@@ -1,0 +1,117 @@
+--- fatresize-1.0.2/fatresize.c	2014-11-28 21:45:29.478528022 +0100
++++ fatresize-1.0.2.fix/fatresize.c	2014-11-28 21:48:14.969997998 +0100
+@@ -49,6 +49,7 @@
+     char verbose;
+     char progress;
+     char is_evms;
++    char is_mmc;
+     char info;
+ } opts;
+ 
+@@ -149,7 +150,17 @@
+ 
+     p = dev+strlen(dev)-1;
+     while (*p && isdigit(*p) && *p != '/')
+-	p--;
++		p--;
++		
++	if (opts.is_mmc && *p == 'p')
++	{
++		do
++		{
++			p--;
++		}
++		while ( !isdigit(*p) );
++			
++	}
+ 
+     devname = malloc(p-dev+2);
+     strncpy(devname, dev, p-dev+1);
+@@ -157,9 +168,9 @@
+ 
+     if (opts.is_evms)
+     {
+-	p = strstr(devname, "/evms/");
+-	if (p)
+-	    strcpy(p, p+5);
++		p = strstr(devname, "/evms/");
++		if (p)
++			strcpy(p, p+5);
+     }
+ 
+     return devname;
+@@ -371,40 +382,42 @@
+ 
+     while ((opt = getopt_long(argc, argv, sopt, lopt, NULL)) != -1)
+     {
+-	switch (opt)
+-	{
+-	    case 1:
+-		if (!opts.dev)
++		switch (opt)
+ 		{
+-		    if (!strncmp(optarg, "/dev/evms/", 10))
+-			opts.is_evms = 1;
+-		    opts.dev = get_devname(optarg);
+-		    opts.pnum = get_partnum(optarg);
++			case 1:
++				if (!opts.dev)
++				{
++					if (!strncmp(optarg, "/dev/evms/", 10))
++						opts.is_evms = 1;
++					if (!strncmp(optarg, "/dev/mmcblk", 11))
++						opts.is_mmc = 1;
++					opts.dev = get_devname(optarg);
++					opts.pnum = get_partnum(optarg);
++				}
++				else
++					usage(1);
++				break;
++			case 'i':
++				opts.info = 1;
++				break;
++			case 'p':
++				opts.progress = 1;
++				break;
++			case 's':
++				opts.size = get_size(optarg);
++				break;
++			case 'v':
++				opts.verbose++;
++				break;
++			case 'q':
++				opts.verbose = -1;
++				break;
++			case 'h':
++			case '?':
++			default:
++				printd(0, "%s (%s)\n", PACKAGE_STRING, BUILD_DATE);
++				usage(0);
+ 		}
+-		else
+-		    usage(1);
+-		break;
+-	    case 'i':
+-		opts.info = 1;
+-		break;
+-	    case 'p':
+-		opts.progress = 1;
+-		break;
+-	    case 's':
+-		opts.size = get_size(optarg);
+-		break;
+-	    case 'v':
+-		opts.verbose++;
+-		break;
+-	    case 'q':
+-		opts.verbose = -1;
+-		break;
+-	    case 'h':
+-	    case '?':
+-	    default:
+-		printd(0, "%s (%s)\n", PACKAGE_STRING, BUILD_DATE);
+-		usage(0);
+-	}
+     }
+ 
+     printd(0, "%s (%s)\n", PACKAGE_STRING, BUILD_DATE);

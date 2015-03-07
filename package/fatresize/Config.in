@@ -1,0 +1,13 @@
+config BR2_PACKAGE_FATRESIZE
+	bool "fatresize"
+	depends on BR2_LARGEFILE
+	select BR2_PACKAGE_PARTED
+	select BR2_PACKAGE_UTIL_LINUX
+	select BR2_PACKAGE_UTIL_LINUX_LIBUUID
+	help
+	  fatresize, The FAT16/FAT32 non-destructive resizer.
+
+	  http://sourceforge.net/projects/fatresize/
+
+comment "fatresize needs a largefile"
+	depends on !BR2_LARGEFILE
