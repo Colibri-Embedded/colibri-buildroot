@@ -39,8 +39,7 @@ define HOST_PYTHON_NUMPY_COPY_TARGET_FILES
 endef
 
 define HOST_PYTHON_NUMPY_FORCE_CROSS_GFORTRAN
-	sed -e "s@possible_executables = \['gfortran', 'f95'\]@possible_executables = \['$(TARGET_CROSS)gfortran'\]@" -i $(HOST_DIR)/usr/lib/python2.7/site-packages/numpy/distutils/fcompiler/gnu.py
-	sed -e "s@'linker_so'    : \[\"<F90>\", \"-Wall\"\],@'linker_so'    : \[\"<F90>\", \"-Wall -shared\"\],@" -i $(HOST_DIR)/usr/lib/python2.7/site-packages/numpy/distutils/fcompiler/gnu.py
+	sed -e "s@possible_executables = \['gfortran'\]@possible_executables = \['$(TARGET_CROSS)gfortran'\]@" -i $(HOST_DIR)/usr/lib/python2.7/site-packages/numpy/distutils/fcompiler/gnu.py
 endef
 
 HOST_PYTHON_NUMPY_POST_INSTALL_HOOKS += HOST_PYTHON_NUMPY_COPY_TARGET_FILES \

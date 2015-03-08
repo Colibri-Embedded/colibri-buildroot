@@ -1,0 +1,36 @@
+diff -rupN numpy-1.8.0.orig/numpy/distutils/fcompiler/gnu.py numpy-1.8.0.fix/numpy/distutils/fcompiler/gnu.py
+--- numpy-1.8.0.orig/numpy/distutils/fcompiler/gnu.py	2013-10-30 19:31:40.000000000 +0100
++++ numpy-1.8.0.fix/numpy/distutils/fcompiler/gnu.py	2015-03-08 14:06:07.761338253 +0100
+@@ -41,9 +41,13 @@ class GnuFCompiler(FCompiler):
+         m = re.match(r'GNU Fortran\s+95.*?([0-9-.]+)', version_string)
+         if m:
+             return ('gfortran', m.group(1))
+-        m = re.match(r'GNU Fortran.*?\-?([0-9-.]+)', version_string)
++        m = re.match(r'GNU Fortran.*?\-?([0-9-.]+).*?(([0-9]+(\.))+([0-9]+))', version_string)
+         if m:
+             v = m.group(1)
++            if self.compiler_type == 'gnu95':
++				return ('gfortran', m.group(2))
++				
++            v = m.group(1)
+             if v.startswith('0') or v.startswith('2') or v.startswith('3'):
+                 # the '0' is for early g77's
+                 return ('g77', v)
+@@ -249,7 +253,7 @@ class Gnu95FCompiler(GnuFCompiler):
+     #       GNU Fortran 95 (GCC) 4.2.0 20060218 (experimental)
+     #       GNU Fortran (GCC) 4.3.0 20070316 (experimental)
+ 
+-    possible_executables = ['gfortran', 'f95']
++    possible_executables = ['gfortran']
+     executables = {
+         'version_cmd'  : ["<F90>", "--version"],
+         'compiler_f77' : [None, "-Wall", "-ffixed-form",
+@@ -257,7 +261,7 @@ class Gnu95FCompiler(GnuFCompiler):
+         'compiler_f90' : [None, "-Wall", "-fno-second-underscore"] + _EXTRAFLAGS,
+         'compiler_fix' : [None, "-Wall", "-ffixed-form",
+                           "-fno-second-underscore"] + _EXTRAFLAGS,
+-        'linker_so'    : ["<F90>", "-Wall"],
++        'linker_so'    : ["<F90>", "-Wall", "-shared"],
+         'archiver'     : ["ar", "-cr"],
+         'ranlib'       : ["ranlib"],
+         'linker_exe'   : [None, "-Wall"]
