@@ -49,11 +49,13 @@ ifeq ($(BR2_LINUX_KERNEL_UBOOT_IMAGE),y)
 	LINUX_DEPENDENCIES += host-uboot-tools
 endif
 
+LINUX_TARGET_DIR = $(PACKAGES_DIR)/linux
+
 LINUX_MAKE_FLAGS = \
 	HOSTCC="$(HOSTCC)" \
 	HOSTCFLAGS="$(HOSTCFLAGS)" \
 	ARCH=$(KERNEL_ARCH) \
-	INSTALL_MOD_PATH=$(TARGET_DIR) \
+	INSTALL_MOD_PATH=$(LINUX_TARGET_DIR) \
 	CROSS_COMPILE="$(CCACHE) $(TARGET_CROSS)" \
 	DEPMOD=$(HOST_DIR)/sbin/depmod
 
@@ -244,7 +246,7 @@ define LINUX_INSTALL_DTB_TARGET
 	cp $(addprefix \
 		$(KERNEL_ARCH_PATH)/boot/$(if $(wildcard \
 		$(addprefix $(KERNEL_ARCH_PATH)/boot/dts/,$(KERNEL_DTBS))),dts/),$(KERNEL_DTBS)) \
-		$(TARGET_DIR)/boot/
+		$(LINUX_TARGET_DIR)/boot/
 endef
 endif
 endif
@@ -288,7 +290,7 @@ endef
 
 ifeq ($(BR2_LINUX_KERNEL_INSTALL_TARGET),y)
 define LINUX_INSTALL_KERNEL_IMAGE_TO_TARGET
-	install -m 0644 -D $(LINUX_IMAGE_PATH) $(TARGET_DIR)/boot/$(LINUX_IMAGE_NAME)
+	install -m 0644 -D $(LINUX_IMAGE_PATH) $(LINUX_TARGET_DIR)/boot/$(LINUX_IMAGE_NAME)
 	$(LINUX_INSTALL_DTB_TARGET)
 endef
 endif
@@ -313,8 +315,8 @@ define LINUX_INSTALL_TARGET_CMDS
 	# directories, not relevant on the target
 	@if grep -q "CONFIG_MODULES=y" $(@D)/.config; then 	\
 		$(TARGET_MAKE_ENV) $(MAKE1) $(LINUX_MAKE_FLAGS) -C $(@D) modules_install; \
-		rm -f $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/build ;		\
-		rm -f $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/source ;	\
+		rm -f $(LINUX_TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/build ;		\
+		rm -f $(LINUX_TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/source ;	\
 	fi
 	$(LINUX_INSTALL_HOST_TOOLS)
 endef

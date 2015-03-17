@@ -115,7 +115,7 @@ $(2)_BASE_ENV         = $$(PKG_PYTHON_DISTUTILS_ENV)
 $(2)_BASE_BUILD_TGT   = build
 $(2)_BASE_BUILD_OPTS   = $$(PKG_PYTHON_DISTUTILS_BUILD_OPTS)
 
-$(2)_BASE_INSTALL_TARGET_OPTS  = --prefix=$$(PACKAGES_DIR)/$(pkgname)/usr
+$(2)_BASE_INSTALL_TARGET_OPTS  = --prefix=$$(PACKAGES_DIR)/$(1)/usr
 	
 $(2)_BASE_INSTALL_STAGING_OPTS = $$(PKG_PYTHON_DISTUTILS_INSTALL_STAGING_OPTS)
 else
@@ -130,7 +130,7 @@ ifeq ($(4),target)
 $(2)_BASE_ENV         = $$(PKG_PYTHON_SETUPTOOLS_ENV)
 $(2)_BASE_BUILD_TGT   = build
 $(2)_BASE_BUILD_OPTS   =
-$(2)_BASE_INSTALL_TARGET_OPTS  = --prefix=$$(PACKAGES_DIR)/$(pkgname)/usr \
+$(2)_BASE_INSTALL_TARGET_OPTS  = --prefix=$$(PACKAGES_DIR)/$(1)/usr \
 								--executable=/usr/bin/python \
 								--single-version-externally-managed \
 								--root=/

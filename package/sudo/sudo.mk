@@ -9,7 +9,7 @@ SUDO_SITE = http://www.sudo.ws/sudo/dist
 SUDO_LICENSE = ISC BSD-3c
 SUDO_LICENSE_FILES = doc/LICENSE
 # This is to avoid sudo's make install from chown()ing files which fails
-SUDO_INSTALL_TARGET_OPTS = INSTALL_OWNER="" DESTDIR="$(TARGET_DIR)" install
+SUDO_INSTALL_TARGET_OPTS = INSTALL_OWNER="" DESTDIR="$(SUDO_TARGET_DIR)" install
 SUDO_CONF_OPTS = \
 	--without-lecture \
 	--without-sendmail \

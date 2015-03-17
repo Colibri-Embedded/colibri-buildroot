@@ -242,6 +242,9 @@ $(BUILD_DIR)/%/.stamp_target_installed:
 	$(Q)if test -n "$($(PKG)_CONFIG_SCRIPTS)" ; then \
 		$(RM) -f $(addprefix $(TARGET_DIR)/usr/bin/,$($(PKG)_CONFIG_SCRIPTS)) ; \
 	fi
+	$($(PKG)_FAKEROOT) $($(PKG)_FAKEROOT_ENV) -- $(TAR) -cf $($(PKG)_TARGET_ARCHIVE) -C $($(PKG)_TARGET_DIR) .
+	$(RM) -rf $($(PKG)_TARGET_DIR)
+	$(RM) $(@D)/.fakeroot_env
 	$(Q)touch $@
 	@$(call step_end,install-target)
 
@@ -312,9 +315,23 @@ define inner-generic-package
 # this information has only to be specified once, for both the
 # target and host packages of a given .mk file.
 
-$(2)_TYPE                       =  $(4)
+$(2)_TYPE           =  $(4)
 $(2)_NAME			=  $(1)
-$(2)_RAWNAME			=  $$(patsubst host-%,%,$(1))
+$(2)_RAWNAME		=  $$(patsubst host-%,%,$(1))
+$(2)_TARGET_DIR		=  $$(PACKAGES_DIR)/$(1)
+$(2)_TARGET_ARCHIVE	=  $$(PACKAGES_DIR)/$(1).tar
+
+# Fakeroot 
+
+ifndef $(2)_FAKEROOT
+ ifdef $(3)_FAKEROOT
+  $(2)_FAKEROOT = $$($(3)_FAKEROOT)
+ else
+  $(2)_FAKEROOT ?= $$(FAKEROOT)
+ endif
+endif
+
+$(2)_FAKEROOT_ENV	= -s $$(@D)/.fakeroot_env -i $$(@D)/.fakeroot_env
 
 # Keep the package version that may contain forward slashes in the _DL_VERSION
 # variable, then replace all forward slashes ('/') by underscores ('_') to

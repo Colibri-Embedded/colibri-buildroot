@@ -23,7 +23,7 @@ TAGLIB_CONF_OPTS += -DWITH_MP4=ON
 endif
 
 define TAGLIB_REMOVE_DEVFILE
-	rm -f $(TARGET_DIR)/usr/bin/taglib-config
+	rm -f $(TAGLIB_TARGET_DIR)/usr/bin/taglib-config
 endef
 
 TAGLIB_POST_INSTALL_TARGET_HOOKS += TAGLIB_REMOVE_DEVFILE

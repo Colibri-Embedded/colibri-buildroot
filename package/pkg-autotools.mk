@@ -127,6 +127,14 @@ ifndef $(2)_MAKE
  endif
 endif
 
+ifndef $(2)_MAKE1
+ ifdef $(3)_MAKE1
+  $(2)_MAKE1 = $$($(3)_MAKE1)
+ else
+  $(2)_MAKE1 ?= $$(MAKE1)
+ endif
+endif
+
 ifndef $(2)_AUTORECONF
  ifdef $(3)_AUTORECONF
   $(2)_AUTORECONF = $$($(3)_AUTORECONF)
@@ -255,7 +263,7 @@ $(2)_PRE_CONFIGURE_HOOKS += AUTORECONF_HOOK
 ifneq ($$($(2)_LIBTOOL_PATCH),NO)
 $(2)_PRE_CONFIGURE_HOOKS += LIBTOOL_PATCH_HOOK
 endif
-$(2)_DEPENDENCIES += host-automake host-autoconf host-libtool
+$(2)_DEPENDENCIES += host-automake host-autoconf host-libtool host-fakeroot
 
 else # ! AUTORECONF = YES
 
@@ -328,7 +336,7 @@ endif
 #
 ifndef $(2)_INSTALL_TARGET_CMDS
 define $(2)_INSTALL_TARGET_CMDS
-	$$(TARGET_MAKE_ENV) $$($$(PKG)_MAKE_ENV) $$($$(PKG)_MAKE) $$($$(PKG)_INSTALL_TARGET_OPTS) -C $$($$(PKG)_SRCDIR)
+	$$(TARGET_MAKE_ENV) $$($$(PKG)_MAKE_ENV) $$($$(PKG)_FAKEROOT) $$($$(PKG)_FAKEROOT_ENV) -- $$($$(PKG)_MAKE1) $$($$(PKG)_INSTALL_TARGET_OPTS) -C $$($$(PKG)_SRCDIR)
 endef
 endif
 

@@ -28,7 +28,7 @@ endif
 ifeq ($(BR2_PACKAGE_NANO_TINY),y)
 	NANO_CONF_OPTS += --enable-tiny
 define NANO_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 $(@D)/src/nano $(TARGET_DIR)/usr/bin/nano
+	$(NANO_FAKEROOT) $(NANO_FAKEROOT_ENV) -- $(INSTALL) -D -m 0755 $(@D)/src/nano $(NANO_TARGET_DIR)/usr/bin/nano
 endef
 endif
 

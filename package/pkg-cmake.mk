@@ -49,12 +49,13 @@ define inner-cmake-package
 
 $(2)_CONF_ENV			?=
 $(2)_CONF_OPTS			?=
-$(2)_MAKE			?= $$(MAKE)
+$(2)_MAKE				?= $$(MAKE)
+$(2)_MAKE1				?= $$(MAKE1)
 $(2)_MAKE_ENV			?=
 $(2)_MAKE_OPTS			?=
 $(2)_INSTALL_OPTS		?= install
 $(2)_INSTALL_STAGING_OPTS	?= DESTDIR=$$(STAGING_DIR) install
-$(2)_INSTALL_TARGET_OPTS		?= DESTDIR=$$(PACKAGES_DIR)/$(pkgname) install
+$(2)_INSTALL_TARGET_OPTS		?= DESTDIR=$$($(2)_TARGET_DIR) install
 
 $(2)_SRCDIR			= $$($(2)_DIR)/$$($(2)_SUBDIR)
 $(2)_BUILDDIR			= $$($(2)_SRCDIR)
@@ -178,7 +179,7 @@ endif
 #
 ifndef $(2)_INSTALL_TARGET_CMDS
 define $(2)_INSTALL_TARGET_CMDS
-	$$(TARGET_MAKE_ENV) $$($$(PKG)_MAKE_ENV) $$($$(PKG)_MAKE) $$($$(PKG)_MAKE_OPTS) $$($$(PKG)_INSTALL_TARGET_OPTS) -C $$($$(PKG)_BUILDDIR)
+	$$(TARGET_MAKE_ENV) $$($$(PKG)_MAKE_ENV) $$($$(PKG)_FAKEROOT) $$($$(PKG)_FAKEROOT_ENV) --  $$($$(PKG)_MAKE1) $$($$(PKG)_MAKE_OPTS) $$($$(PKG)_INSTALL_TARGET_OPTS) -C $$($$(PKG)_BUILDDIR)
 endef
 endif
 
