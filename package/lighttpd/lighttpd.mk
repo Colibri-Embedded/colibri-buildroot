@@ -16,6 +16,30 @@ LIGHTTPD_CONF_OPTS = \
 	--libexecdir=/usr/lib \
 	$(if $(BR2_LARGEFILE),,--disable-lfs)
 
+LIGHTTPD_CONF_AVAILABLE_FILES = \
+						01-mime.conf \
+						10-accesslog.conf \
+						10-dir-listing.conf \
+						10-evhost.conf \
+						10-fastcgi.conf \
+						10-no-www.conf \
+						10-rrdtool.conf \
+						10-ssi.conf \
+						10-status.conf \
+						10-usertrack.conf \
+						90-debian-doc.conf \
+						05-auth.conf \
+						10-cgi.conf \
+						10-evasive.conf \
+						10-expire.conf \
+						10-flv-streaming.conf \
+						10-proxy.conf \
+						10-simple-vhost.conf \
+						10-ssl.conf \
+						10-userdir.conf \
+						15-fastcgi-php.conf \
+						README
+
 ifeq ($(BR2_PACKAGE_LIGHTTPD_OPENSSL),y)
 LIGHTTPD_DEPENDENCIES += openssl
 LIGHTTPD_CONF_OPTS += --with-openssl
@@ -59,38 +83,69 @@ else
 LIGHTTPD_CONF_OPTS += --without-lua
 endif
 
+ifeq ($(BR2_PACKAGE_LIGHTTPD_IPV6),y)
+LIGHTTPD_CONF_OPTS += --enable-ipv6
+else
+LIGHTTPD_CONF_OPTS += --disable-ipv6
+endif
+
 define LIGHTTPD_INSTALL_CONFIG
-	$(INSTALL) -d -m 0755 $(TARGET_DIR)/etc/lighttpd/conf.d
-	$(INSTALL) -d -m 0755 $(TARGET_DIR)/var/www
-	$(INSTALL) -D -m 0644 $(@D)/doc/config/lighttpd.conf \
-		$(TARGET_DIR)/etc/lighttpd/lighttpd.conf
-	$(INSTALL) -D -m 0644 $(@D)/doc/config/modules.conf \
-		$(TARGET_DIR)/etc/lighttpd/modules.conf
-	$(INSTALL) -D -m 0644 $(@D)/doc/config/conf.d/access_log.conf \
-		$(TARGET_DIR)/etc/lighttpd/conf.d/access_log.conf
-	$(INSTALL) -D -m 0644 $(@D)/doc/config/conf.d/debug.conf \
-		$(TARGET_DIR)/etc/lighttpd/conf.d/debug.conf
-	$(INSTALL) -D -m 0644 $(@D)/doc/config/conf.d/dirlisting.conf \
-		$(TARGET_DIR)/etc/lighttpd/conf.d/dirlisting.conf
-	$(INSTALL) -D -m 0644 $(@D)/doc/config/conf.d/mime.conf \
-		$(TARGET_DIR)/etc/lighttpd/conf.d/mime.conf
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(LIGHTTPD_TARGET_DIR)/etc/lighttpd/conf-available
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(LIGHTTPD_TARGET_DIR)/etc/lighttpd/conf-enabled
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(LIGHTTPD_TARGET_DIR)/var/www
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(LIGHTTPD_TARGET_DIR)/var/cache/lighttpd
+
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) chown 33.33 $(LIGHTTPD_TARGET_DIR)/var/www
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) chown 33.33 $(LIGHTTPD_TARGET_DIR)/var/cache/lighttpd
+
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -D -m 0644 package/lighttpd/lighttpd.conf \
+		$(LIGHTTPD_TARGET_DIR)/etc/lighttpd/lighttpd.conf
+		
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/lighttpd/include-conf-enabled.sh \
+		$(LIGHTTPD_TARGET_DIR)/usr/share/lighttpd/include-conf-enabled.sh
+		
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/lighttpd/lighttpd-enable-mod \
+		$(LIGHTTPD_TARGET_DIR)/usr/sbin/lighttpd-enable-mod
+
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) ln -fs lighttpd-enable-mod \
+		$(LIGHTTPD_TARGET_DIR)/usr/sbin/lighttpd-disable-mod
+		
+for conf in $(LIGHTTPD_CONF_AVAILABLE_FILES); do \
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -D -m 0644 package/lighttpd/conf-available/$$conf \
+		$(LIGHTTPD_TARGET_DIR)/etc/lighttpd/conf-available/$$conf; \
+done
+
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) ln -fs ../conf-available/01-mime.conf \
+		$(LIGHTTPD_TARGET_DIR)/etc/lighttpd/conf-enabled/01-mime.conf
+
 endef
 
 LIGHTTPD_POST_INSTALL_TARGET_HOOKS += LIGHTTPD_INSTALL_CONFIG
 
 define LIGHTTPD_INSTALL_INIT_SYSV
-	$(INSTALL) -D -m 0755 package/lighttpd/S50lighttpd \
-		$(TARGET_DIR)/etc/init.d/S50lighttpd
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/lighttpd/lighttpd.init \
+		$(LIGHTTPD_TARGET_DIR)/etc/init.d/lighttpd
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/lighttpd/lighttpd.default \
+		$(LIGHTTPD_TARGET_DIR)/etc/default/lighttpd
+		
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(LIGHTTPD_TARGET_DIR)/etc/rc.d/rc.startup.d	
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(LIGHTTPD_TARGET_DIR)/etc/rc.d/rc.shutdown.d
+	
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) ln -fs ../../init.d/lighttpd \
+		$(LIGHTTPD_TARGET_DIR)/etc/rc.d/rc.startup.d/S28lighttpd
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) ln -fs ../../init.d/lighttpd \
+		$(LIGHTTPD_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S28lighttpd
+	
 endef
 
 define LIGHTTPD_INSTALL_INIT_SYSTEMD
-	$(INSTALL) -D -m 0644 package/lighttpd/lighttpd.service \
-		$(TARGET_DIR)/etc/systemd/system/lighttpd.service
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -D -m 0644 package/lighttpd/lighttpd.service \
+		$(LIGHTTPD_TARGET_DIR)/etc/systemd/system/lighttpd.service
 
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) mkdir -p $(LIGHTTPD_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
 
-	ln -fs ../lighttpd.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/lighttpd.service
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) ln -fs ../lighttpd.service \
+		$(LIGHTTPD_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/lighttpd.service
 endef
 
 $(eval $(autotools-package))

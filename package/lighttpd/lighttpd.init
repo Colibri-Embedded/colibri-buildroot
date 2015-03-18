@@ -1,0 +1,41 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     : Daniel Kesler <kesler.daniel@gmail.com>
+# 
+# Version     : 00.10
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+source /etc/default/lighttpd
+
+case "$1" in
+  start)
+	boot_msg "Starting lighttpd server."
+	start-stop-daemon -S -q -p $LIGHTTPD_PIDFILE --exec /usr/sbin/lighttpd -- -f $LIGHTTPD_CONF
+	evaluate_retval
+	;;
+  stop)
+	boot_msg "Stopping lighttpd server."
+	start-stop-daemon -K -q -p $LIGHTTPD_PIDFILE
+	evaluate_retval
+	;;
+  restart|reload)
+	${0} stop
+	sleep 1
+	${0} start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?

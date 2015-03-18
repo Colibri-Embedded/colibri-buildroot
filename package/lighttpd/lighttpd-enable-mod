@@ -1,0 +1,107 @@
+#!/bin/bash
+#
+#	Copyright (c) 2014 Daniel Kesler
+#
+#	Contains changes from:
+#		- Tobias Gruetzmacher <tobias@portfolio16.de>
+#		- Arno Toell <debian@toell.net>
+#
+#	You may distribute under the terms of either the GNU General Public
+#	License[1]
+#
+#	[1] http://www.gnu.org/licenses/gpl.html
+#
+
+CONF_DIR="/etc/lighttpd"
+CONF_ENABLED="${CONF_DIR}/conf-enabled"
+CONF_AVAILABLE="${CONF_DIR}/conf-available"
+
+ENABLED=
+AVAILABLE=
+
+for file in ${CONF_ENABLED}/*.conf; do
+	if [ -e "$file" ] ; then
+		file=$( echo $file | awk 'BEGIN{FS="/"};{print $NF}' )
+		ENABLED="${ENABLED} ${file}"
+	fi
+done
+
+for file in ${CONF_AVAILABLE}/*.conf; do
+	if [ -e "$file" ] ; then
+		file=$( echo $file | awk 'BEGIN{FS="/"};{print $NF}' )
+		AVAILABLE="${AVAILABLE} ${file}"
+	fi
+done
+
+## 
+## Strip number in front and .conf extension.
+##
+extract_name()
+{
+	a=${1##*-}
+	echo ${a%.*}
+}
+
+## 
+## Find $1 module name in list $2..$n
+##
+find_module()
+{
+	needle=$(extract_name $1)
+	shift
+	for mod in $@; do
+		m=$(extract_name $mod)
+		if [ "x$m" == "x$needle" ]; then
+			echo $mod
+			return
+		fi
+	done
+}
+
+## 
+## Enable modules if found. Create a symlink in conf-enabled.
+##
+enable_modules()
+{
+	module=
+	
+	for mod in $@; do
+		module=$(find_module $mod $AVAILABLE)
+		if [ "x$module" != "x" ]; then
+			if [ ! -e "${CONF_ENABLED}/$module" ]; then
+				ln -s ../conf-available/$module ${CONF_ENABLED}/$module
+			fi
+		else
+			echo "*** Warning: module '$mod' not found"
+		fi
+	done
+} 
+
+## 
+## Disable modules if found. Remove a symlink in conf-enabled.
+##
+disable_modules()
+{
+	module=
+	
+	for mod in $@; do
+		module=$(find_module $mod $ENABLED)
+		if [ "x$module" != "x" ]; then
+			echo "rm ${CONF_ENABLED}/$module"
+			if [ -e "${CONF_ENABLED}/$module" ]; then
+				rm ${CONF_ENABLED}/$module
+			fi
+		else
+			echo "*** Warning: module '$mod' not found"
+		fi
+	done
+}
+
+case $0 in
+	*-enable-mod)
+		enable_modules $@
+		;;
+	*-disable-mod)
+		disable_modules $@
+		;;
+esac

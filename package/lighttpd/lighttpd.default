@@ -1,0 +1,3 @@
+LIGHTTPD_PIDFILE=/run/lighttpd.pid
+LIGHTTPD_CONF=/etc/lighttpd/lighttpd.conf
+
