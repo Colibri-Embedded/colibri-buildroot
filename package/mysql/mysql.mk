@@ -93,14 +93,14 @@ define MYSQL_USERS
 endef
 
 define MYSQL_ADD_FOLDER
-	$(INSTALL) -d $(TARGET_DIR)/var/mysql
+	$(INSTALL) -d $(MYSQL_TARGET_DIR)/var/mysql
 endef
 
 MYSQL_POST_INSTALL_TARGET_HOOKS += MYSQL_ADD_FOLDER
 
 define MYSQL_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 0755 package/mysql/S97mysqld \
-		$(TARGET_DIR)/etc/init.d/S97mysqld
+		$(MYSQL_TARGET_DIR)/etc/init.d/S97mysqld
 endef
 
 else
@@ -110,11 +110,11 @@ endif
 
 
 define MYSQL_REMOVE_TEST_PROGS
-	rm -rf $(TARGET_DIR)/usr/mysql-test $(TARGET_DIR)/usr/sql-bench
+	rm -rf $(MYSQL_TARGET_DIR)/usr/mysql-test $(MYSQL_TARGET_DIR)/usr/sql-bench
 endef
 
 define MYSQL_ADD_MYSQL_LIB_PATH
-	echo "/usr/lib/mysql" >> $(TARGET_DIR)/etc/ld.so.conf
+	echo "/usr/lib/mysql" >> $(MYSQL_TARGET_DIR)/etc/ld.so.conf
 endef
 
 MYSQL_POST_INSTALL_TARGET_HOOKS += MYSQL_REMOVE_TEST_PROGS

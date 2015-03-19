@@ -52,17 +52,27 @@ define DROPBEAR_DISABLE_STANDALONE
 endef
 
 define DROPBEAR_INSTALL_INIT_SYSTEMD
-	$(INSTALL) -D -m 644 package/dropbear/dropbear.service \
-		$(TARGET_DIR)/etc/systemd/system/dropbear.service
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
-	ln -fs ../dropbear.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/dropbear.service
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -D -m 644 package/dropbear/dropbear.service \
+		$(DROPBEAR_TARGET_DIR)/etc/systemd/system/dropbear.service
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) mkdir -p $(DROPBEAR_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) ln -fs ../dropbear.service \
+		$(DROPBEAR_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/dropbear.service
 endef
 
 ifeq ($(BR2_USE_MMU),y)
 define DROPBEAR_INSTALL_INIT_SYSV
-	$(INSTALL) -D -m 755 package/dropbear/S50dropbear \
-		$(TARGET_DIR)/etc/init.d/S50dropbear
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT) $(INSTALL) -D -m 0755 package/lighttpd/dropbear.init \
+		$(DROPBEAR_FAKEROOT)/etc/init.d/dropbear
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT) $(INSTALL) -D -m 0755 package/lighttpd/dropbear.default \
+		$(DROPBEAR_FAKEROOT)/etc/default/dropbear
+		
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(DROPBEAR_TARGET_DIR)/etc/rc.d/rc.startup.d	
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(DROPBEAR_TARGET_DIR)/etc/rc.d/rc.shutdown.d
+	
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) ln -fs ../../init.d/dropbear \
+		$(DROPBEAR_TARGET_DIR)/etc/rc.d/rc.startup.d/S50dropbear
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) ln -fs ../../init.d/dropbear \
+		$(DROPBEAR_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S50dropbear
 endef
 else
 DROPBEAR_POST_EXTRACT_HOOKS += DROPBEAR_DISABLE_STANDALONE
@@ -89,11 +99,13 @@ DROPBEAR_CONF_OPTS += --disable-lastlog
 endif
 
 define DROPBEAR_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 755 $(@D)/dropbearmulti $(TARGET_DIR)/usr/sbin/dropbear
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(DROPBEAR_TARGET_DIR)/usr/sbin
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(DROPBEAR_TARGET_DIR)/usr/bin
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -m 755 $(@D)/dropbearmulti $(DROPBEAR_TARGET_DIR)/usr/sbin/dropbear
 	for f in $(DROPBEAR_TARGET_BINS); do \
-		ln -snf ../sbin/dropbear $(TARGET_DIR)/usr/bin/$$f ; \
+		$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) ln -snf ../sbin/dropbear $(DROPBEAR_TARGET_DIR)/usr/bin/$$f ; \
 	done
-	mkdir -p $(TARGET_DIR)/etc/dropbear
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) mkdir -p $(DROPBEAR_TARGET_DIR)/etc/dropbear
 endef
 
 $(eval $(autotools-package))

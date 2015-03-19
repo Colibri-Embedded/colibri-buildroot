@@ -135,7 +135,6 @@ define LIGHTTPD_INSTALL_INIT_SYSV
 		$(LIGHTTPD_TARGET_DIR)/etc/rc.d/rc.startup.d/S28lighttpd
 	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) ln -fs ../../init.d/lighttpd \
 		$(LIGHTTPD_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S28lighttpd
-	
 endef
 
 define LIGHTTPD_INSTALL_INIT_SYSTEMD

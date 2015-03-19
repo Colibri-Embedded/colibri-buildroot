@@ -162,11 +162,11 @@ PYTHON_POST_PATCH_HOOKS += PYTHON_TOUCH_GRAMMAR_FILES
 # idle & smtpd.py have bad shebangs and are mostly samples
 #
 define PYTHON_REMOVE_USELESS_FILES
-	rm -f $(PACKAGES_DIR)/python/usr/bin/python$(PYTHON_VERSION_MAJOR)-config
-	rm -f $(PACKAGES_DIR)/python/usr/bin/python2-config
-	rm -f $(PACKAGES_DIR)/python/usr/bin/python-config
-	rm -f $(PACKAGES_DIR)/python/usr/bin/smtpd.py
-	for i in `find $(PACKAGES_DIR)/python/usr/lib/python$(PYTHON_VERSION_MAJOR)/config/ \
+	rm -f $(PYTHON_TARGET_DIR)/usr/bin/python$(PYTHON_VERSION_MAJOR)-config
+	rm -f $(PYTHON_TARGET_DIR)/usr/bin/python2-config
+	rm -f $(PYTHON_TARGET_DIR)/usr/bin/python-config
+	rm -f $(PYTHON_TARGET_DIR)/usr/bin/smtpd.py
+	for i in `find $(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/config/ \
 		-type f -not -name pyconfig.h -a -not -name Makefile` ; do \
 		rm -f $$i ; \
 	done
@@ -178,14 +178,14 @@ PYTHON_POST_INSTALL_TARGET_HOOKS += PYTHON_REMOVE_USELESS_FILES
 # Make sure libpython gets stripped out on target
 #
 define PYTHON_ENSURE_LIBPYTHON_STRIPPED
-	chmod u+w $(PACKAGES_DIR)/python/usr/lib/libpython$(PYTHON_VERSION_MAJOR)*.so
+	chmod u+w $(PYTHON_TARGET_DIR)/usr/lib/libpython$(PYTHON_VERSION_MAJOR)*.so
 endef
 
 PYTHON_POST_INSTALL_TARGET_HOOKS += PYTHON_ENSURE_LIBPYTHON_STRIPPED
 
 # Always install the python symlink in the target tree
 define PYTHON_INSTALL_TARGET_PYTHON_SYMLINK
-	ln -sf python2 $(PACKAGES_DIR)/python/usr/bin/python
+	ln -sf python2 $(PYTHON_TARGET_DIR)/usr/bin/python
 endef
 
 PYTHON_POST_INSTALL_TARGET_HOOKS += PYTHON_INSTALL_TARGET_PYTHON_SYMLINK
@@ -212,20 +212,20 @@ HOST_PYTHON_POST_INSTALL_HOOKS += HOST_PYTHON_INSTALL_PYTHON_SYMLINK
 endif
 
 # Provided to other packages
-PYTHON_PATH = $(PACKAGES_DIR)/python/usr/lib/python$(PYTHON_VERSION_MAJOR)/sysconfigdata/:$(PACKAGES_DIR)/python/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/
+PYTHON_PATH = $(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/sysconfigdata/:$(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/
 
 $(eval $(autotools-package))
 $(eval $(host-autotools-package))
 
 ifeq ($(BR2_PACKAGE_PYTHON_PYC_ONLY),y)
 define PYTHON_FINALIZE_TARGET
-	find $(PACKAGES_DIR)/python/usr/lib/python$(PYTHON_VERSION_MAJOR) -name '*.py' -print0 | xargs -0 rm -f
+	find $(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR) -name '*.py' -print0 | xargs -0 rm -f
 endef
 endif
 
 ifeq ($(BR2_PACKAGE_PYTHON_PY_ONLY),y)
 define PYTHON_FINALIZE_TARGET
-	find $(PACKAGES_DIR)/python/usr/lib/python$(PYTHON_VERSION_MAJOR) -name '*.pyc' -print0 | xargs -0 rm -f
+	find $(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR) -name '*.pyc' -print0 | xargs -0 rm -f
 endef
 endif
 

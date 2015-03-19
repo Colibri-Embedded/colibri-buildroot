@@ -609,9 +609,9 @@ endif
 		/sbin/ldconfig -r $(TARGET_DIR); \
 	fi
 	( \
-		echo "NAME=Buildroot"; \
+		echo "NAME=Colibri"; \
 		echo "VERSION=$(BR2_VERSION_FULL)"; \
-		echo "ID=buildroot"; \
+		echo "ID=colibri"; \
 		echo "VERSION_ID=$(BR2_VERSION)"; \
 		echo "PRETTY_NAME=\"Buildroot $(BR2_VERSION)\"" \
 	) >  $(TARGET_DIR)/etc/os-release

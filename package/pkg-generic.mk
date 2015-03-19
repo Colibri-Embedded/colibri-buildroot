@@ -242,9 +242,13 @@ $(BUILD_DIR)/%/.stamp_target_installed:
 	$(Q)if test -n "$($(PKG)_CONFIG_SCRIPTS)" ; then \
 		$(RM) -f $(addprefix $(TARGET_DIR)/usr/bin/,$($(PKG)_CONFIG_SCRIPTS)) ; \
 	fi
-	$($(PKG)_FAKEROOT) $($(PKG)_FAKEROOT_ENV) -- $(TAR) -cf $($(PKG)_TARGET_ARCHIVE) -C $($(PKG)_TARGET_DIR) .
-	$(RM) -rf $($(PKG)_TARGET_DIR)
-	$(RM) $(@D)/.fakeroot_env
+	
+	$(Q)if [ "x$($(PKG)_SKIP_PACKAGE_TAR)" != "xYES" ]; then \
+		$($(PKG)_FAKEROOT) $($(PKG)_FAKEROOT_ENV) -- $(TAR) -cf $($(PKG)_TARGET_ARCHIVE) -C $($(PKG)_TARGET_DIR) . ; \
+		$(RM) -rf $($(PKG)_TARGET_DIR) ; \
+		$(RM) $(@D)/.fakeroot_env ; \
+	fi
+	
 	$(Q)touch $@
 	@$(call step_end,install-target)
 

@@ -15,12 +15,17 @@
 . /etc/default/rc
 . ${rc_functions}
 
-source /etc/default/lighttpd
+test -r /etc/default/lighttpd && source /etc/default/lighttpd
+
+[ -z $LIGHTTPD_PIDFILE ] && LIGHTTPD_PIDFILE=/run/lighttpd.pid
+[ -z $LIGHTTPD_CONF ] && LIGHTTPD_CONF=/etc/lighttpd/lighttpd.conf
+
+DAEMON=/usr/sbin/lighttpd
 
 case "$1" in
   start)
 	boot_msg "Starting lighttpd server."
-	start-stop-daemon -S -q -p $LIGHTTPD_PIDFILE --exec /usr/sbin/lighttpd -- -f $LIGHTTPD_CONF
+	start-stop-daemon -S -q -p $LIGHTTPD_PIDFILE --exec $DAEMON -- -f $LIGHTTPD_CONF
 	evaluate_retval
 	;;
   stop)

@@ -56,7 +56,7 @@ define ZLIB_INSTALL_STAGING_CMDS
 endef
 
 define ZLIB_INSTALL_TARGET_CMDS
-	$(MAKE1) -C $(@D) DESTDIR=$(TARGET_DIR) LDCONFIG=true install
+	$(MAKE1) -C $(@D) DESTDIR=$(ZLIB_TARGET_DIR) LDCONFIG=true install
 endef
 
 # We don't care removing the .a from target, since it not used at link

@@ -19,7 +19,7 @@ endif
 PYTHON_NUMPY_BUILD_OPTS = --fcompiler=None
 
 define PYTHON_NUMPY_CONFIGURE_CMDS
-	-rm -f $(@D)/site.cfg
+	rm -f $(@D)/site.cfg
 	echo "[DEFAULT]" >> $(@D)/site.cfg
 	echo "library_dirs = $(STAGING_DIR)/usr/lib" >> $(@D)/site.cfg
 	echo "include_dirs = $(STAGING_DIR)/usr/include" >> $(@D)/site.cfg

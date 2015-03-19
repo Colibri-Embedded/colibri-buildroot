@@ -39,15 +39,15 @@ endef
 ifeq ($(BR2_STATIC_LIBS),)
 define BZIP2_INSTALL_TARGET_SHARED_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) \
-		-f Makefile-libbz2_so PREFIX=$(TARGET_DIR)/usr -C $(@D) install
+		-f Makefile-libbz2_so PREFIX=$(BZIP2_TARGET_DIR)/usr -C $(@D) install
 endef
 endif
 
 # make sure busybox doesn't get overwritten by make install
 define BZIP2_INSTALL_TARGET_CMDS
-	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,bzip2 bunzip2 bzcat)
+	rm -f $(addprefix $(BZIP2_TARGET_DIR)/usr/bin/,bzip2 bunzip2 bzcat)
 	$(TARGET_MAKE_ENV) $(MAKE) \
-		PREFIX=$(TARGET_DIR)/usr -C $(@D) install
+		PREFIX=$(BZIP2_TARGET_DIR)/usr -C $(@D) install
 	$(BZIP2_INSTALL_TARGET_SHARED_CMDS)
 endef
 

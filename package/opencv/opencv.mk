@@ -228,19 +228,19 @@ endif
 
 # Installation hooks:
 define OPENCV_CLEAN_INSTALL_DOC
-	$(RM) -fr $(TARGET_DIR)/usr/share/OpenCV/doc
+	$(RM) -fr $(OPENCV_TARGET_DIR)/usr/share/OpenCV/doc
 endef
 OPENCV_POST_INSTALL_TARGET_HOOKS += OPENCV_CLEAN_INSTALL_DOC
 
 define OPENCV_CLEAN_INSTALL_CMAKE
-	$(RM) -f $(TARGET_DIR)/usr/share/OpenCV/OpenCVConfig*.cmake
+	$(RM) -f $(OPENCV_TARGET_DIR)/usr/share/OpenCV/OpenCVConfig*.cmake
 endef
 OPENCV_POST_INSTALL_TARGET_HOOKS += OPENCV_CLEAN_INSTALL_CMAKE
 
 ifneq ($(BR2_PACKAGE_OPENCV_INSTALL_DATA),y)
 define OPENCV_CLEAN_INSTALL_DATA
-	$(RM) -fr $(TARGET_DIR)/usr/share/OpenCV/haarcascades \
-		$(TARGET_DIR)/usr/share/OpenCV/lbpcascades
+	$(RM) -fr $(OPENCV_TARGET_DIR)/usr/share/OpenCV/haarcascades \
+		$(OPENCV_TARGET_DIR)/usr/share/OpenCV/lbpcascades
 endef
 OPENCV_POST_INSTALL_TARGET_HOOKS += OPENCV_CLEAN_INSTALL_DATA
 endif

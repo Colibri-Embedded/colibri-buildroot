@@ -111,9 +111,9 @@ define HOST_OPENSSL_INSTALL_CMDS
 endef
 
 define OPENSSL_INSTALL_TARGET_CMDS
-	$(MAKE1) -C $(@D) INSTALL_PREFIX=$(TARGET_DIR) install
-	rm -rf $(TARGET_DIR)/usr/lib/ssl
-	rm -f $(TARGET_DIR)/usr/bin/c_rehash
+	$(MAKE1) -C $(@D) INSTALL_PREFIX=$(OPENSSL_TARGET_DIR) install
+	rm -rf $(OPENSSL_TARGET_DIR)/usr/lib/ssl
+	rm -f $(OPENSSL_TARGET_DIR)/usr/bin/c_rehash
 endef
 
 # libdl has no business in a static build
@@ -129,16 +129,16 @@ endif
 ifneq ($(BR2_STATIC_LIBS),y)
 # libraries gets installed read only, so strip fails
 define OPENSSL_INSTALL_FIXUPS_SHARED
-	chmod +w $(TARGET_DIR)/usr/lib/engines/lib*.so
-	for i in $(addprefix $(TARGET_DIR)/usr/lib/,libcrypto.so.* libssl.so.*); \
-	do chmod +w $$i; done
+	$(OPENSSL_FAKEROOT) $(OPENSSL_FAKEROOT_ENV) chmod +w $(OPENSSL_TARGET_DIR)/usr/lib/engines/lib*.so
+	for i in $(addprefix $(OPENSSL_TARGET_DIR)/usr/lib/,libcrypto.so.* libssl.so.*); \
+	do $(OPENSSL_FAKEROOT) $(OPENSSL_FAKEROOT_ENV) chmod +w $$i; done
 endef
 OPENSSL_POST_INSTALL_TARGET_HOOKS += OPENSSL_INSTALL_FIXUPS_SHARED
 endif
 
 ifneq ($(BR2_PACKAGE_OPENSSL_ENGINES),y)
 define OPENSSL_REMOVE_OPENSSL_ENGINES
-	rm -rf $(TARGET_DIR)/usr/lib/engines
+	rm -rf $(OPENSSL_TARGET_DIR)/usr/lib/engines
 endef
 OPENSSL_POST_INSTALL_TARGET_HOOKS += OPENSSL_REMOVE_OPENSSL_ENGINES
 endif

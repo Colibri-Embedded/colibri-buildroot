@@ -1,0 +1,48 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     : Daniel Kesler <kesler.daniel@gmail.com>
+# 
+# Version     : 00.10
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+test -r /etc/default/dropbear && source /etc/default/dropbear
+
+[ -z $DROPBEAR_ARGS ] && DROPBEAR_ARGS=-B
+[ -z $DROPBEAR_PIDFILE ] && DROPBEAR_PIDFILE=/run/dropbear.pid
+
+DROPBEAR_ARGS="$DROPBEAR_ARGS -R"
+
+DAEMON=/usr/sbin/dropbear
+
+case "$1" in
+	start)
+		boot_msg "Starting dropbear sshd."
+		start-stop-daemon -S -q -p $DROPBEAR_PIDFILE --exec /usr/sbin/dropbear -- $DROPBEAR_ARGS
+		evaluate_retval
+		;;
+	stop)
+		boot_msg "Stopping dropbear sshd."
+		start-stop-daemon -K -q -p $DROPBEAR_PIDFILE
+		evaluate_retval
+		;;
+	restart|reload)
+		${0} stop
+		sleep 1
+		${0} start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+esac
+
+exit $?

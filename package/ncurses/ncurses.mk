@@ -86,8 +86,8 @@ define NCURSES_LINK_PC
 endef
 
 NCURSES_LINK_TARGET_LIBS = \
-	$(if $(BR2_STATIC_LIBS)$(BR2_SHARED_STATIC_LIBS),$(call NCURSES_LINK_LIBS_STATIC,$(TARGET_DIR));) \
-	$(if $(BR2_SHARED_LIBS)$(BR2_SHARED_STATIC_LIBS),$(call NCURSES_LINK_LIBS_SHARED,$(TARGET_DIR)))
+	$(if $(BR2_STATIC_LIBS)$(BR2_SHARED_STATIC_LIBS),$(call NCURSES_LINK_LIBS_STATIC,$(NCURSES_TARGET_DIR));) \
+	$(if $(BR2_SHARED_LIBS)$(BR2_SHARED_STATIC_LIBS),$(call NCURSES_LINK_LIBS_SHARED,$(NCURSES_TARGET_DIR)))
 NCURSES_LINK_STAGING_LIBS = \
 	$(if $(BR2_STATIC_LIBS)$(BR2_SHARED_STATIC_LIBS),$(call NCURSES_LINK_LIBS_STATIC,$(STAGING_DIR));) \
 	$(if $(BR2_SHARED_LIBS)$(BR2_SHARED_STATIC_LIBS),$(call NCURSES_LINK_LIBS_SHARED,$(STAGING_DIR)))
@@ -97,8 +97,8 @@ NCURSES_LINK_STAGING_PC = $(call NCURSES_LINK_PC,$(STAGING_DIR))
 NCURSES_CONF_OPTS += --enable-ext-colors
 NCURSES_ABI_VERSION = 6
 define NCURSES_INSTALL_TARGET_256_COLORS_TERMINFO
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/x/xterm+256color $(TARGET_DIR)/usr/share/terminfo/x
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/x/xterm-256color $(TARGET_DIR)/usr/share/terminfo/x
+	cp -dpf $(STAGING_DIR)/usr/share/terminfo/x/xterm+256color $(NCURSES_TARGET_DIR)/usr/share/terminfo/x
+	cp -dpf $(STAGING_DIR)/usr/share/terminfo/x/xterm-256color $(NCURSES_TARGET_DIR)/usr/share/terminfo/x
 endef
 
 NCURSES_POST_INSTALL_STAGING_HOOKS += NCURSES_LINK_STAGING_LIBS
@@ -124,7 +124,7 @@ ifneq ($(BR2_STATIC_LIBS),y)
 define NCURSES_INSTALL_TARGET_LIBS
 	for lib in $(NCURSES_LIBS-y:%=lib%); do \
 		cp -dpf $(NCURSES_DIR)/lib/$${lib}$(NCURSES_LIB_SUFFIX).so* \
-			$(TARGET_DIR)/usr/lib/; \
+			$(NCURSES_TARGET_DIR)/usr/lib/; \
 	done
 endef
 endif
@@ -133,34 +133,34 @@ ifeq ($(BR2_PACKAGE_NCURSES_TARGET_PROGS),y)
 define NCURSES_INSTALL_TARGET_PROGS
 	for x in $(NCURSES_PROGS); do \
 		$(INSTALL) -m 0755 $(NCURSES_DIR)/progs/$$x \
-			$(TARGET_DIR)/usr/bin/$$x; \
+			$(NCURSES_TARGET_DIR)/usr/bin/$$x; \
 	done
-	ln -sf tset $(TARGET_DIR)/usr/bin/reset
+	ln -sf tset $(NCURSES_TARGET_DIR)/usr/bin/reset
 endef
 endif
 
 define NCURSES_INSTALL_TARGET_CMDS
-	mkdir -p $(TARGET_DIR)/usr/lib
+	mkdir -p $(NCURSES_TARGET_DIR)/usr/lib
 	$(NCURSES_INSTALL_TARGET_LIBS)
 	$(NCURSES_LINK_TARGET_LIBS)
 	$(NCURSES_INSTALL_TARGET_PROGS)
-	ln -snf /usr/share/terminfo $(TARGET_DIR)/usr/lib/terminfo
-	mkdir -p $(TARGET_DIR)/usr/share/terminfo/x
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/x/xterm $(TARGET_DIR)/usr/share/terminfo/x
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/x/xterm-color $(TARGET_DIR)/usr/share/terminfo/x
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/x/xterm-xfree86 $(TARGET_DIR)/usr/share/terminfo/x
+	ln -snf /usr/share/terminfo $(NCURSES_TARGET_DIR)/usr/lib/terminfo
+	mkdir -p $(NCURSES_TARGET_DIR)/usr/share/terminfo/x
+	cp -dpf $(STAGING_DIR)/usr/share/terminfo/x/xterm $(NCURSES_TARGET_DIR)/usr/share/terminfo/x
+	cp -dpf $(STAGING_DIR)/usr/share/terminfo/x/xterm-color $(NCURSES_TARGET_DIR)/usr/share/terminfo/x
+	cp -dpf $(STAGING_DIR)/usr/share/terminfo/x/xterm-xfree86 $(NCURSES_TARGET_DIR)/usr/share/terminfo/x
 	$(NCURSES_INSTALL_TARGET_256_COLORS_TERMINFO)
-	mkdir -p $(TARGET_DIR)/usr/share/terminfo/v
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/v/vt100 $(TARGET_DIR)/usr/share/terminfo/v
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/v/vt102 $(TARGET_DIR)/usr/share/terminfo/v
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/v/vt200 $(TARGET_DIR)/usr/share/terminfo/v
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/v/vt220 $(TARGET_DIR)/usr/share/terminfo/v
-	mkdir -p $(TARGET_DIR)/usr/share/terminfo/a
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/a/ansi $(TARGET_DIR)/usr/share/terminfo/a
-	mkdir -p $(TARGET_DIR)/usr/share/terminfo/l
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/l/linux $(TARGET_DIR)/usr/share/terminfo/l
-	mkdir -p $(TARGET_DIR)/usr/share/terminfo/s
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/s/screen $(TARGET_DIR)/usr/share/terminfo/s
+	mkdir -p $(NCURSES_TARGET_DIR)/usr/share/terminfo/v
+	cp -dpf $(STAGING_DIR)/usr/share/terminfo/v/vt100 $(NCURSES_TARGET_DIR)/usr/share/terminfo/v
+	cp -dpf $(STAGING_DIR)/usr/share/terminfo/v/vt102 $(NCURSES_TARGET_DIR)/usr/share/terminfo/v
+	cp -dpf $(STAGING_DIR)/usr/share/terminfo/v/vt200 $(NCURSES_TARGET_DIR)/usr/share/terminfo/v
+	cp -dpf $(STAGING_DIR)/usr/share/terminfo/v/vt220 $(NCURSES_TARGET_DIR)/usr/share/terminfo/v
+	mkdir -p $(NCURSES_TARGET_DIR)/usr/share/terminfo/a
+	cp -dpf $(STAGING_DIR)/usr/share/terminfo/a/ansi $(NCURSES_TARGET_DIR)/usr/share/terminfo/a
+	mkdir -p $(NCURSES_TARGET_DIR)/usr/share/terminfo/l
+	cp -dpf $(STAGING_DIR)/usr/share/terminfo/l/linux $(NCURSES_TARGET_DIR)/usr/share/terminfo/l
+	mkdir -p $(NCURSES_TARGET_DIR)/usr/share/terminfo/s
+	cp -dpf $(STAGING_DIR)/usr/share/terminfo/s/screen $(NCURSES_TARGET_DIR)/usr/share/terminfo/s
 endef # NCURSES_INSTALL_TARGET_CMDS
 
 #
