@@ -1,0 +1,7 @@
+MYSQLD_USER=mysql
+MYSQLD_SOCK=/run/mysqld.sock
+MYSQLD_PIDFILE=/run/mysqld.pid
+MYSQLD_DATADIR=/var/lib/mysql
+MYSQLD_WAIT=yes
+MYSQLD_WAIT_TIMEOUT=60
+

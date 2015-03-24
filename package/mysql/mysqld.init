@@ -1,0 +1,59 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     : Daniel Kesler
+# 
+# Version     : 00.03
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+source /etc/default/mysqld
+
+case "$1" in
+	start)
+		if [ ! -d $MYSQLD_DATADIR/mysql ] ; then
+			boot_msg "Creating MySQL system tables."
+			mysql_install_db --user=$MYSQLD_USER --datadir=$MYSQLD_DATADIR &> /dev/null
+			evaluate_retval
+		fi
+
+		# start-stop-daemon is not used because mysqld has its own wrapper script.
+		boot_msg "Starting mysql server."
+		/usr/bin/mysqld_safe --basedir=/usr --datadir=$MYSQLD_DATADIR --pid-file=$MYSQLD_PIDFILE &> /dev/null & 
+		evaluate_retval
+		
+		if [ "x$MYSQLD_WAIT" == "xyes" ]; then
+			boot_msg "Waiting for mysql server."
+			wait_for_file_create $MYSQLD_SOCK $MYSQLD_WAIT_TIMEOUT
+			evaluate_retval
+		fi
+		
+		;;
+	stop)
+		boot_msg "Stopping mysql server."
+		if test -f $MYSQLD_PIDFILE ; then
+			kill `cat $MYSQLD_PIDFILE` || failed=1
+			wait_for_pid_end `cat $MYSQLD_PIDFILE` 10
+		fi
+		(exit ${failed})
+		evaluate_retval
+		;;
+	restart|reload)
+		${0} stop
+		sleep 1
+		${0} start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restarts}"
+	exit 1
+esac
+
+exit $?

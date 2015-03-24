@@ -18,6 +18,55 @@ config BR2_PACKAGE_MYSQL_SERVER
 	bool "MySQL server"
 	help
 	  Install the MySQL server on the target.
+	  
+if BR2_PACKAGE_MYSQL_SERVER
+
+config BR2_PACKAGE_MYSQL_SERVER_PARTITION
+	bool "Partitioning Support"
+	help
+	  MySQL Partitioning Support (static).
+	  
+config BR2_PACKAGE_MYSQL_SERVER_ARCHIVE
+	bool "Archive Storage Engine"
+	help
+	  Build the MySQL Archive Storage Engine plugin.
+	  
+config BR2_PACKAGE_MYSQL_SERVER_BLACKHOLE
+	bool "Blackhole Storage Engine"
+	help
+	  Build the Basic Write-only Read-never tables plugin.
+	  
+config BR2_PACKAGE_MYSQL_SERVER_CSV
+	bool "CSV Storage Engine"
+	help
+	  Stores tables in text CSV format (static).
+	  
+config BR2_PACKAGE_MYSQL_SERVER_EXAMPLE
+	bool "Partitioning Support"
+	help
+	  Build Example for Storage Engines for developers as a plugin.
+	  
+config BR2_PACKAGE_MYSQL_SERVER_FEDERATED
+	bool "Federated Storage Engine"
+	help
+	  Connects to tables on remote MySQL servers.
+	  	  
+config BR2_PACKAGE_MYSQL_SERVER_INNOBASE_PLUGIN
+	bool "InnoDB Storage Engine"
+	help
+	  Transactional Tables using InnoDB.
+	  
+config BR2_PACKAGE_MYSQL_SERVER_MYISAMMRG
+	bool "MyISAM MERGE Engine"
+	help
+	  Merge multiple MySQL tables into one (static).
+	  
+config BR2_PACKAGE_MYSQL_SERVER_NBDCLUSTER
+	bool "MySQL Cluster Storage Engine"
+	help
+	  High Availability Clustered tables (static).
+
+endif
 
 endif
 

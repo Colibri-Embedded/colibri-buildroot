@@ -61,10 +61,10 @@ endef
 
 ifeq ($(BR2_USE_MMU),y)
 define DROPBEAR_INSTALL_INIT_SYSV
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT) $(INSTALL) -D -m 0755 package/lighttpd/dropbear.init \
-		$(DROPBEAR_FAKEROOT)/etc/init.d/dropbear
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT) $(INSTALL) -D -m 0755 package/lighttpd/dropbear.default \
-		$(DROPBEAR_FAKEROOT)/etc/default/dropbear
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/dropbear/dropbear.init \
+		$(DROPBEAR_TARGET_DIR)/etc/init.d/dropbear
+	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/dropbear/dropbear.default \
+		$(DROPBEAR_TARGET_DIR)/etc/default/dropbear
 		
 	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(DROPBEAR_TARGET_DIR)/etc/rc.d/rc.startup.d	
 	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(DROPBEAR_TARGET_DIR)/etc/rc.d/rc.shutdown.d

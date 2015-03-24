@@ -50,21 +50,64 @@ HOST_MYSQL_CONF_OPTS = \
 	--disable-mysql-maintainer-mode
 
 MYSQL_CONF_OPTS += \
-	--localstatedir=/var/mysql \
+	--localstatedir=/run \
+	--with-unix-socket-path=/run/mysqld.sock \
 	--with-atomic-ops=up \
-	--with-embedded-server \
-	--without-query-cache \
-	--without-plugin-partition \
-	--without-plugin-daemon_example \
-	--without-plugin-ftexample \
-	--without-plugin-archive \
-	--without-plugin-blackhole \
-	--without-plugin-example \
-	--without-plugin-federated \
-	--without-plugin-ibmdb2i \
-	--without-plugin-innobase \
-	--without-plugin-innodb_plugin \
-	--without-plugin-ndbcluster
+	--without-query-cache
+
+
+ifeq ($(BR2_PACKAGE_MYSQL_SERVER_PARTITION),y)
+	BR2_PACKAGE_MYSQL_SERVER_PLUGINS += partition
+else
+	MYSQL_CONF_OPTS += --without-plugin-partition
+endif
+
+ifeq ($(BR2_PACKAGE_MYSQL_SERVER_ARCHIVE),y)
+	BR2_PACKAGE_MYSQL_SERVER_PLUGINS += archive
+else
+	MYSQL_CONF_OPTS += --without-plugin-archive
+endif
+
+ifeq ($(BR2_PACKAGE_MYSQL_SERVER_BLACKHOLE),y)
+	BR2_PACKAGE_MYSQL_SERVER_PLUGINS += blackhole
+else
+	MYSQL_CONF_OPTS += --without-plugin-blackhole
+endif
+
+ifeq ($(BR2_PACKAGE_MYSQL_SERVER_CSV),y)
+	BR2_PACKAGE_MYSQL_SERVER_PLUGINS += csv
+else
+	MYSQL_CONF_OPTS += --without-plugin-partition
+endif
+
+ifeq ($(BR2_PACKAGE_MYSQL_SERVER_EXAMPLE),y)
+	BR2_PACKAGE_MYSQL_SERVER_PLUGINS += example
+else
+	MYSQL_CONF_OPTS += --without-plugin-example
+endif
+
+ifeq ($(BR2_PACKAGE_MYSQL_SERVER_FEDERATED),y)
+	BR2_PACKAGE_MYSQL_SERVER_PLUGINS += federated
+else
+	MYSQL_CONF_OPTS += --without-plugin-federated
+endif
+
+ifeq ($(BR2_PACKAGE_MYSQL_SERVER_INNOBASE_PLUGIN),y)
+	BR2_PACKAGE_MYSQL_SERVER_PLUGINS += innodb_plugin
+else
+	MYSQL_CONF_OPTS += --without-plugin-innodb_plugin
+endif
+
+ifeq ($(BR2_PACKAGE_MYSQL_SERVER_NBDCLUSTER),y)
+	BR2_PACKAGE_MYSQL_SERVER_PLUGINS += ndbcluster
+else
+	MYSQL_CONF_OPTS += --without-plugin-ndbcluster
+endif
+
+ifneq ($(BR2_PACKAGE_MYSQL_SERVER_PLUGINS),)
+	BR2_PACKAGE_MYSQL_SERVER_PLUGINS_ARG = $(subst $(space),$(comma),$(BR2_PACKAGE_MYSQL_SERVER_PLUGINS))
+	MYSQL_CONF_OPTS += --with-plugins-$(subst $(space),$(comma),$(BR2_PACKAGE_MYSQL_SERVER_PLUGINS))
+endif
 
 # Debugging is only available for the server, so no need for
 # this if-block outside of the server if-block
@@ -99,8 +142,18 @@ endef
 MYSQL_POST_INSTALL_TARGET_HOOKS += MYSQL_ADD_FOLDER
 
 define MYSQL_INSTALL_INIT_SYSV
-	$(INSTALL) -D -m 0755 package/mysql/S97mysqld \
-		$(MYSQL_TARGET_DIR)/etc/init.d/S97mysqld
+	$(MYSQL_FAKEROOT) $(MYSQL_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/mysql/mysqld.init \
+		$(MYSQL_TARGET_DIR)/etc/init.d/mysqld
+	$(MYSQL_FAKEROOT) $(MYSQL_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/mysql/mysqld.default \
+		$(MYSQL_TARGET_DIR)/etc/default/mysqld
+		
+	$(MYSQL_FAKEROOT) $(MYSQL_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(MYSQL_TARGET_DIR)/etc/rc.d/rc.startup.d	
+	$(MYSQL_FAKEROOT) $(MYSQL_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(MYSQL_TARGET_DIR)/etc/rc.d/rc.shutdown.d
+	
+	$(MYSQL_FAKEROOT) $(MYSQL_FAKEROOT_ENV) ln -fs ../../init.d/mysqld \
+		$(MYSQL_TARGET_DIR)/etc/rc.d/rc.startup.d/S26mysqld
+	$(MYSQL_FAKEROOT) $(MYSQL_FAKEROOT_ENV) ln -fs ../../init.d/mysqld \
+		$(MYSQL_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S26mysqld
 endef
 
 else
@@ -114,6 +167,7 @@ define MYSQL_REMOVE_TEST_PROGS
 endef
 
 define MYSQL_ADD_MYSQL_LIB_PATH
+	$(INSTALL) -d $(MYSQL_TARGET_DIR)/etc
 	echo "/usr/lib/mysql" >> $(MYSQL_TARGET_DIR)/etc/ld.so.conf
 endef
 
