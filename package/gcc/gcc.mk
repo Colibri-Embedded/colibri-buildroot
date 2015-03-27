@@ -21,6 +21,8 @@ endif
 
 GCC_SOURCE ?= gcc-$(GCC_VERSION).tar.bz2
 
+GCC_ARCHIVE_TARGET = NO
+
 #
 # Xtensa special hook
 #

@@ -3,6 +3,8 @@
 # TARGET_FINALIZE_HOOKS, to be applied just after all packages
 # have been built.
 
+TOOLCHAIN_ARCHIVE_TARGET = NO
+
 # Install default nsswitch.conf file if the skeleton doesn't provide it
 ifeq ($(BR2_TOOLCHAIN_USES_GLIBC),y)
 define GLIBC_COPY_NSSWITCH_FILE

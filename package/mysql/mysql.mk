@@ -146,6 +146,8 @@ define MYSQL_INSTALL_INIT_SYSV
 		$(MYSQL_TARGET_DIR)/etc/init.d/mysqld
 	$(MYSQL_FAKEROOT) $(MYSQL_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/mysql/mysqld.default \
 		$(MYSQL_TARGET_DIR)/etc/default/mysqld
+	$(MYSQL_FAKEROOT) $(MYSQL_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/mysql/my.cnf \
+		$(MYSQL_TARGET_DIR)/etc/mysql/my.cnf
 		
 	$(MYSQL_FAKEROOT) $(MYSQL_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(MYSQL_TARGET_DIR)/etc/rc.d/rc.startup.d	
 	$(MYSQL_FAKEROOT) $(MYSQL_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(MYSQL_TARGET_DIR)/etc/rc.d/rc.shutdown.d

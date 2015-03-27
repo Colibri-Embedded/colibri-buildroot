@@ -28,6 +28,8 @@ GLIBC_DEPENDENCIES = host-gcc-initial linux-headers host-gawk
 
 GLIBC_SUBDIR = build
 
+GLIBC_ARCHIVE_TARGET = NO
+
 GLIBC_INSTALL_STAGING = YES
 
 GLIBC_INSTALL_STAGING_OPTS = install_root=$(STAGING_DIR) install

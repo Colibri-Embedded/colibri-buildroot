@@ -243,7 +243,7 @@ $(BUILD_DIR)/%/.stamp_target_installed:
 		$(RM) -f $(addprefix $(TARGET_DIR)/usr/bin/,$($(PKG)_CONFIG_SCRIPTS)) ; \
 	fi
 	
-	$(Q)if [ "x$($(PKG)_SKIP_PACKAGE_TAR)" != "xYES" ]; then \
+	$(Q)if [ "x$($(PKG)_ARCHIVE_TARGET)" != "xYES" ]; then \
 		$($(PKG)_FAKEROOT) $($(PKG)_FAKEROOT_ENV) -- $(TAR) -cf $($(PKG)_TARGET_ARCHIVE) -C $($(PKG)_TARGET_DIR) . ; \
 		$(RM) -rf $($(PKG)_TARGET_DIR) ; \
 		$(RM) $(@D)/.fakeroot_env ; \
@@ -251,7 +251,7 @@ $(BUILD_DIR)/%/.stamp_target_installed:
 	
 	$(Q)touch $@
 	@$(call step_end,install-target)
-
+	
 # Remove package sources
 $(BUILD_DIR)/%/.stamp_dircleaned:
 	rm -Rf $(@D)
@@ -452,12 +452,14 @@ $(2)_FINAL_DEPENDENCIES = $$(sort $$($(2)_DEPENDENCIES))
 $(2)_INSTALL_STAGING		?= NO
 $(2)_INSTALL_IMAGES		?= NO
 $(2)_INSTALL_TARGET		?= YES
+$(2)_ARCHIVE_TARGET		?= YES
 
 # define sub-target stamps
 $(2)_TARGET_INSTALL_TARGET =	$$($(2)_DIR)/.stamp_target_installed
 $(2)_TARGET_INSTALL_STAGING =	$$($(2)_DIR)/.stamp_staging_installed
 $(2)_TARGET_INSTALL_IMAGES =	$$($(2)_DIR)/.stamp_images_installed
 $(2)_TARGET_INSTALL_HOST =      $$($(2)_DIR)/.stamp_host_installed
+$(2)_TARGET_ARCHIVE_TARGET =	$$($(2)_DIR)/.stamp_target_archived
 $(2)_TARGET_BUILD =		$$($(2)_DIR)/.stamp_built
 $(2)_TARGET_CONFIGURE =		$$($(2)_DIR)/.stamp_configured
 $(2)_TARGET_RSYNC =	        $$($(2)_DIR)/.stamp_rsynced
