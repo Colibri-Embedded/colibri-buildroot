@@ -37,7 +37,7 @@ endef
 
 define WHOIS_INSTALL_TARGET_CMDS
 	$(WHOIS_MAKE_ENV) $(MAKE) $(WHOIS_MAKE_OPTS) \
-		BASEDIR="$(TARGET_DIR)" install -C $(@D)
+		BASEDIR="$(WHOIS_TARGET_DIR)" install -C $(@D)
 endef
 
 $(eval $(generic-package))

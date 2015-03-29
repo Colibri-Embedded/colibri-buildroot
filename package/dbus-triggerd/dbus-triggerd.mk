@@ -14,7 +14,7 @@ define DBUS_TRIGGERD_BUILD_CMDS
 endef
 
 define DBUS_TRIGGERD_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) DESTDIR="$(TARGET_DIR)" -C $(@D) install
+	$(TARGET_MAKE_ENV) $(MAKE) DESTDIR="$(DBUS_TRIGGERD_TARGET_DIR)" -C $(@D) install
 endef
 
 $(eval $(generic-package))

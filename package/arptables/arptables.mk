@@ -15,7 +15,7 @@ define ARPTABLES_BUILD_CMDS
 endef
 
 define ARPTABLES_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 755 -D $(@D)/arptables $(TARGET_DIR)/usr/sbin/arptables
+	$(INSTALL) -m 755 -D $(@D)/arptables $(ARPTABLES_TARGET_DIR)/usr/sbin/arptables
 endef
 
 $(eval $(generic-package))

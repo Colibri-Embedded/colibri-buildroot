@@ -22,8 +22,8 @@ B43_FIRMWARE_REDISTRIBUTE = NO
 B43_FIRMWARE_DEPENDENCIES = host-b43-fwcutter
 
 define B43_FIRMWARE_INSTALL_TARGET_CMDS
-	$(INSTALL) -d -m 0755 $(TARGET_DIR)/lib/firmware/
-	$(HOST_DIR)/usr/bin/b43-fwcutter -w $(TARGET_DIR)/lib/firmware/ $(@D)/$(B43_FIRMWARE_DRIVER_FILE)
+	$(INSTALL) -d -m 0755 $(B43_FIRMWARE_TARGET_DIR)/lib/firmware/
+	$(HOST_DIR)/usr/bin/b43-fwcutter -w $(B43_FIRMWARE_TARGET_DIR)/lib/firmware/ $(@D)/$(B43_FIRMWARE_DRIVER_FILE)
 endef
 
 $(eval $(generic-package))

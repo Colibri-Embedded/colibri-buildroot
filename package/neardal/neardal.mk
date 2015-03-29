@@ -22,7 +22,7 @@ NEARDAL_DEPENDENCIES += libedit
 endif
 
 define NEARDAL_INSTALL_NCL
-	$(INSTALL) -m 0755 -D $(@D)/ncl/ncl $(TARGET_DIR)/usr/bin/ncl
+	$(INSTALL) -m 0755 -D $(@D)/ncl/ncl $(NEARDAL_TARGET_DIR)/usr/bin/ncl
 endef
 
 ifeq ($(BR2_PACKAGE_NEARDAL_NCL),y)

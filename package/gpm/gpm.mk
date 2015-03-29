@@ -55,14 +55,14 @@ ifeq ($(BR2_PACKAGE_GPM_INSTALL_TEST_TOOLS),)
 define GPM_REMOVE_TEST_TOOLS_FROM_TARGET
 	for tools in mev hltest mouse-test display-buttons \
 		get-versions display-coords; do \
-			rm -f $(TARGET_DIR)/usr/bin/$$tools ; \
+			rm -f $(GPM_TARGET_DIR)/usr/bin/$$tools ; \
 	done
 endef
 GPM_POST_INSTALL_TARGET_HOOKS += GPM_REMOVE_TEST_TOOLS_FROM_TARGET
 endif
 
 define GPM_INSTALL_GPM_ROOT_CONF_ON_TARGET
-	$(INSTALL) -m 0644 -D $(@D)/conf/gpm-root.conf $(TARGET_DIR)/etc/
+	$(INSTALL) -m 0644 -D $(@D)/conf/gpm-root.conf $(GPM_TARGET_DIR)/etc/
 endef
 
 GPM_POST_INSTALL_TARGET_HOOKS += GPM_INSTALL_GPM_ROOT_CONF_ON_TARGET

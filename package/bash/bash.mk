@@ -44,8 +44,8 @@ endif
 # Make /bin/sh -> bash (no other shell, better than busybox shells)
 define BASH_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) \
-		DESTDIR=$(TARGET_DIR) exec_prefix=/ install
-	rm -f $(TARGET_DIR)/bin/bashbug
+		DESTDIR=$(BASH_TARGET_DIR) exec_prefix=/ install
+	rm -f $(BASH_TARGET_DIR)/bin/bashbug
 endef
 
 $(eval $(autotools-package))

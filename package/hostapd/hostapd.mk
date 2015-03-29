@@ -84,9 +84,9 @@ endef
 
 define HOSTAPD_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/$(HOSTAPD_SUBDIR)/hostapd \
-		$(TARGET_DIR)/usr/sbin/hostapd
+		$(HOSTAPD_TARGET_DIR)/usr/sbin/hostapd
 	$(INSTALL) -m 0755 -D $(@D)/$(HOSTAPD_SUBDIR)/hostapd_cli \
-		$(TARGET_DIR)/usr/bin/hostapd_cli
+		$(HOSTAPD_TARGET_DIR)/usr/bin/hostapd_cli
 endef
 
 $(eval $(generic-package))

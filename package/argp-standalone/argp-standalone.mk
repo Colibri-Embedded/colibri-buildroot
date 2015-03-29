@@ -18,8 +18,8 @@ define ARGP_STANDALONE_INSTALL_STAGING_CMDS
 endef
 
 define ARGP_STANDALONE_INSTALL_TARGET_CMDS
-	$(INSTALL) -D $(@D)/libargp.a $(TARGET_DIR)/usr/lib/libargp.a
-	$(INSTALL) -D $(@D)/argp.h $(TARGET_DIR)/usr/include/argp.h
+	$(INSTALL) -D $(@D)/libargp.a $(ARGP_STANDALONE_TARGET_DIR)/usr/lib/libargp.a
+	$(INSTALL) -D $(@D)/argp.h $(ARGP_STANDALONE_TARGET_DIR)/usr/include/argp.h
 endef
 
 $(eval $(autotools-package))

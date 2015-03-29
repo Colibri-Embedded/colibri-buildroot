@@ -40,15 +40,15 @@ PRBOOM_POST_CONFIGURE_HOOKS += PRBOOM_BIG_ENDIAN_FIXUP
 endif
 
 define PRBOOM_INSTALL_TARGET_CMDS
-	$(INSTALL) -D $(@D)/src/prboom $(TARGET_DIR)/usr/games/prboom
-	$(INSTALL) -D $(@D)/src/prboom-game-server $(TARGET_DIR)/usr/games/prboom-game-server
-	$(INSTALL) -D $(@D)/data/prboom.wad $(TARGET_DIR)/usr/share/games/doom/prboom.wad
+	$(INSTALL) -D $(@D)/src/prboom $(PRBOOM_TARGET_DIR)/usr/games/prboom
+	$(INSTALL) -D $(@D)/src/prboom-game-server $(PRBOOM_TARGET_DIR)/usr/games/prboom-game-server
+	$(INSTALL) -D $(@D)/data/prboom.wad $(PRBOOM_TARGET_DIR)/usr/share/games/doom/prboom.wad
 endef
 
 define PRBOOM_UINSTALL_TARGET_CMDS
-	rm -rf $(TARGET_DIR)/usr/share/games/doom/prboom.wad \
-		$(TARGET_DIR)/usr/games/prboom-game-server \
-		$(TARGET_DIR)/usr/games/prboom
+	rm -rf $(PRBOOM_TARGET_DIR)/usr/share/games/doom/prboom.wad \
+		$(PRBOOM_TARGET_DIR)/usr/games/prboom-game-server \
+		$(PRBOOM_TARGET_DIR)/usr/games/prboom
 endef
 
 $(eval $(autotools-package))

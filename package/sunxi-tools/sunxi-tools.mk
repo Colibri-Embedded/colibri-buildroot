@@ -30,7 +30,7 @@ define SUNXI_TOOLS_BUILD_CMDS
 endef
 
 define SUNXI_TOOLS_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/nand-part $(TARGET_DIR)/usr/bin/nand-part
+	$(INSTALL) -D -m 0755 $(@D)/nand-part $(SUNXI_TOOLS_TARGET_DIR)/usr/bin/nand-part
 endef
 
 $(eval $(generic-package))

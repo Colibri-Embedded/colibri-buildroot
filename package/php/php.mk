@@ -9,7 +9,7 @@ PHP_SITE = http://www.php.net/distributions
 PHP_SOURCE = php-$(PHP_VERSION).tar.xz
 PHP_INSTALL_STAGING = YES
 PHP_INSTALL_STAGING_OPTS = INSTALL_ROOT=$(STAGING_DIR) install
-PHP_INSTALL_TARGET_OPTS = INSTALL_ROOT=$(TARGET_DIR) install
+PHP_INSTALL_TARGET_OPTS = INSTALL_ROOT=$(PHP_TARGET_DIR) install
 PHP_DEPENDENCIES = host-pkgconf
 PHP_LICENSE = PHP
 PHP_LICENSE_FILES = LICENSE
@@ -231,17 +231,17 @@ endif
 define PHP_EXTENSIONS_FIXUP
 	$(SED) "/prefix/ s:/usr:$(STAGING_DIR)/usr:" \
 		$(STAGING_DIR)/usr/bin/phpize
-	$(SED) "/extension_dir/ s:/usr:$(TARGET_DIR)/usr:" \
+	$(SED) "/extension_dir/ s:/usr:$(PHP_TARGET_DIR)/usr:" \
 		$(STAGING_DIR)/usr/bin/php-config
 endef
 
 PHP_POST_INSTALL_TARGET_HOOKS += PHP_EXTENSIONS_FIXUP
 
 define PHP_INSTALL_FIXUP
-	rm -rf $(TARGET_DIR)/usr/lib/php
-	rm -f $(TARGET_DIR)/usr/bin/phpize
+	rm -rf $(PHP_TARGET_DIR)/usr/lib/php
+	rm -f $(PHP_TARGET_DIR)/usr/bin/phpize
 	$(INSTALL) -D -m 0755 $(PHP_DIR)/php.ini-production \
-		$(TARGET_DIR)/etc/php.ini
+		$(PHP_TARGET_DIR)/etc/php.ini
 endef
 
 PHP_POST_INSTALL_TARGET_HOOKS += PHP_INSTALL_FIXUP

@@ -18,11 +18,11 @@ endef
 
 define TI_UTILS_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/calibrator \
-		$(TARGET_DIR)/usr/bin/calibrator
+		$(TI_UTILS_TARGET_DIR)/usr/bin/calibrator
 	$(INSTALL) -m 0755 -D $(@D)/scripts/go.sh \
-		$(TARGET_DIR)/usr/share/ti-utils/scripts/go.sh
+		$(TI_UTILS_TARGET_DIR)/usr/share/ti-utils/scripts/go.sh
 
-	cp -r $(@D)/ini_files $(TARGET_DIR)/usr/share/ti-utils
+	cp -r $(@D)/ini_files $(TI_UTILS_TARGET_DIR)/usr/share/ti-utils
 endef
 
 $(eval $(generic-package))

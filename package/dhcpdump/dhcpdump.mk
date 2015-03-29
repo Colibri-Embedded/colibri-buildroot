@@ -20,7 +20,7 @@ define DHCPDUMP_BUILD_CMDS
 endef
 
 define DHCPDUMP_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/dhcpdump $(TARGET_DIR)/usr/bin/dhcpdump
+	$(INSTALL) -m 0755 -D $(@D)/dhcpdump $(DHCPDUMP_TARGET_DIR)/usr/bin/dhcpdump
 endef
 
 $(eval $(generic-package))

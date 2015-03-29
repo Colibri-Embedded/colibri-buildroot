@@ -19,7 +19,7 @@ GIFLIB_BINS = \
 	text2gif
 
 define GIFLIB_BINS_CLEANUP
-	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,$(GIFLIB_BINS))
+	rm -f $(addprefix $(GIFLIB_TARGET_DIR)/usr/bin/,$(GIFLIB_BINS))
 endef
 
 GIFLIB_POST_INSTALL_TARGET_HOOKS += GIFLIB_BINS_CLEANUP

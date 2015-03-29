@@ -52,19 +52,19 @@ TCL_PRE_CONFIGURE_HOOKS += TCL_REMOVE_PACKAGES
 
 ifeq ($(BR2_PACKAGE_TCL_DEL_ENCODINGS),y)
 define TCL_REMOVE_ENCODINGS
-	rm -rf $(TARGET_DIR)/usr/lib/tcl$(TCL_VERSION_MAJOR)/encoding/*
+	rm -rf $(TCL_TARGET_DIR)/usr/lib/tcl$(TCL_VERSION_MAJOR)/encoding/*
 endef
 TCL_POST_INSTALL_TARGET_HOOKS += TCL_REMOVE_ENCODINGS
 endif
 
 ifeq ($(BR2_PACKAGE_TCL_SHLIB_ONLY),y)
 define TCL_REMOVE_TCLSH
-	rm -f $(TARGET_DIR)/usr/bin/tclsh$(TCL_VERSION_MAJOR)
+	rm -f $(TCL_TARGET_DIR)/usr/bin/tclsh$(TCL_VERSION_MAJOR)
 endef
 TCL_POST_INSTALL_TARGET_HOOKS += TCL_REMOVE_TCLSH
 else
 define TCL_SYMLINK_TCLSH
-	ln -sf tclsh$(TCL_VERSION_MAJOR) $(TARGET_DIR)/usr/bin/tclsh
+	ln -sf tclsh$(TCL_VERSION_MAJOR) $(TCL_TARGET_DIR)/usr/bin/tclsh
 endef
 TCL_POST_INSTALL_TARGET_HOOKS += TCL_SYMLINK_TCLSH
 endif
@@ -74,10 +74,10 @@ endif
 # .msg name which makes it difficult to save the correct locales per the
 # configured whitelist.
 define TCL_REMOVE_EXTRA
-	rm -fr $(TARGET_DIR)/usr/lib/tclConfig.sh \
-		$(TARGET_DIR)/usr/lib/tclooConfig.sh \
-		$(TARGET_DIR)/usr/lib/tcl$(TCL_VERSION_MAJOR)/tclAppInit.c \
-		$(TARGET_DIR)/usr/lib/tcl$(TCL_VERSION_MAJOR)/msgs
+	rm -fr $(TCL_TARGET_DIR)/usr/lib/tclConfig.sh \
+		$(TCL_TARGET_DIR)/usr/lib/tclooConfig.sh \
+		$(TCL_TARGET_DIR)/usr/lib/tcl$(TCL_VERSION_MAJOR)/tclAppInit.c \
+		$(TCL_TARGET_DIR)/usr/lib/tcl$(TCL_VERSION_MAJOR)/msgs
 endef
 TCL_POST_INSTALL_TARGET_HOOKS += TCL_REMOVE_EXTRA
 

@@ -24,7 +24,7 @@ endef
 define SCHIFRA_INSTALL_EXAMPLES
 	cd $(@D) && for i in `find -type f -name 'schifra_*' -executable` ; \
 	do \
-		$(INSTALL) -m 0755 -D $$i $(TARGET_DIR)/usr/bin/$$i; \
+		$(INSTALL) -m 0755 -D $$i $(SCHIFRA_TARGET_DIR)/usr/bin/$$i; \
 	done
 endef
 
@@ -33,7 +33,7 @@ endif
 
 define SCHIFRA_INSTALL_TARGET_CMDS
 	cd $(@D) && for i in schifra_*.hpp; do \
-		$(INSTALL) -m 0644 -D $$i $(TARGET_DIR)/usr/include/$$i; done
+		$(INSTALL) -m 0644 -D $$i $(SCHIFRA_TARGET_DIR)/usr/include/$$i; done
 endef
 
 define SCHIFRA_INSTALL_STAGING_CMDS

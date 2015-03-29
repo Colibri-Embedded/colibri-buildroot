@@ -20,7 +20,7 @@ endef
 ifeq ($(BR2_STATIC_LIBS),y)
 define EBTABLES_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/$(EBTABLES_SUBDIR)/static \
-		$(TARGET_DIR)/sbin/ebtables
+		$(EBTABLES_TARGET_DIR)/sbin/ebtables
 endef
 else
 define EBTABLES_INSTALL_TARGET_CMDS
@@ -28,11 +28,11 @@ define EBTABLES_INSTALL_TARGET_CMDS
 		$(@D)/$(EBTABLES_SUBDIR)/extensions/*.so; \
 		do \
 		$(INSTALL) -m 0755 -D $${so} \
-			$(TARGET_DIR)/lib/ebtables/`basename $${so}` || exit 1; \
+			$(EBTABLES_TARGET_DIR)/lib/ebtables/`basename $${so}` || exit 1; \
 	done
 	$(INSTALL) -m 0755 -D $(@D)/$(EBTABLES_SUBDIR)/ebtables \
-		$(TARGET_DIR)/sbin/ebtables
-	$(INSTALL) -m 0644 -D $(@D)/ethertypes $(TARGET_DIR)/etc/ethertypes
+		$(EBTABLES_TARGET_DIR)/sbin/ebtables
+	$(INSTALL) -m 0644 -D $(@D)/ethertypes $(EBTABLES_TARGET_DIR)/etc/ethertypes
 endef
 endif
 

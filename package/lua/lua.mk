@@ -97,7 +97,7 @@ define LUA_INSTALL_STAGING_CMDS
 endef
 
 define LUA_INSTALL_TARGET_CMDS
-	$(MAKE) INSTALL_TOP="$(TARGET_DIR)/usr" -C $(@D) install
+	$(MAKE) INSTALL_TOP="$(LUA_TARGET_DIR)/usr" -C $(@D) install
 endef
 
 define HOST_LUA_INSTALL_CMDS

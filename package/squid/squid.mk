@@ -53,9 +53,9 @@ ifeq ($(BR2_PACKAGE_OPENSSL),y)
 endif
 
 define SQUID_CLEANUP_TARGET
-	rm -f $(addprefix $(TARGET_DIR)/usr/bin/, \
+	rm -f $(addprefix $(SQUID_TARGET_DIR)/usr/bin/, \
 		RunCache RunAccel)
-	rm -f $(addprefix $(TARGET_DIR)/etc/, \
+	rm -f $(addprefix $(SQUID_TARGET_DIR)/etc/, \
 		cachemgr.conf mime.conf.default squid.conf.default)
 endef
 
@@ -67,7 +67,7 @@ endef
 
 define SQUID_INSTALL_INIT_SYSV
 	$(INSTALL) -m 755 -D package/squid/S97squid \
-		$(TARGET_DIR)/etc/init.d/S97squid
+		$(SQUID_TARGET_DIR)/etc/init.d/S97squid
 endef
 
 $(eval $(autotools-package))

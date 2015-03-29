@@ -28,10 +28,10 @@ NDISC6_SBIN_$(BR2_PACKAGE_NDISC6_RLTRACEROUTE6) += rltraceroute6 tracert6
 NDISC6_SBIN_$(BR2_PACKAGE_NDISC6_TCPTRACEROUTE6) += tcptraceroute6
 
 define NDISC6_REMOVE_UNNEEDED
-	rm -rf $(addprefix $(TARGET_DIR)/usr/bin/,$(NDISC6_BIN_)) \
-		$(addprefix $(TARGET_DIR)/usr/sbin/,$(NDISC6_SBIN_))
+	rm -rf $(addprefix $(NDISC6_TARGET_DIR)/usr/bin/,$(NDISC6_BIN_)) \
+		$(addprefix $(NDISC6_TARGET_DIR)/usr/sbin/,$(NDISC6_SBIN_))
 	$(if $(BR2_PACKAGE_NDISC6_RDNSSD),,\
-		rm -rf $(TARGET_DIR)/etc/rdnssd $(TARGET_DIR)/var/run/rdnssd)
+		rm -rf $(NDISC6_TARGET_DIR)/etc/rdnssd $(NDISC6_TARGET_DIR)/var/run/rdnssd)
 endef
 
 NDISC6_POST_INSTALL_TARGET_HOOKS += NDISC6_REMOVE_UNNEEDED

@@ -48,20 +48,20 @@ ALSA_UTILS_TARGETS_$(BR2_PACKAGE_ALSA_UTILS_ASEQNET) += usr/bin/aseqnet
 ALSA_UTILS_TARGETS_$(BR2_PACKAGE_ALSA_UTILS_SPEAKER_TEST) += usr/bin/speaker-test
 
 define ALSA_UTILS_INSTALL_TARGET_CMDS
-	mkdir -p $(TARGET_DIR)/var/lib/alsa
+	mkdir -p $(ALSA_UTILS_TARGET_DIR)/var/lib/alsa
 	for i in $(ALSA_UTILS_TARGETS_y); do \
-		$(INSTALL) -D -m 755 $(STAGING_DIR)/$$i $(TARGET_DIR)/$$i || exit 1; \
+		$(INSTALL) -D -m 755 $(STAGING_DIR)/$$i $(ALSA_UTILS_TARGET_DIR)/$$i || exit 1; \
 	done
-	if [ -x "$(TARGET_DIR)/usr/bin/speaker-test" ]; then \
-		mkdir -p $(TARGET_DIR)/usr/share/alsa/speaker-test; \
-		mkdir -p $(TARGET_DIR)/usr/share/sounds/alsa; \
-		cp -rdpf $(STAGING_DIR)/usr/share/alsa/speaker-test/* $(TARGET_DIR)/usr/share/alsa/speaker-test/; \
-		cp -rdpf $(STAGING_DIR)/usr/share/sounds/alsa/* $(TARGET_DIR)/usr/share/sounds/alsa/; \
+	if [ -x "$(ALSA_UTILS_TARGET_DIR)/usr/bin/speaker-test" ]; then \
+		mkdir -p $(ALSA_UTILS_TARGET_DIR)/usr/share/alsa/speaker-test; \
+		mkdir -p $(ALSA_UTILS_TARGET_DIR)/usr/share/sounds/alsa; \
+		cp -rdpf $(STAGING_DIR)/usr/share/alsa/speaker-test/* $(ALSA_UTILS_TARGET_DIR)/usr/share/alsa/speaker-test/; \
+		cp -rdpf $(STAGING_DIR)/usr/share/sounds/alsa/* $(ALSA_UTILS_TARGET_DIR)/usr/share/sounds/alsa/; \
 	fi
-	if [ -x "$(TARGET_DIR)/usr/sbin/alsactl" ]; then \
-		mkdir -p $(TARGET_DIR)/usr/share/; \
-		rm -rf $(TARGET_DIR)/usr/share/alsa/; \
-		cp -rdpf $(STAGING_DIR)/usr/share/alsa/ $(TARGET_DIR)/usr/share/alsa/; \
+	if [ -x "$(ALSA_UTILS_TARGET_DIR)/usr/sbin/alsactl" ]; then \
+		mkdir -p $(ALSA_UTILS_TARGET_DIR)/usr/share/; \
+		rm -rf $(ALSA_UTILS_TARGET_DIR)/usr/share/alsa/; \
+		cp -rdpf $(STAGING_DIR)/usr/share/alsa/ $(ALSA_UTILS_TARGET_DIR)/usr/share/alsa/; \
 	fi
 endef
 

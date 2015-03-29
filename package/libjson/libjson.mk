@@ -38,7 +38,7 @@ endef
 
 define LIBJSON_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) $(TARGET_CONFIGURE_OPTS) \
-		$(LIBJSON_MAKE_OPTS) prefix=$(TARGET_DIR)/usr install -C $(@D)
+		$(LIBJSON_MAKE_OPTS) prefix=$(LIBJSON_TARGET_DIR)/usr install -C $(@D)
 endef
 
 define LIBJSON_INSTALL_STAGING_CMDS

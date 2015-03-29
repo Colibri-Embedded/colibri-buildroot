@@ -202,15 +202,15 @@ endef
 define GPSD_INSTALL_TARGET_CMDS
 	(cd $(@D); \
 		$(GPSD_SCONS_ENV) \
-		DESTDIR=$(TARGET_DIR) \
+		DESTDIR=$(GPSD_TARGET_DIR) \
 		$(SCONS) \
 		$(GPSD_SCONS_OPTS) \
 		install)
 endef
 
 define GPSD_INSTALL_INIT_SYSV
-	$(INSTALL) -m 0755 -D package/gpsd/S50gpsd $(TARGET_DIR)/etc/init.d/S50gpsd
-	$(SED) 's,^DEVICES=.*,DEVICES=$(BR2_PACKAGE_GPSD_DEVICES),' $(TARGET_DIR)/etc/init.d/S50gpsd
+	$(INSTALL) -m 0755 -D package/gpsd/S50gpsd $(GPSD_TARGET_DIR)/etc/init.d/S50gpsd
+	$(SED) 's,^DEVICES=.*,DEVICES=$(BR2_PACKAGE_GPSD_DEVICES),' $(GPSD_TARGET_DIR)/etc/init.d/S50gpsd
 endef
 
 define GPSD_INSTALL_STAGING_CMDS
@@ -226,7 +226,7 @@ ifeq ($(BR2_PACKAGE_HAS_UDEV),y)
 define GPSD_INSTALL_UDEV_RULES
 	(cd $(@D); \
 		$(GPSD_SCONS_ENV) \
-		DESTDIR=$(TARGET_DIR) \
+		DESTDIR=$(GPSD_TARGET_DIR) \
 		$(SCONS) \
 		$(GPSD_SCONS_OPTS) \
 		udev-install)

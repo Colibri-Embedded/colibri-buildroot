@@ -59,7 +59,7 @@ define LSOF_BUILD_CMDS
 endef
 
 define LSOF_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 755 $(@D)/lsof $(TARGET_DIR)/usr/bin/lsof
+	$(INSTALL) -D -m 755 $(@D)/lsof $(LSOF_TARGET_DIR)/usr/bin/lsof
 endef
 
 $(eval $(generic-package))

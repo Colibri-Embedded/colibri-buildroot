@@ -30,7 +30,7 @@ endef
 
 define DROPWATCH_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/src/dropwatch \
-		$(TARGET_DIR)/usr/bin/dropwatch
+		$(DROPWATCH_TARGET_DIR)/usr/bin/dropwatch
 endef
 
 $(eval $(generic-package))

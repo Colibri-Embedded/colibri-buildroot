@@ -22,7 +22,7 @@ endif
 
 ifneq ($(BR2_PACKAGE_LIBMPEG2_BINS),y)
 define LIBMPEG2_REMOVE_BINS
-	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,\
+	rm -f $(addprefix $(LIBMPEG2_TARGET_DIR)/usr/bin/,\
 		mpeg2dec corrupt_mpeg2 extract_mpeg2)
 endef
 

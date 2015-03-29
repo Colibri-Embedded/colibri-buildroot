@@ -21,13 +21,13 @@ endef
 
 define JQUERY_UI_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0644 -D $(@D)/ui/minified/jquery-ui.min.js \
-		$(TARGET_DIR)/var/www/jquery-ui.js
+		$(JQUERY_UI_TARGET_DIR)/var/www/jquery-ui.js
 	$(INSTALL) -m 0644 -D $(@D)/ui/minified/i18n/jquery-ui-i18n.min.js \
-		$(TARGET_DIR)/var/www/jquery-ui-i18n.js
+		$(JQUERY_UI_TARGET_DIR)/var/www/jquery-ui-i18n.js
 	$(INSTALL) -m 0644 -D $(@D)/themes/base/minified/jquery-ui.min.css \
-		$(TARGET_DIR)/var/www/jquery-ui.css
-	$(INSTALL) -d $(TARGET_DIR)/var/www/images
-	$(INSTALL) -m 0644 -t $(TARGET_DIR)/var/www/images \
+		$(JQUERY_UI_TARGET_DIR)/var/www/jquery-ui.css
+	$(INSTALL) -d $(JQUERY_UI_TARGET_DIR)/var/www/images
+	$(INSTALL) -m 0644 -t $(JQUERY_UI_TARGET_DIR)/var/www/images \
 		$(@D)/themes/base/minified/images/*.png
 endef
 

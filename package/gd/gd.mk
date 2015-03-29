@@ -81,7 +81,7 @@ GD_TOOLS_$(BR2_PACKAGE_GD_PNGTOGD2)	+= pngtogd2
 GD_TOOLS_$(BR2_PACKAGE_GD_WEBPNG)	+= webpng
 
 define GD_REMOVE_TOOLS
-	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,$(GD_TOOLS_))
+	rm -f $(addprefix $(GD_TARGET_DIR)/usr/bin/,$(GD_TOOLS_))
 endef
 
 GD_POST_INSTALL_TARGET_HOOKS += GD_REMOVE_TOOLS

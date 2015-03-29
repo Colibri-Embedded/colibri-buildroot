@@ -65,7 +65,7 @@ endef
 
 define PCIUTILS_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE1) -C $(@D) $(PCIUTILS_MAKE_OPTS) \
-		PREFIX=$(TARGET_DIR)/usr SBINDIR=$(TARGET_DIR)/usr/bin \
+		PREFIX=$(PCIUTILS_TARGET_DIR)/usr SBINDIR=$(PCIUTILS_TARGET_DIR)/usr/bin \
 		install install-lib install-pcilib
 endef
 

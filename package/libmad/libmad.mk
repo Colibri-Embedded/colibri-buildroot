@@ -23,7 +23,7 @@ endef
 
 define LIBMAD_INSTALL_TARGET_PC
 	$(INSTALL) -D package/libmad/mad.pc \
-		$(TARGET_DIR)/usr/lib/pkgconfig/mad.pc
+		$(LIBMAD_TARGET_DIR)/usr/lib/pkgconfig/mad.pc
 endef
 
 LIBMAD_POST_PATCH_HOOKS += LIBMAD_PREVENT_AUTOMAKE

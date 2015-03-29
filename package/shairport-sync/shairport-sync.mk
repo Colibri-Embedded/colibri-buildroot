@@ -44,12 +44,12 @@ endif
 
 define SHAIRPORT_SYNC_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/shairport-sync \
-		$(TARGET_DIR)/usr/bin/shairport-sync
+		$(SHAIRPORT_SYNC_TARGET_DIR)/usr/bin/shairport-sync
 endef
 
 define SHAIRPORT_SYNC_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 0755 package/shairport-sync/S99shairport-sync \
-		$(TARGET_DIR)/etc/init.d/S99shairport-sync
+		$(SHAIRPORT_SYNC_TARGET_DIR)/etc/init.d/S99shairport-sync
 endef
 
 $(eval $(autotools-package))

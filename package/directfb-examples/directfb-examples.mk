@@ -93,19 +93,19 @@ DIRECTFB_EXAMPLES_FONT_y = usr/share/directfb-examples/fonts/*
 endif
 
 define DIRECTFB_EXAMPLES_INSTALL_TARGET_CMDS
-	$(Q)mkdir -p $(TARGET_DIR)/usr/bin
-	$(Q)mkdir -p $(TARGET_DIR)/usr/share/directfb-examples/
-	$(Q)mkdir -p $(TARGET_DIR)/usr/share/directfb-examples/fonts/
+	$(Q)mkdir -p $(DIRECTFB_EXAMPLES_TARGET_DIR)/usr/bin
+	$(Q)mkdir -p $(DIRECTFB_EXAMPLES_TARGET_DIR)/usr/share/directfb-examples/
+	$(Q)mkdir -p $(DIRECTFB_EXAMPLES_TARGET_DIR)/usr/share/directfb-examples/fonts/
 	$(Q)for file in $(DIRECTFB_EXAMPLES_TARGETS_y); do \
-	        cp -dpf $(STAGING_DIR)/$$file $(TARGET_DIR)/$$file; \
+	        cp -dpf $(STAGING_DIR)/$$file $(DIRECTFB_EXAMPLES_TARGET_DIR)/$$file; \
 	done
-	$(Q)cp -rdpf $(STAGING_DIR)/usr/share/directfb-examples/fonts/decker.ttf $(TARGET_DIR)/usr/share/directfb-examples/fonts/
+	$(Q)cp -rdpf $(STAGING_DIR)/usr/share/directfb-examples/fonts/decker.ttf $(DIRECTFB_EXAMPLES_TARGET_DIR)/usr/share/directfb-examples/fonts/
 	$(Q)for file in $(DIRECTFB_EXAMPLES_FONT_y); do \
-		$(INSTALL) -m 0644 $(STAGING_DIR)/$$file $(TARGET_DIR)/usr/share/directfb-examples/fonts/; \
+		$(INSTALL) -m 0644 $(STAGING_DIR)/$$file $(DIRECTFB_EXAMPLES_TARGET_DIR)/usr/share/directfb-examples/fonts/; \
 	done
-	$(Q)$(INSTALL) -m 0755 -d $(TARGET_DIR)/usr/share/directfb-examples
+	$(Q)$(INSTALL) -m 0755 -d $(DIRECTFB_EXAMPLES_TARGET_DIR)/usr/share/directfb-examples
 	$(Q)for file in $(DIRECTFB_EXAMPLES_DATA_y); do \
-		$(INSTALL) -m 0644 $(STAGING_DIR)/$$file $(TARGET_DIR)/usr/share/directfb-examples; \
+		$(INSTALL) -m 0644 $(STAGING_DIR)/$$file $(DIRECTFB_EXAMPLES_TARGET_DIR)/usr/share/directfb-examples; \
 	done
 endef
 

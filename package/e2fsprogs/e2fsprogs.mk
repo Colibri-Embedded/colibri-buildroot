@@ -73,17 +73,17 @@ E2FSPROGS_TXTTARGETS_ = \
 	usr/sbin/tune2fs
 
 define E2FSPROGS_TARGET_REMOVE_UNNEEDED
-	rm -f $(addprefix $(TARGET_DIR)/, $(E2FSPROGS_BINTARGETS_))
-	rm -f $(addprefix $(TARGET_DIR)/, $(E2FSPROGS_TXTTARGETS_))
+	rm -f $(addprefix $(E2FSPROGS_TARGET_DIR)/, $(E2FSPROGS_BINTARGETS_))
+	rm -f $(addprefix $(E2FSPROGS_TARGET_DIR)/, $(E2FSPROGS_TXTTARGETS_))
 endef
 
 E2FSPROGS_POST_INSTALL_TARGET_HOOKS += E2FSPROGS_TARGET_REMOVE_UNNEEDED
 
 define E2FSPROGS_TARGET_MKE2FS_SYMLINKS
-	ln -sf mke2fs $(TARGET_DIR)/usr/sbin/mkfs.ext2
-	ln -sf mke2fs $(TARGET_DIR)/usr/sbin/mkfs.ext3
-	ln -sf mke2fs $(TARGET_DIR)/usr/sbin/mkfs.ext4
-	ln -sf mke2fs $(TARGET_DIR)/usr/sbin/mkfs.ext4dev
+	ln -sf mke2fs $(E2FSPROGS_TARGET_DIR)/usr/sbin/mkfs.ext2
+	ln -sf mke2fs $(E2FSPROGS_TARGET_DIR)/usr/sbin/mkfs.ext3
+	ln -sf mke2fs $(E2FSPROGS_TARGET_DIR)/usr/sbin/mkfs.ext4
+	ln -sf mke2fs $(E2FSPROGS_TARGET_DIR)/usr/sbin/mkfs.ext4dev
 endef
 
 ifeq ($(BR2_PACKAGE_E2FSPROGS_MKE2FS),y)
@@ -91,10 +91,10 @@ E2FSPROGS_POST_INSTALL_TARGET_HOOKS += E2FSPROGS_TARGET_MKE2FS_SYMLINKS
 endif
 
 define E2FSPROGS_TARGET_E2FSCK_SYMLINKS
-	ln -sf e2fsck $(TARGET_DIR)/usr/sbin/fsck.ext2
-	ln -sf e2fsck $(TARGET_DIR)/usr/sbin/fsck.ext3
-	ln -sf e2fsck $(TARGET_DIR)/usr/sbin/fsck.ext4
-	ln -sf e2fsck $(TARGET_DIR)/usr/sbin/fsck.ext4dev
+	ln -sf e2fsck $(E2FSPROGS_TARGET_DIR)/usr/sbin/fsck.ext2
+	ln -sf e2fsck $(E2FSPROGS_TARGET_DIR)/usr/sbin/fsck.ext3
+	ln -sf e2fsck $(E2FSPROGS_TARGET_DIR)/usr/sbin/fsck.ext4
+	ln -sf e2fsck $(E2FSPROGS_TARGET_DIR)/usr/sbin/fsck.ext4dev
 endef
 
 ifeq ($(BR2_PACKAGE_E2FSPROGS_E2FSCK),y)
@@ -102,7 +102,7 @@ E2FSPROGS_POST_INSTALL_TARGET_HOOKS += E2FSPROGS_TARGET_E2FSCK_SYMLINKS
 endif
 
 define E2FSPROGS_TARGET_TUNE2FS_SYMLINK
-	ln -sf e2label $(TARGET_DIR)/usr/sbin/tune2fs
+	ln -sf e2label $(E2FSPROGS_TARGET_DIR)/usr/sbin/tune2fs
 endef
 
 ifeq ($(BR2_PACKAGE_E2FSPROGS_TUNE2FS),y)
@@ -110,7 +110,7 @@ E2FSPROGS_POST_INSTALL_TARGET_HOOKS += E2FSPROGS_TARGET_TUNE2FS_SYMLINK
 endif
 
 define E2FSPROGS_TARGET_FINDFS_SYMLINK
-	ln -sf e2label $(TARGET_DIR)/usr/sbin/findfs
+	ln -sf e2label $(E2FSPROGS_TARGET_DIR)/usr/sbin/findfs
 endef
 
 ifeq ($(BR2_PACKAGE_E2FSPROGS_FINDFS),y)

@@ -20,7 +20,7 @@ SED_CONF_OPTS = \
 	--include=$(STAGING_DIR)/usr/include
 
 define SED_MOVE_BINARY
-	mv $(TARGET_DIR)/usr/bin/sed $(TARGET_DIR)/bin/
+	mv $(SED_TARGET_DIR)/usr/bin/sed $(SED_TARGET_DIR)/bin/
 endef
 
 SED_POST_INSTALL_TARGET_HOOKS = SED_MOVE_BINARY

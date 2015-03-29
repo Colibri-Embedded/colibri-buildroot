@@ -11,15 +11,15 @@ OPENNTPD_LICENSE_FILES = COPYING
 
 define OPENNTPD_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -D -m 0644 package/openntpd/ntpd.service \
-		$(TARGET_DIR)/etc/systemd/system/ntpd.service
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+		$(OPENNTPD_TARGET_DIR)/etc/systemd/system/ntpd.service
+	mkdir -p $(OPENNTPD_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
 	ln -fs ../ntpd.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/ntpd.service
+		$(OPENNTPD_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/ntpd.service
 endef
 
 define OPENNTPD_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/openntpd/S49ntp \
-		$(TARGET_DIR)/etc/init.d/S49ntp
+		$(OPENNTPD_TARGET_DIR)/etc/init.d/S49ntp
 endef
 
 define OPENNTPD_USERS

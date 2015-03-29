@@ -21,7 +21,7 @@ define FAN_CTRL_BUILD_CMDS
 endef
 
 define FAN_CTRL_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 755 $(@D)/fan-ctrl $(TARGET_DIR)/usr/sbin/fan-ctrl
+	$(INSTALL) -D -m 755 $(@D)/fan-ctrl $(FAN_CTRL_TARGET_DIR)/usr/sbin/fan-ctrl
 endef
 
 $(eval $(generic-package))

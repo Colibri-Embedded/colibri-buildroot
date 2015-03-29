@@ -20,7 +20,7 @@ endef
 
 define INTEL_MICROCODE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0644 $(@D)/microcode.dat \
-		$(TARGET_DIR)/usr/share/misc/intel-microcode.dat
+		$(INTEL_MICROCODE_TARGET_DIR)/usr/share/misc/intel-microcode.dat
 endef
 
 $(eval $(generic-package))

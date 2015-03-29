@@ -15,7 +15,7 @@ RADVD_LICENSE = BSD-4c-like
 RADVD_LICENSE_FILES = COPYRIGHT
 
 define RADVD_INSTALL_INIT_SYSV
-	$(INSTALL) -D -m 0755 package/radvd/S50radvd $(TARGET_DIR)/etc/init.d/S50radvd
+	$(INSTALL) -D -m 0755 package/radvd/S50radvd $(RADVD_TARGET_DIR)/etc/init.d/S50radvd
 endef
 
 $(eval $(autotools-package))

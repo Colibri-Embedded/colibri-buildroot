@@ -15,7 +15,7 @@ define DSP_TOOLS_BUILD_CMDS
 endef
 
 define DSP_TOOLS_INSTALL_TARGET_CMDS
-	$(TARGET_CONFIGURE_OPTS) $(MAKE) -C $(@D) -e DESTDIR=$(TARGET_DIR) install
+	$(TARGET_CONFIGURE_OPTS) $(MAKE) -C $(@D) -e DESTDIR=$(DSP_TOOLS_TARGET_DIR) install
 endef
 
 $(eval $(generic-package))

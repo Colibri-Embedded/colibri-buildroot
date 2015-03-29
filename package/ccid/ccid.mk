@@ -14,8 +14,8 @@ CCID_DEPENDENCIES = pcsc-lite host-pkgconf libusb
 
 ifeq ($(BR2_PACKAGE_HAS_UDEV),y)
 define CCID_INSTALL_UDEV_RULES
-	if test -d $(TARGET_DIR)/etc/udev/rules.d ; then \
-		cp $(@D)/src/92_pcscd_ccid.rules $(TARGET_DIR)/etc/udev/rules.d/ ; \
+	if test -d $(CCID_TARGET_DIR)/etc/udev/rules.d ; then \
+		cp $(@D)/src/92_pcscd_ccid.rules $(CCID_TARGET_DIR)/etc/udev/rules.d/ ; \
 	fi;
 endef
 

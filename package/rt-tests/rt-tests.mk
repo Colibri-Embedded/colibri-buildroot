@@ -30,7 +30,7 @@ endef
 define RT_TESTS_INSTALL_TARGET_CMDS
 	$(MAKE) -C $(@D) 				\
 		HAVE_NPTL=$(RT_TESTS_HAVE_NPTL)		\
-		DESTDIR="$(TARGET_DIR)" 		\
+		DESTDIR="$(RT_TESTS_TARGET_DIR)" 		\
 		prefix=/usr 				\
 		$(if $(BR2_PACKAGE_PYTHON),HASPYTHON=1 PYLIB=/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/) \
 		install

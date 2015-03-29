@@ -18,20 +18,20 @@ endef
 ifeq ($(BR2_PACKAGE_HAS_UDEV),y)
 define TRIGGERHAPPY_INSTALL_UDEV_RULE
 	$(INSTALL) -D -m 0644 $(@D)/udev/triggerhappy-udev.rules \
-		$(TARGET_DIR)/lib/udev/rules.d/triggerhappy.rules
+		$(TRIGGERHAPPY_TARGET_DIR)/lib/udev/rules.d/triggerhappy.rules
 endef
 endif
 
 define TRIGGERHAPPY_INSTALL_TARGET_CMDS
-	$(INSTALL) -d $(TARGET_DIR)/etc/triggerhappy/triggers.d
-	$(INSTALL) -D -m 0755 $(@D)/thd $(TARGET_DIR)/usr/sbin/thd
-	$(INSTALL) -D -m 0755 $(@D)/th-cmd $(TARGET_DIR)/usr/sbin/th-cmd
+	$(INSTALL) -d $(TRIGGERHAPPY_TARGET_DIR)/etc/triggerhappy/triggers.d
+	$(INSTALL) -D -m 0755 $(@D)/thd $(TRIGGERHAPPY_TARGET_DIR)/usr/sbin/thd
+	$(INSTALL) -D -m 0755 $(@D)/th-cmd $(TRIGGERHAPPY_TARGET_DIR)/usr/sbin/th-cmd
 	$(TRIGGERHAPPY_INSTALL_UDEV_RULE)
 endef
 
 define TRIGGERHAPPY_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/triggerhappy/S10triggerhappy \
-		$(TARGET_DIR)/etc/init.d/S10triggerhappy
+		$(TRIGGERHAPPY_TARGET_DIR)/etc/init.d/S10triggerhappy
 endef
 
 $(eval $(generic-package))

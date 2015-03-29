@@ -25,7 +25,7 @@ define OCRAD_INSTALL_STAGING_CMDS
 endef
 
 define OCRAD_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) DESTDIR=$(TARGET_DIR) install
+	$(MAKE) -C $(@D) DESTDIR=$(OCRAD_TARGET_DIR) install
 endef
 
 $(eval $(generic-package))

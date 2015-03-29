@@ -68,16 +68,16 @@ endef
 
 define SUNXI_MALI_INSTALL_TARGET_CMDS
 	$(SUNXI_MALI_MAKE_ENV) $(MAKE) -C $(@D)/lib \
-		$(SUNXI_MALI_MAKE_OPTS) DESTDIR=$(TARGET_DIR) install
+		$(SUNXI_MALI_MAKE_OPTS) DESTDIR=$(SUNXI_MALI_TARGET_DIR) install
 	$(if $(BR2_PACKAGE_SUNXI_MALI_DBG),
-		$(INSTALL) -m 755 $(@D)/version/version $(TARGET_DIR)/usr/bin/maliver; \
-		$(INSTALL) -m 755 $(@D)/test/test $(TARGET_DIR)/usr/bin/malitest
+		$(INSTALL) -m 755 $(@D)/version/version $(SUNXI_MALI_TARGET_DIR)/usr/bin/maliver; \
+		$(INSTALL) -m 755 $(@D)/test/test $(SUNXI_MALI_TARGET_DIR)/usr/bin/malitest
 	)
 endef
 
 define SUNXI_MALI_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 0755 package/sunxi-mali/S80mali \
-		$(TARGET_DIR)/etc/init.d/S80mali
+		$(SUNXI_MALI_TARGET_DIR)/etc/init.d/S80mali
 endef
 
 $(eval $(generic-package))

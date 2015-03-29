@@ -51,10 +51,10 @@ endif
 # symlink needed by lib/system/systemLinux.c (or will cry in /var/log/messages)
 # /sbin/shutdown needed for Guest OS restart/shutdown from hypervisor
 define OPENVMTOOLS_POST_INSTALL_TARGET_THINGIES
-	ln -fs os-release $(TARGET_DIR)/etc/lfs-release
-	if [ ! -e $(TARGET_DIR)/sbin/shutdown ]; then \
+	ln -fs os-release $(OPENVMTOOLS_TARGET_DIR)/etc/lfs-release
+	if [ ! -e $(OPENVMTOOLS_TARGET_DIR)/sbin/shutdown ]; then \
 		$(INSTALL) -D -m 755 package/openvmtools/shutdown \
-			$(TARGET_DIR)/sbin/shutdown; \
+			$(OPENVMTOOLS_TARGET_DIR)/sbin/shutdown; \
 	fi
 endef
 
@@ -62,15 +62,15 @@ OPENVMTOOLS_POST_INSTALL_TARGET_HOOKS += OPENVMTOOLS_POST_INSTALL_TARGET_THINGIE
 
 define OPENVMTOOLS_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 755 package/openvmtools/S10vmtoolsd \
-		$(TARGET_DIR)/etc/init.d/S10vmtoolsd
+		$(OPENVMTOOLS_TARGET_DIR)/etc/init.d/S10vmtoolsd
 endef
 
 define OPENVMTOOLS_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -D -m 644 package/openvmtools/vmtoolsd.service \
-		$(TARGET_DIR)/etc/systemd/system/vmtoolsd.service
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+		$(OPENVMTOOLS_TARGET_DIR)/etc/systemd/system/vmtoolsd.service
+	mkdir -p $(OPENVMTOOLS_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
 	ln -fs ../vmtoolsd.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/vmtoolsd.service
+		$(OPENVMTOOLS_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/vmtoolsd.service
 endef
 
 $(eval $(autotools-package))

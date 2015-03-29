@@ -22,7 +22,7 @@ AT_CONF_OPTS = \
 	SENDMAIL=/usr/sbin/sendmail
 
 define AT_INSTALL_INIT_SYSV
-	$(INSTALL) -m 0755 -D package/at/S99at $(TARGET_DIR)/etc/init.d/S99at
+	$(INSTALL) -m 0755 -D package/at/S99at $(AT_TARGET_DIR)/etc/init.d/S99at
 endef
 
 $(eval $(autotools-package))

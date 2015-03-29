@@ -13,7 +13,7 @@ PKGCONF_LICENSE_FILES = COPYING
 PKG_CONFIG_HOST_BINARY = $(HOST_DIR)/usr/bin/pkg-config
 
 define PKGCONF_LINK_PKGCONFIG
-	ln -sf pkgconf $(TARGET_DIR)/usr/bin/pkg-config
+	ln -sf pkgconf $(PKGCONF_TARGET_DIR)/usr/bin/pkg-config
 endef
 
 define HOST_PKGCONF_INSTALL_WRAPPER

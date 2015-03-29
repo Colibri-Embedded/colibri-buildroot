@@ -12,7 +12,7 @@ DASH_LICENSE = BSD-3c, GPLv2+ (mksignames.c)
 DASH_LICENSE_FILES = COPYING
 
 define DASH_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 $(@D)/src/dash $(TARGET_DIR)/bin/dash
+	$(INSTALL) -m 0755 $(@D)/src/dash $(DASH_TARGET_DIR)/bin/dash
 endef
 
 $(eval $(autotools-package))

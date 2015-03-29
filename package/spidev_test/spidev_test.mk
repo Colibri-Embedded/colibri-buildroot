@@ -27,7 +27,7 @@ endef
 
 define SPIDEV_TEST_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 755 $(@D)/spidev_test \
-		$(TARGET_DIR)/usr/sbin/spidev_test
+		$(SPIDEV_TEST_TARGET_DIR)/usr/sbin/spidev_test
 endef
 
 $(eval $(generic-package))

@@ -90,7 +90,7 @@ endif
 
 define PANGO_INSTALL_INIT_SYSV
 	$(INSTALL) -m 755 -D package/pango/S25pango \
-		$(TARGET_DIR)/etc/init.d/S25pango
+		$(PANGO_TARGET_DIR)/etc/init.d/S25pango
 endef
 
 $(eval $(autotools-package))

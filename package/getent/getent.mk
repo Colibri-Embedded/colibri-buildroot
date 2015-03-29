@@ -24,7 +24,7 @@ GETENT_LOCATION = package/getent/getent
 endif
 
 define GETENT_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(GETENT_LOCATION) $(TARGET_DIR)/usr/bin/getent
+	$(INSTALL) -D -m 0755 $(GETENT_LOCATION) $(GETENT_TARGET_DIR)/usr/bin/getent
 endef
 
 $(eval $(generic-package))

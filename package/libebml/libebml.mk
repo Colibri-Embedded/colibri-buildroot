@@ -30,7 +30,7 @@ define LIBEBML_INSTALL_STAGING_CMDS
 endef
 
 define LIBEBML_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D)/make/linux prefix=$(TARGET_DIR)/usr \
+	$(MAKE) -C $(@D)/make/linux prefix=$(LIBEBML_TARGET_DIR)/usr \
 		$(LIBEBML_MAKE_INSTALL_TARGETS)
 endef
 

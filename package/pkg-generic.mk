@@ -242,13 +242,11 @@ $(BUILD_DIR)/%/.stamp_target_installed:
 	$(Q)if test -n "$($(PKG)_CONFIG_SCRIPTS)" ; then \
 		$(RM) -f $(addprefix $(TARGET_DIR)/usr/bin/,$($(PKG)_CONFIG_SCRIPTS)) ; \
 	fi
-	
-	$(Q)if [ "x$($(PKG)_ARCHIVE_TARGET)" != "xYES" ]; then \
+	$(Q)if [ "x$($(PKG)_ARCHIVE_TARGET)" == "xYES" ] ; then \
 		$($(PKG)_FAKEROOT) $($(PKG)_FAKEROOT_ENV) -- $(TAR) -cf $($(PKG)_TARGET_ARCHIVE) -C $($(PKG)_TARGET_DIR) . ; \
 		$(RM) -rf $($(PKG)_TARGET_DIR) ; \
 		$(RM) $(@D)/.fakeroot_env ; \
 	fi
-	
 	$(Q)touch $@
 	@$(call step_end,install-target)
 	
@@ -444,6 +442,10 @@ ifeq ($(4),target)
 ifeq ($$($(2)_ADD_TOOLCHAIN_DEPENDENCY),YES)
 $(2)_DEPENDENCIES += toolchain
 endif
+endif
+
+ifeq ($(4),target)
+$(2)_DEPENDENCIES += host-fakeroot
 endif
 
 # Eliminate duplicates in dependencies

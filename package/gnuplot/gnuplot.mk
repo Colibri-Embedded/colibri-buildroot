@@ -43,7 +43,7 @@ endif
 
 # Remove Javascript scripts, lua scripts, PostScript files
 define GNUPLOT_REMOVE_UNNEEDED_FILES
-	$(RM) -rf $(TARGET_DIR)/usr/share/gnuplot
+	$(RM) -rf $(GNUPLOT_TARGET_DIR)/usr/share/gnuplot
 endef
 
 GNUPLOT_POST_INSTALL_TARGET_HOOKS += GNUPLOT_REMOVE_UNNEEDED_FILES

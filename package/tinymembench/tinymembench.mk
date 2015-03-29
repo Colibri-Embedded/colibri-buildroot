@@ -15,7 +15,7 @@ endef
 
 define TINYMEMBENCH_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/tinymembench \
-		$(TARGET_DIR)/usr/bin/tinymembench
+		$(TINYMEMBENCH_TARGET_DIR)/usr/bin/tinymembench
 endef
 
 $(eval $(generic-package))

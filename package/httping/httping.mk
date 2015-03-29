@@ -30,7 +30,7 @@ define HTTPING_BUILD_CMDS
 endef
 
 define HTTPING_INSTALL_TARGET_CMDS
-	$(HTTPING_MAKE_OPTS) $(MAKE) DESTDIR=$(TARGET_DIR) -C $(@D) install
+	$(HTTPING_MAKE_OPTS) $(MAKE) DESTDIR=$(HTTPING_TARGET_DIR) -C $(@D) install
 endef
 
 $(eval $(generic-package))

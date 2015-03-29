@@ -10,7 +10,7 @@ SNOWBALL_INIT_LICENSE = BSD-4c
 SNOWBALL_INIT_LICENSE_FILES = debian/copyright
 
 define SNOWBALL_INIT_INSTALL_INIT_SYSV
-	$(INSTALL) -D -m 0755 $(@D)/snowball $(TARGET_DIR)/etc/init.d/S50snowball
+	$(INSTALL) -D -m 0755 $(@D)/snowball $(SNOWBALL_INIT_TARGET_DIR)/etc/init.d/S50snowball
 endef
 
 $(eval $(generic-package))

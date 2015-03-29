@@ -61,7 +61,7 @@ define GLMARK2_BUILD_CMDS
 endef
 
 define GLMARK2_INSTALL_TARGET_CMDS
-	cd $(@D) && $(TARGET_MAKE_ENV) ./waf install --destdir=$(TARGET_DIR)
+	cd $(@D) && $(TARGET_MAKE_ENV) ./waf install --destdir=$(GLMARK2_TARGET_DIR)
 endef
 
 $(eval $(generic-package))

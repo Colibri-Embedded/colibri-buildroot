@@ -108,7 +108,7 @@ PULSEAUDIO_CONF_OPTS += --disable-x11
 endif
 
 define PULSEAUDIO_REMOVE_VALA
-	rm -rf $(TARGET_DIR)/usr/share/vala
+	rm -rf $(PULSEAUDIO_TARGET_DIR)/usr/share/vala
 endef
 
 PULSEAUDIO_POST_INSTALL_TARGET_HOOKS += PULSEAUDIO_REMOVE_VALA
@@ -120,7 +120,7 @@ endef
 
 define PULSEAUDIO_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 755 package/pulseaudio/S50pulseaudio \
-		$(TARGET_DIR)/etc/init.d/S50pulseaudio
+		$(PULSEAUDIO_TARGET_DIR)/etc/init.d/S50pulseaudio
 endef
 
 endif

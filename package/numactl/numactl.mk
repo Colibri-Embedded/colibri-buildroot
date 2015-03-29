@@ -14,7 +14,7 @@ define NUMACTL_BUILD_CMDS
 endef
 
 define NUMACTL_INSTALL_TARGET_CMDS
-	$(MAKE) prefix=$(TARGET_DIR) libdir=$(TARGET_DIR)/lib -C $(@D) install
+	$(MAKE) prefix=$(NUMACTL_TARGET_DIR) libdir=$(NUMACTL_TARGET_DIR)/lib -C $(@D) install
 endef
 
 $(eval $(generic-package))

@@ -14,7 +14,7 @@ LIBSIGC_LICENSE = LGPLv2.1+
 LIBSIGC_LICENSE_FILES = COPYING
 
 define LIBSIGC_INSTALL_TARGET_FIXUP
-	rm -rf $(TARGET_DIR)/usr/share/devhelp/books/libsigc++*
+	rm -rf $(LIBSIGC_TARGET_DIR)/usr/share/devhelp/books/libsigc++*
 endef
 
 LIBSIGC_POST_INSTALL_TARGET_HOOKS += LIBSIGC_INSTALL_TARGET_FIXUP

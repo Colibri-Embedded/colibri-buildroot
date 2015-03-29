@@ -13,7 +13,7 @@ define MMC_UTILS_BUILD_CMDS
 endef
 
 define MMC_UTILS_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/mmc $(TARGET_DIR)/usr/bin/mmc
+	$(INSTALL) -D -m 0755 $(@D)/mmc $(MMC_UTILS_TARGET_DIR)/usr/bin/mmc
 endef
 
 $(eval $(generic-package))

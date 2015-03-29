@@ -26,20 +26,20 @@ endef
 
 ifeq ($(BR2_PACKAGE_UBOOT_TOOLS_MKIMAGE),y)
 define UBOOT_TOOLS_INSTALL_MKIMAGE
-	$(INSTALL) -m 0755 -D $(@D)/tools/mkimage $(TARGET_DIR)/usr/bin/mkimage
+	$(INSTALL) -m 0755 -D $(@D)/tools/mkimage $(UBOOT_TOOLS_TARGET_DIR)/usr/bin/mkimage
 endef
 endif
 
 ifeq ($(BR2_PACKAGE_UBOOT_TOOLS_MKENVIMAGE),y)
 define UBOOT_TOOLS_INSTALL_MKENVIMAGE
-	$(INSTALL) -m 0755 -D $(@D)/tools/mkenvimage $(TARGET_DIR)/usr/bin/mkenvimage
+	$(INSTALL) -m 0755 -D $(@D)/tools/mkenvimage $(UBOOT_TOOLS_TARGET_DIR)/usr/bin/mkenvimage
 endef
 endif
 
 ifeq ($(BR2_PACKAGE_UBOOT_TOOLS_FWPRINTENV),y)
 define UBOOT_TOOLS_INSTALL_FWPRINTENV
-	$(INSTALL) -m 0755 -D $(@D)/tools/env/fw_printenv $(TARGET_DIR)/usr/sbin/fw_printenv
-	ln -sf fw_printenv $(TARGET_DIR)/usr/sbin/fw_setenv
+	$(INSTALL) -m 0755 -D $(@D)/tools/env/fw_printenv $(UBOOT_TOOLS_TARGET_DIR)/usr/sbin/fw_printenv
+	ln -sf fw_printenv $(UBOOT_TOOLS_TARGET_DIR)/usr/sbin/fw_setenv
 endef
 endif
 

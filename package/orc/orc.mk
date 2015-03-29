@@ -13,11 +13,11 @@ ORC_INSTALL_STAGING = YES
 ORC_DEPENDENCIES = host-orc
 
 define ORC_REMOVE_BUGREPORT
-	rm -f $(TARGET_DIR)/usr/bin/orc-bugreport
+	rm -f $(ORC_TARGET_DIR)/usr/bin/orc-bugreport
 endef
 
 define ORC_REMOVE_DEVFILES
-	rm -f $(TARGET_DIR)/usr/bin/orcc
+	rm -f $(ORC_TARGET_DIR)/usr/bin/orcc
 endef
 
 ORC_POST_INSTALL_TARGET_HOOKS += ORC_REMOVE_BUGREPORT

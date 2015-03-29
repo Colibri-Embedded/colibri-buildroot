@@ -15,7 +15,7 @@ define TCPING_BUILD_CMDS
 endef
 
 define TCPING_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/tcping $(TARGET_DIR)/usr/bin/tcping
+	$(INSTALL) -D -m 0755 $(@D)/tcping $(TCPING_TARGET_DIR)/usr/bin/tcping
 endef
 
 $(eval $(generic-package))

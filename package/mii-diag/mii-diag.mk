@@ -26,7 +26,7 @@ define MII_DIAG_BUILD_CMDS
 endef
 
 define MII_DIAG_INSTALL_TARGET_CMDS
-	$(MAKE) DESTDIR=$(TARGET_DIR) -C $(@D) install-mii-diag
+	$(MAKE) DESTDIR=$(MII_DIAG_TARGET_DIR) -C $(@D) install-mii-diag
 endef
 
 $(eval $(generic-package))

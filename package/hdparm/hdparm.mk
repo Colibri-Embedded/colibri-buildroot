@@ -17,7 +17,7 @@ define HDPARM_BUILD_CMDS
 endef
 
 define HDPARM_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/hdparm $(TARGET_DIR)/sbin/hdparm
+	$(INSTALL) -D -m 0755 $(@D)/hdparm $(HDPARM_TARGET_DIR)/sbin/hdparm
 endef
 
 $(eval $(generic-package))

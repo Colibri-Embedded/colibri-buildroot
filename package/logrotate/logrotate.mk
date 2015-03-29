@@ -16,9 +16,9 @@ define LOGROTATE_BUILD_CMDS
 endef
 
 define LOGROTATE_INSTALL_TARGET_CMDS
-	$(MAKE) PREFIX=$(TARGET_DIR) -C $(@D) install
-	$(INSTALL) -m 0644 package/logrotate/logrotate.conf $(TARGET_DIR)/etc/logrotate.conf
-	$(INSTALL) -d -m 0755 $(TARGET_DIR)/etc/logrotate.d
+	$(MAKE) PREFIX=$(LOGROTATE_TARGET_DIR) -C $(@D) install
+	$(INSTALL) -m 0644 package/logrotate/logrotate.conf $(LOGROTATE_TARGET_DIR)/etc/logrotate.conf
+	$(INSTALL) -d -m 0755 $(LOGROTATE_TARGET_DIR)/etc/logrotate.d
 endef
 
 $(eval $(generic-package))

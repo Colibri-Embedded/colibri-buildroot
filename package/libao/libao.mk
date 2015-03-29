@@ -24,7 +24,7 @@ LIBAO_CONF_OPTS += --enable-alsa --enable-alsa-mmap
 
 # Remove the OSS plugin if ALSA is enabled, as libao will prefer ALSA anyway
 define LIBAO_REMOVE_OSS_PLUGIN
-	rm -f $(TARGET_DIR)/usr/lib/ao/plugins-4/liboss.so
+	rm -f $(LIBAO_TARGET_DIR)/usr/lib/ao/plugins-4/liboss.so
 endef
 LIBAO_POST_INSTALL_TARGET_HOOKS += LIBAO_REMOVE_OSS_PLUGIN
 else

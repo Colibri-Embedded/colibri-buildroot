@@ -28,12 +28,12 @@ endef
 
 define MONGOOSE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 755 $(@D)/examples/web_server/web_server \
-		$(TARGET_DIR)/usr/sbin/mongoose
+		$(MONGOOSE_TARGET_DIR)/usr/sbin/mongoose
 endef
 
 define MONGOOSE_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 755 package/mongoose/S85mongoose \
-		$(TARGET_DIR)/etc/init.d/S85mongoose
+		$(MONGOOSE_TARGET_DIR)/etc/init.d/S85mongoose
 endef
 
 define MONGOOSE_INSTALL_STAGING_CMDS

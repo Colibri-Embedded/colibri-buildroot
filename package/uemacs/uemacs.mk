@@ -16,7 +16,7 @@ define UEMACS_BUILD_CMDS
 endef
 
 define UEMACS_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/em $(TARGET_DIR)/usr/bin/em
+	$(INSTALL) -m 0755 -D $(@D)/em $(UEMACS_TARGET_DIR)/usr/bin/em
 endef
 
 $(eval $(generic-package))

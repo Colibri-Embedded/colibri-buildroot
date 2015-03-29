@@ -14,7 +14,7 @@ define EEPROG_BUILD_CMDS
 endef
 
 define EEPROG_INSTALL_TARGET_CMDS
-	$(INSTALL) -D $(@D)/eeprog $(TARGET_DIR)/usr/bin/eeprog
+	$(INSTALL) -D $(@D)/eeprog $(EEPROG_TARGET_DIR)/usr/bin/eeprog
 endef
 
 $(eval $(generic-package))

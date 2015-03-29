@@ -15,7 +15,7 @@ define EMPTY_BUILD_CMDS
 endef
 
 define EMPTY_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/empty $(TARGET_DIR)/usr/bin/empty
+	$(INSTALL) -m 0755 -D $(@D)/empty $(EMPTY_TARGET_DIR)/usr/bin/empty
 endef
 
 $(eval $(generic-package))

@@ -209,28 +209,28 @@ endef
 
 define QT5BASE_INSTALL_TARGET_LIBS
 	for lib in $(QT5BASE_INSTALL_LIBS_y); do \
-		cp -dpf $(STAGING_DIR)/usr/lib/lib$${lib}.so.* $(TARGET_DIR)/usr/lib || exit 1 ; \
+		cp -dpf $(STAGING_DIR)/usr/lib/lib$${lib}.so.* $(QT5BASE_TARGET_DIR)/usr/lib || exit 1 ; \
 	done
 endef
 
 define QT5BASE_INSTALL_TARGET_PLUGINS
 	if [ -d $(STAGING_DIR)/usr/lib/qt/plugins/ ] ; then \
-		mkdir -p $(TARGET_DIR)/usr/lib/qt/plugins ; \
-		cp -dpfr $(STAGING_DIR)/usr/lib/qt/plugins/* $(TARGET_DIR)/usr/lib/qt/plugins ; \
+		mkdir -p $(QT5BASE_TARGET_DIR)/usr/lib/qt/plugins ; \
+		cp -dpfr $(STAGING_DIR)/usr/lib/qt/plugins/* $(QT5BASE_TARGET_DIR)/usr/lib/qt/plugins ; \
 	fi
 endef
 
 define QT5BASE_INSTALL_TARGET_FONTS
 	if [ -d $(STAGING_DIR)/usr/lib/fonts/ ] ; then \
-		mkdir -p $(TARGET_DIR)/usr/lib/fonts ; \
-		cp -dpfr $(STAGING_DIR)/usr/lib/fonts/* $(TARGET_DIR)/usr/lib/fonts ; \
+		mkdir -p $(QT5BASE_TARGET_DIR)/usr/lib/fonts ; \
+		cp -dpfr $(STAGING_DIR)/usr/lib/fonts/* $(QT5BASE_TARGET_DIR)/usr/lib/fonts ; \
 	fi
 endef
 
 define QT5BASE_INSTALL_TARGET_EXAMPLES
 	if [ -d $(STAGING_DIR)/usr/lib/qt/examples/ ] ; then \
-		mkdir -p $(TARGET_DIR)/usr/lib/qt/examples ; \
-		cp -dpfr $(STAGING_DIR)/usr/lib/qt/examples/* $(TARGET_DIR)/usr/lib/qt/examples ; \
+		mkdir -p $(QT5BASE_TARGET_DIR)/usr/lib/qt/examples ; \
+		cp -dpfr $(STAGING_DIR)/usr/lib/qt/examples/* $(QT5BASE_TARGET_DIR)/usr/lib/qt/examples ; \
 	fi
 endef
 

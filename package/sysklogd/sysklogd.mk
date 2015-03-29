@@ -19,15 +19,15 @@ define SYSKLOGD_BUILD_CMDS
 endef
 
 define SYSKLOGD_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0500 $(@D)/syslogd $(TARGET_DIR)/sbin/syslogd
-	$(INSTALL) -D -m 0500 $(@D)/klogd $(TARGET_DIR)/sbin/klogd
+	$(INSTALL) -D -m 0500 $(@D)/syslogd $(SYSKLOGD_TARGET_DIR)/sbin/syslogd
+	$(INSTALL) -D -m 0500 $(@D)/klogd $(SYSKLOGD_TARGET_DIR)/sbin/klogd
 	$(INSTALL) -D -m 0644 package/sysklogd/syslog.conf \
-		$(TARGET_DIR)/etc/syslog.conf
+		$(SYSKLOGD_TARGET_DIR)/etc/syslog.conf
 endef
 
 define SYSKLOGD_INSTALL_INIT_SYSV
 	$(INSTALL) -m 755 -D package/sysklogd/S01logging \
-		$(TARGET_DIR)/etc/init.d/S01logging
+		$(SYSKLOGD_TARGET_DIR)/etc/init.d/S01logging
 endef
 
 $(eval $(generic-package))

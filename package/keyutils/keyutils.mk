@@ -36,7 +36,7 @@ define KEYUTILS_INSTALL_STAGING_CMDS
 endef
 
 define KEYUTILS_INSTALL_TARGET_CMDS
-	$(MAKE) $(KEYUTILS_MAKE_PARAMS) -C $(@D) DESTDIR=$(TARGET_DIR) install
+	$(MAKE) $(KEYUTILS_MAKE_PARAMS) -C $(@D) DESTDIR=$(KEYUTILS_TARGET_DIR) install
 endef
 
 $(eval $(generic-package))

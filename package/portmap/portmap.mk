@@ -22,12 +22,12 @@ endef
 
 define PORTMAP_INSTALL_TARGET_CMDS
 	for sbin in $(PORTMAP_SBINS); do \
-		$(INSTALL) -D -m 0755 $(@D)/$$sbin $(TARGET_DIR)/sbin/$$sbin || exit 1; \
+		$(INSTALL) -D -m 0755 $(@D)/$$sbin $(PORTMAP_TARGET_DIR)/sbin/$$sbin || exit 1; \
 	done
 endef
 
 define PORTMAP_INSTALL_INIT_SYSV
-	$(INSTALL) -D -m 0755 package/portmap/S13portmap $(TARGET_DIR)/etc/init.d/S13portmap
+	$(INSTALL) -D -m 0755 package/portmap/S13portmap $(PORTMAP_TARGET_DIR)/etc/init.d/S13portmap
 endef
 
 $(eval $(generic-package))

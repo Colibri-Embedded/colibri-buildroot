@@ -98,7 +98,7 @@ ifneq ($(BR2_PACKAGE_TIFF_JBIG),y)
 endif
 
 define TIFF_REMOVE_TOOLS_FIXUP
-	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,$(TIFF_TOOLS_TO_DELETE))
+	rm -f $(addprefix $(TIFF_TARGET_DIR)/usr/bin/,$(TIFF_TOOLS_TO_DELETE))
 endef
 
 TIFF_POST_INSTALL_TARGET_HOOKS += TIFF_REMOVE_TOOLS_FIXUP

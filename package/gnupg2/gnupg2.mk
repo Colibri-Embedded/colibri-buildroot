@@ -22,7 +22,7 @@ GNUPG2_CONF_ENV = gl_cv_header_working_stdint_h=yes
 
 ifneq ($(BR2_PACKAGE_GNUPG2_GPGV2),y)
 define GNUPG2_REMOVE_GPGV2
-	rm -f $(TARGET_DIR)/usr/bin/gpgv2
+	rm -f $(GNUPG2_TARGET_DIR)/usr/bin/gpgv2
 endef
 GNUPG2_POST_INSTALL_TARGET_HOOKS += GNUPG2_REMOVE_GPGV2
 endif

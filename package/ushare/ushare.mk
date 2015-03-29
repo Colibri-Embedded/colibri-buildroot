@@ -30,8 +30,8 @@ define USHARE_BUILD_CMDS
 endef
 
 define USHARE_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) DESTDIR=$(TARGET_DIR) install
-	rm -f $(TARGET_DIR)/etc/init.d/ushare
+	$(MAKE) -C $(@D) DESTDIR=$(USHARE_TARGET_DIR) install
+	rm -f $(USHARE_TARGET_DIR)/etc/init.d/ushare
 endef
 
 # Even though configure is called it's not autoconf

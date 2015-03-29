@@ -22,8 +22,8 @@ ATTR_INSTALL_STAGING_OPTS = 			\
 	install-dev install-lib
 
 ATTR_INSTALL_TARGET_OPTS = 			\
-	prefix=$(TARGET_DIR)/usr 		\
-	exec_prefix=$(TARGET_DIR)/usr 		\
+	prefix=$(ATTR_TARGET_DIR)/usr 		\
+	exec_prefix=$(ATTR_TARGET_DIR)/usr 		\
 	install install-lib
 
 $(eval $(autotools-package))

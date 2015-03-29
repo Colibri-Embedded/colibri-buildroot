@@ -47,8 +47,8 @@ define LM_SENSORS_INSTALL_STAGING_CMDS
 endef
 
 define LM_SENSORS_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) $(LM_SENSORS_MAKE_OPTS) DESTDIR=$(TARGET_DIR) install
-	rm -f $(addprefix $(TARGET_DIR)/usr/,$(LM_SENSORS_BINS_))
+	$(MAKE) -C $(@D) $(LM_SENSORS_MAKE_OPTS) DESTDIR=$(LM_SENSORS_TARGET_DIR) install
+	rm -f $(addprefix $(LM_SENSORS_TARGET_DIR)/usr/,$(LM_SENSORS_BINS_))
 endef
 
 $(eval $(generic-package))

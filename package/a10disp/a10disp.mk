@@ -16,7 +16,7 @@ define A10DISP_BUILD_CMDS
 endef
 
 define A10DISP_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/a10disp $(TARGET_DIR)/usr/bin/a10disp
+	$(INSTALL) -D -m 0755 $(@D)/a10disp $(A10DISP_TARGET_DIR)/usr/bin/a10disp
 endef
 
 $(eval $(generic-package))

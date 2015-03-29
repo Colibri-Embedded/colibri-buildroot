@@ -62,20 +62,20 @@ endef
 # copy the data files in the right place and add the corresponding stamp file.
 define TVHEADEND_BUILD_CMDS
 	$(INSTALL) -d $(@D)/data/dvb-scan
-	cp -r $(TARGET_DIR)/usr/share/dvb/* $(@D)/data/dvb-scan/
+	cp -r $(TVHEADEND_TARGET_DIR)/usr/share/dvb/* $(@D)/data/dvb-scan/
 	touch $(@D)/data/dvb-scan/.stamp
 	$(MAKE) -C $(@D)
 endef
 
 define TVHEADEND_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) DESTDIR="$(TARGET_DIR)" install
+	$(MAKE) -C $(@D) DESTDIR="$(TVHEADEND_TARGET_DIR)" install
 endef
 
 # Remove documentation and source files that are not needed because we
 # use the bundled web interface version.
 define TVHEADEND_CLEAN_SHARE
-	rm -rf $(TARGET_DIR)/usr/share/tvheadend/docs
-	rm -rf $(TARGET_DIR)/usr/share/tvheadend/src
+	rm -rf $(TVHEADEND_TARGET_DIR)/usr/share/tvheadend/docs
+	rm -rf $(TVHEADEND_TARGET_DIR)/usr/share/tvheadend/src
 endef
 
 TVHEADEND_POST_INSTALL_TARGET_HOOKS += TVHEADEND_CLEAN_SHARE
@@ -87,14 +87,14 @@ TVHEADEND_POST_INSTALL_TARGET_HOOKS += TVHEADEND_CLEAN_SHARE
 #  - a non-root user to run as
 define TVHEADEND_INSTALL_DB
 	$(INSTALL) -D -m 0600 package/tvheadend/accesscontrol.1     \
-		$(TARGET_DIR)/home/tvheadend/.hts/tvheadend/accesscontrol/1
-	chmod -R go-rwx $(TARGET_DIR)/home/tvheadend
+		$(TVHEADEND_TARGET_DIR)/home/tvheadend/.hts/tvheadend/accesscontrol/1
+	chmod -R go-rwx $(TVHEADEND_TARGET_DIR)/home/tvheadend
 endef
 TVHEADEND_POST_INSTALL_TARGET_HOOKS += TVHEADEND_INSTALL_DB
 
 define TVHEADEND_INSTALL_INIT_SYSV
-	$(INSTALL) -D package/tvheadend/etc.default.tvheadend $(TARGET_DIR)/etc/default/tvheadend
-	$(INSTALL) -D package/tvheadend/S99tvheadend          $(TARGET_DIR)/etc/init.d/S99tvheadend
+	$(INSTALL) -D package/tvheadend/etc.default.tvheadend $(TVHEADEND_TARGET_DIR)/etc/default/tvheadend
+	$(INSTALL) -D package/tvheadend/S99tvheadend          $(TVHEADEND_TARGET_DIR)/etc/init.d/S99tvheadend
 endef
 
 define TVHEADEND_USERS

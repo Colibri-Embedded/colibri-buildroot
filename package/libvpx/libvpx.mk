@@ -47,7 +47,7 @@ define LIBVPX_INSTALL_STAGING_CMDS
 endef
 
 define LIBVPX_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(LIBVPX_MAKE_ENV) $(MAKE) DESTDIR="$(TARGET_DIR)" -C $(@D) install
+	$(TARGET_MAKE_ENV) $(LIBVPX_MAKE_ENV) $(MAKE) DESTDIR="$(LIBVPX_TARGET_DIR)" -C $(@D) install
 endef
 
 $(eval $(generic-package))

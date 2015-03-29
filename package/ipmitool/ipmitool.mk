@@ -22,7 +22,7 @@ endif
 
 ifeq ($(BR2_PACKAGE_IPMITOOL_IPMIEVD),)
 define IPMITOOL_REMOVE_IPMIEVD
-	$(RM) -f $(TARGET_DIR)/usr/sbin/ipmievd
+	$(RM) -f $(IPMITOOL_TARGET_DIR)/usr/sbin/ipmievd
 endef
 IPMITOOL_POST_INSTALL_TARGET_HOOKS += IPMITOOL_REMOVE_IPMIEVD
 endif

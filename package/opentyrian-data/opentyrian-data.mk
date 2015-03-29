@@ -14,10 +14,10 @@ define OPENTYRIAN_DATA_EXTRACT_CMDS
 endef
 
 define OPENTYRIAN_DATA_INSTALL_TARGET_CMDS
-	mkdir -p $(TARGET_DIR)/usr/share/opentyrian/data/
-	cp $(@D)/tyrian21/* $(TARGET_DIR)/usr/share/opentyrian/data/
-	rm -f $(TARGET_DIR)/usr/share/opentyrian/data/*.doc
-	rm -f $(TARGET_DIR)/usr/share/opentyrian/data/*.exe
+	mkdir -p $(OPENTYRIAN_DATA_TARGET_DIR)/usr/share/opentyrian/data/
+	cp $(@D)/tyrian21/* $(OPENTYRIAN_DATA_TARGET_DIR)/usr/share/opentyrian/data/
+	rm -f $(OPENTYRIAN_DATA_TARGET_DIR)/usr/share/opentyrian/data/*.doc
+	rm -f $(OPENTYRIAN_DATA_TARGET_DIR)/usr/share/opentyrian/data/*.exe
 endef
 
 $(eval $(generic-package))

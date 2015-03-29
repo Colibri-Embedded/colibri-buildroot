@@ -20,7 +20,7 @@ LIBUNGIF_BINS = \
 	text2gif
 
 define LIBUNGIF_BINS_CLEANUP
-	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,$(LIBUNGIF_BINS))
+	rm -f $(addprefix $(LIBUNGIF_TARGET_DIR)/usr/bin/,$(LIBUNGIF_BINS))
 endef
 
 LIBUNGIF_POST_INSTALL_TARGET_HOOKS += LIBUNGIF_BINS_CLEANUP

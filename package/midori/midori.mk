@@ -42,7 +42,7 @@ define MIDORI_BUILD_CMDS
 endef
 
 define MIDORI_INSTALL_TARGET_CMDS
-	(cd $(@D); $(HOST_DIR)/usr/bin/python2 ./waf --destdir=$(TARGET_DIR) install)
+	(cd $(@D); $(HOST_DIR)/usr/bin/python2 ./waf --destdir=$(MIDORI_TARGET_DIR) install)
 endef
 
 $(eval $(generic-package))

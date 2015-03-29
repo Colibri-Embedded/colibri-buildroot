@@ -11,8 +11,8 @@ BONNIE_LICENSE = GPLv2
 BONNIE_LICENSE_FILES = copyright.txt
 
 define BONNIE_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 755 $(@D)/bonnie++ $(TARGET_DIR)/usr/sbin/bonnie++
-	$(INSTALL) -D -m 755 $(@D)/zcav $(TARGET_DIR)/usr/sbin/zcav
+	$(INSTALL) -D -m 755 $(@D)/bonnie++ $(BONNIE_TARGET_DIR)/usr/sbin/bonnie++
+	$(INSTALL) -D -m 755 $(@D)/zcav $(BONNIE_TARGET_DIR)/usr/sbin/zcav
 endef
 
 $(eval $(autotools-package))

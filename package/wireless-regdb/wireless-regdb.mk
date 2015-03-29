@@ -12,9 +12,9 @@ WIRELESS_REGDB_LICENSE_FILES = LICENSE
 
 define WIRELESS_REGDB_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 644 -D -T $(@D)/regulatory.bin \
-		$(TARGET_DIR)/usr/lib/crda/regulatory.bin
+		$(WIRELESS_REGDB_TARGET_DIR)/usr/lib/crda/regulatory.bin
 	$(INSTALL) -m 644 -D -T $(@D)/linville.key.pub.pem \
-		$(TARGET_DIR)/etc/wireless-regdb/pubkeys/linville.key.pub.pem
+		$(WIRELESS_REGDB_TARGET_DIR)/etc/wireless-regdb/pubkeys/linville.key.pub.pem
 endef
 
 $(eval $(generic-package))

@@ -49,12 +49,12 @@ endif
 
 define OPENVPN_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 755 $(@D)/src/openvpn/openvpn \
-		$(TARGET_DIR)/usr/sbin/openvpn
+		$(OPENVPN_TARGET_DIR)/usr/sbin/openvpn
 endef
 
 define OPENVPN_INSTALL_INIT_SYSV
 	$(INSTALL) -m 755 -D package/openvpn/S60openvpn \
-		$(TARGET_DIR)/etc/init.d/S60openvpn
+		$(OPENVPN_TARGET_DIR)/etc/init.d/S60openvpn
 endef
 
 $(eval $(autotools-package))

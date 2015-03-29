@@ -12,8 +12,8 @@ ZD1211_FIRMWARE_LICENSE_FILES = COPYING
 
 # Not all of the firmware files are used
 define ZD1211_FIRMWARE_INSTALL_TARGET_CMDS
-	$(INSTALL) -d -m 0755 $(TARGET_DIR)/lib/firmware/zd1211/
-	cp -dpf $(@D)/zd1211*{ub,uphr,ur} $(TARGET_DIR)/lib/firmware/zd1211
+	$(INSTALL) -d -m 0755 $(ZD1211_FIRMWARE_TARGET_DIR)/lib/firmware/zd1211/
+	cp -dpf $(@D)/zd1211*{ub,uphr,ur} $(ZD1211_FIRMWARE_TARGET_DIR)/lib/firmware/zd1211
 endef
 
 $(eval $(generic-package))

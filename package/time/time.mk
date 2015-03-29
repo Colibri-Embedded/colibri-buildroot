@@ -13,7 +13,7 @@ TIME_LICENSE_FILES = COPYING
 # time uses an old version of automake that does not support
 # installing in DESTDIR.
 define TIME_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 755  $(@D)/time $(TARGET_DIR)/usr/bin/time
+	$(INSTALL) -D -m 755  $(@D)/time $(TIME_TARGET_DIR)/usr/bin/time
 endef
 
 $(eval $(autotools-package))

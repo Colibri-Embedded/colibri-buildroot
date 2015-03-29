@@ -19,8 +19,8 @@ else
 endif
 
 define TN5250_INSTALL_FIXES
-	rm -f $(TARGET_DIR)/usr/bin/5250keys
-	rm -f $(TARGET_DIR)/usr/bin/xt5250
+	rm -f $(TN5250_TARGET_DIR)/usr/bin/5250keys
+	rm -f $(TN5250_TARGET_DIR)/usr/bin/xt5250
 endef
 
 TN5250_POST_INSTALL_TARGET_HOOKS += TN5250_INSTALL_FIXES

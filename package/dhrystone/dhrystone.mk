@@ -18,7 +18,7 @@ define DHRYSTONE_BUILD_CMDS
 endef
 
 define DHRYSTONE_INSTALL_TARGET_CMDS
-	$(INSTALL) -D $(@D)/dhrystone $(TARGET_DIR)/usr/bin/dhrystone
+	$(INSTALL) -D $(@D)/dhrystone $(DHRYSTONE_TARGET_DIR)/usr/bin/dhrystone
 endef
 
 $(eval $(generic-package))

@@ -47,16 +47,16 @@ OPROFILE_DEPENDENCIES += libpfm4
 endif
 
 define OPROFILE_INSTALL_TARGET_CMDS
-	$(INSTALL) -d -m 755 $(TARGET_DIR)/usr/bin
-	$(INSTALL) -d -m 755 $(TARGET_DIR)/usr/share/oprofile
-	$(INSTALL) -d -m 755 $(TARGET_DIR)/usr/lib/oprofile
+	$(INSTALL) -d -m 755 $(OPROFILE_TARGET_DIR)/usr/bin
+	$(INSTALL) -d -m 755 $(OPROFILE_TARGET_DIR)/usr/share/oprofile
+	$(INSTALL) -d -m 755 $(OPROFILE_TARGET_DIR)/usr/lib/oprofile
 	if [ -d $(@D)/events/$(OPROFILE_ARCH) ]; then \
 		cp -dpfr $(@D)/events/$(OPROFILE_ARCH) \
-			$(TARGET_DIR)/usr/share/oprofile; \
+			$(OPROFILE_TARGET_DIR)/usr/share/oprofile; \
 	fi
-	$(INSTALL) -m 644 $(@D)/libregex/stl.pat $(TARGET_DIR)/usr/share/oprofile
-	$(INSTALL) -m 755 $(addprefix $(@D)/, $(OPROFILE_BINARIES)) $(TARGET_DIR)/usr/bin
-	$(INSTALL) -m 755 $(@D)/libopagent/.libs/*.so* $(TARGET_DIR)/usr/lib/oprofile
+	$(INSTALL) -m 644 $(@D)/libregex/stl.pat $(OPROFILE_TARGET_DIR)/usr/share/oprofile
+	$(INSTALL) -m 755 $(addprefix $(@D)/, $(OPROFILE_BINARIES)) $(OPROFILE_TARGET_DIR)/usr/bin
+	$(INSTALL) -m 755 $(@D)/libopagent/.libs/*.so* $(OPROFILE_TARGET_DIR)/usr/lib/oprofile
 endef
 
 $(eval $(autotools-package))

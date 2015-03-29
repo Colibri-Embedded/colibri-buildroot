@@ -50,7 +50,7 @@ define RTMPDUMP_INSTALL_STAGING_CMDS
 endef
 
 define RTMPDUMP_INSTALL_TARGET_CMDS
-	$(MAKE) prefix=/usr -C $(@D)/librtmp install DESTDIR=$(TARGET_DIR) $(RTMPDUMP_SHARED)
+	$(MAKE) prefix=/usr -C $(@D)/librtmp install DESTDIR=$(RTMPDUMP_TARGET_DIR) $(RTMPDUMP_SHARED)
 endef
 
 $(eval $(generic-package))

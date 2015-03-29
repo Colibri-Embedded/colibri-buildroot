@@ -17,7 +17,7 @@ define WHETSTONE_BUILD_CMDS
 endef
 
 define WHETSTONE_INSTALL_TARGET_CMDS
-	$(INSTALL) -D $(@D)/whetstone $(TARGET_DIR)/usr/bin/whetstone
+	$(INSTALL) -D $(@D)/whetstone $(WHETSTONE_TARGET_DIR)/usr/bin/whetstone
 endef
 
 $(eval $(generic-package))

@@ -19,7 +19,7 @@ endef
 
 define MONGREL2_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE1) $(TARGET_CONFIGURE_OPTS) -C $(@D) \
-		PREFIX=/usr DESTDIR=$(TARGET_DIR) install
+		PREFIX=/usr DESTDIR=$(MONGREL2_TARGET_DIR) install
 endef
 
 $(eval $(generic-package))

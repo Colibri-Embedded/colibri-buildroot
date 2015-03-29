@@ -23,8 +23,8 @@ ACL_INSTALL_STAGING_OPTS = 			\
 	install-dev install-lib
 
 ACL_INSTALL_TARGET_OPTS = 			\
-	prefix=$(TARGET_DIR)/usr 		\
-	exec_prefix=$(TARGET_DIR)/usr 		\
+	prefix=$(ACL_TARGET_DIR)/usr 		\
+	exec_prefix=$(ACL_TARGET_DIR)/usr 		\
 	install install-lib
 
 $(eval $(autotools-package))

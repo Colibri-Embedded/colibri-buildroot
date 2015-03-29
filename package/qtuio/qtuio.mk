@@ -46,7 +46,7 @@ endef
 ifeq ($(BR2_QTUIO_EXAMPLES),y)
 define QTUIO_INSTALL_EXAMPLES
 	for example in $(QTUIO_EXAMPLES) ; do \
-		$(INSTALL) -D -m 0755 $(@D)/examples/$${example}/$${example} $(TARGET_DIR)/usr/share/qtuio/$${example} || exit 1 ; \
+		$(INSTALL) -D -m 0755 $(@D)/examples/$${example}/$${example} $(QTUIO_TARGET_DIR)/usr/share/qtuio/$${example} || exit 1 ; \
 	done
 endef
 endif
@@ -56,7 +56,7 @@ QTUIO_LIBRARY = libqTUIO.a
 else
 QTUIO_LIBRARY = libqTUIO.so*
 define QTUIO_INSTALL_TARGET_LIBRARY
-	cp -dpf $(@D)/lib/$(QTUIO_LIBRARY) $(TARGET_DIR)/usr/lib
+	cp -dpf $(@D)/lib/$(QTUIO_LIBRARY) $(QTUIO_TARGET_DIR)/usr/lib
 endef
 endif
 

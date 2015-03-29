@@ -14,7 +14,7 @@ define JSMIN_BUILD_CMDS
 endef
 
 define JSMIN_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/jsmin $(TARGET_DIR)/usr/bin/jsmin
+	$(INSTALL) -m 0755 -D $(@D)/jsmin $(JSMIN_TARGET_DIR)/usr/bin/jsmin
 endef
 
 define HOST_JSMIN_BUILD_CMDS

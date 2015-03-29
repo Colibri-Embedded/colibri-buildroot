@@ -15,7 +15,7 @@ define STATSERIAL_BUILD_CMDS
 endef
 
 define STATSERIAL_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/statserial $(TARGET_DIR)/usr/bin/statserial
+	$(INSTALL) -D -m 0755 $(@D)/statserial $(STATSERIAL_TARGET_DIR)/usr/bin/statserial
 endef
 
 $(eval $(generic-package))

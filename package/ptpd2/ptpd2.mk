@@ -26,7 +26,7 @@ endif
 
 define PTPD2_INSTALL_INIT_SYSV
 	$(INSTALL) -m 755 -D package/ptpd2/S65ptpd2 \
-		$(TARGET_DIR)/etc/init.d/S65ptpd2
+		$(PTPD2_TARGET_DIR)/etc/init.d/S65ptpd2
 endef
 
 $(eval $(autotools-package))

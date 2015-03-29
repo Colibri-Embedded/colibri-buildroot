@@ -33,7 +33,7 @@ endef
 
 
 define NE10_INSTALL_TARGET_CMDS
-	cp -dpf $(@D)/modules/libNE10*.so* $(TARGET_DIR)/usr/lib/
+	cp -dpf $(@D)/modules/libNE10*.so* $(NE10_TARGET_DIR)/usr/lib/
 endef
 
 $(eval $(cmake-package))

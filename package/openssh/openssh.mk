@@ -36,15 +36,15 @@ endif
 
 define OPENSSH_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -D -m 644 package/openssh/sshd.service \
-		$(TARGET_DIR)/etc/systemd/system/sshd.service
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+		$(OPENSSH_TARGET_DIR)/etc/systemd/system/sshd.service
+	mkdir -p $(OPENSSH_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
 	ln -fs ../sshd.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/sshd.service
+		$(OPENSSH_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/sshd.service
 endef
 
 define OPENSSH_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 755 package/openssh/S50sshd \
-		$(TARGET_DIR)/etc/init.d/S50sshd
+		$(OPENSSH_TARGET_DIR)/etc/init.d/S50sshd
 endef
 
 $(eval $(autotools-package))

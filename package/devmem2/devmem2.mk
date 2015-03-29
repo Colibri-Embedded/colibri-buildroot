@@ -19,7 +19,7 @@ define DEVMEM2_BUILD_CMDS
 endef
 
 define DEVMEM2_INSTALL_TARGET_CMDS
-	$(INSTALL) -D $(@D)/devmem2 $(TARGET_DIR)/sbin/devmem2
+	$(INSTALL) -D $(@D)/devmem2 $(DEVMEM2_TARGET_DIR)/sbin/devmem2
 endef
 
 $(eval $(generic-package))

@@ -19,8 +19,8 @@ endef
 
 # install doesn't overwrite
 define IFUPDOWN_INSTALL_TARGET_CMDS
-	$(RM) $(TARGET_DIR)/sbin/{ifdown,ifquery}
-	$(TARGET_MAKE_ENV) $(MAKE) BASEDIR=$(TARGET_DIR) -C $(@D) install
+	$(RM) $(IFUPDOWN_TARGET_DIR)/sbin/{ifdown,ifquery}
+	$(TARGET_MAKE_ENV) $(MAKE) BASEDIR=$(IFUPDOWN_TARGET_DIR) -C $(@D) install
 endef
 
 $(eval $(generic-package))

@@ -21,12 +21,12 @@ RP_PPPOE_CONF_ENV = \
 
 define RP_PPPOE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0644 $(@D)/configs/pppoe.conf \
-		$(TARGET_DIR)/etc/ppp/pppoe.conf
+		$(RP_PPPOE_TARGET_DIR)/etc/ppp/pppoe.conf
 	for ff in $(RP_PPPOE_TARGET_FILES); do \
-		$(INSTALL) -m 0755 $(@D)/src/$$ff $(TARGET_DIR)/usr/sbin/$$ff || exit 1; \
+		$(INSTALL) -m 0755 $(@D)/src/$$ff $(RP_PPPOE_TARGET_DIR)/usr/sbin/$$ff || exit 1; \
 	done
 	for ff in $(RP_PPPOE_TARGET_SCRIPTS); do \
-		$(INSTALL) -m 0755 $(@D)/scripts/$$ff $(TARGET_DIR)/usr/sbin/$$ff || exit 1; \
+		$(INSTALL) -m 0755 $(@D)/scripts/$$ff $(RP_PPPOE_TARGET_DIR)/usr/sbin/$$ff || exit 1; \
 	done
 endef
 

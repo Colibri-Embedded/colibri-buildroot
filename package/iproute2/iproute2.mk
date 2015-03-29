@@ -44,7 +44,7 @@ endif
 # ifcfg needs bash
 ifeq ($(BR2_PACKAGE_BASH),)
 define IPROUTE2_REMOVE_IFCFG
-	rm -f $(TARGET_DIR)/sbin/ifcfg
+	rm -f $(IPROUTE2_TARGET_DIR)/sbin/ifcfg
 endef
 endif
 
@@ -65,7 +65,7 @@ define IPROUTE2_BUILD_CMDS
 endef
 
 define IPROUTE2_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR="$(TARGET_DIR)" \
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR="$(IPROUTE2_TARGET_DIR)" \
 		SBINDIR=/sbin \
 		DOCDIR=/usr/share/doc/iproute2-$(IPROUTE2_VERSION) \
 		MANDIR=/usr/share/man install

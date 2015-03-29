@@ -22,7 +22,7 @@ endef
 
 define BUSTLE_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/dist/build/bustle-pcap \
-		$(TARGET_DIR)/usr/bin/bustle-pcap
+		$(BUSTLE_TARGET_DIR)/usr/bin/bustle-pcap
 endef
 
 $(eval $(generic-package))

@@ -57,7 +57,7 @@ define X264_INSTALL_STAGING_CMDS
 endef
 
 define X264_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) DESTDIR="$(TARGET_DIR)" -C $(@D) install
+	$(TARGET_MAKE_ENV) $(MAKE) DESTDIR="$(X264_TARGET_DIR)" -C $(@D) install
 endef
 
 $(eval $(generic-package))

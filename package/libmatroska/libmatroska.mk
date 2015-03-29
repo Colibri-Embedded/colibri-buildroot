@@ -31,7 +31,7 @@ define LIBMATROSKA_INSTALL_STAGING_CMDS
 endef
 
 define LIBMATROSKA_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D)/make/linux prefix=$(TARGET_DIR)/usr \
+	$(MAKE) -C $(@D)/make/linux prefix=$(LIBMATROSKA_TARGET_DIR)/usr \
 		$(LIBMATROSKA_MAKE_INSTALL_TARGETS)
 endef
 

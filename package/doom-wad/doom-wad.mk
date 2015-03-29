@@ -14,7 +14,7 @@ endef
 
 define DOOM_WAD_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0644 -D $(@D)/doom1.wad \
-		$(TARGET_DIR)/usr/share/games/doom/doom1.wad
+		$(DOOM_WAD_TARGET_DIR)/usr/share/games/doom/doom1.wad
 endef
 
 $(eval $(generic-package))

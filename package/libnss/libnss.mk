@@ -67,17 +67,17 @@ define LIBNSS_INSTALL_STAGING_CMDS
 endef
 
 define LIBNSS_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 755 -t $(TARGET_DIR)/usr/lib/ \
+	$(INSTALL) -m 755 -t $(LIBNSS_TARGET_DIR)/usr/lib/ \
 		$(@D)/$(LIBNSS_DISTDIR)/lib/*.so
-	$(INSTALL) -m 755 -d $(TARGET_DIR)/usr/include/nss
-	$(INSTALL) -m 644 -t $(TARGET_DIR)/usr/include/nss \
+	$(INSTALL) -m 755 -d $(LIBNSS_TARGET_DIR)/usr/include/nss
+	$(INSTALL) -m 644 -t $(LIBNSS_TARGET_DIR)/usr/include/nss \
 		$(@D)/$(LIBNSS_DISTDIR)/public/nss/*
-	$(INSTALL) -m 755 -t $(TARGET_DIR)/usr/lib/ \
+	$(INSTALL) -m 755 -t $(LIBNSS_TARGET_DIR)/usr/lib/ \
 		$(@D)/$(LIBNSS_DISTDIR)/lib/*.a
 	$(INSTALL) -D -m 0644 $(TOPDIR)/package/libnss/nss.pc.in \
-		$(TARGET_DIR)/usr/lib/pkgconfig/nss.pc
+		$(LIBNSS_TARGET_DIR)/usr/lib/pkgconfig/nss.pc
 	$(SED) 's/@VERSION@/$(LIBNSS_VERSION)/g;' \
-		$(TARGET_DIR)/usr/lib/pkgconfig/nss.pc
+		$(LIBNSS_TARGET_DIR)/usr/lib/pkgconfig/nss.pc
 endef
 
 $(eval $(generic-package))

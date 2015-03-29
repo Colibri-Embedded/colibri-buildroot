@@ -16,7 +16,7 @@ endef
 
 define LUA_MSGPACK_NATIVE_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 755 -D $(@D)/msgpack.so \
-		$(TARGET_DIR)/usr/lib/lua/$(LUAINTERPRETER_ABIVER)/msgpack.so
+		$(LUA_MSGPACK_NATIVE_TARGET_DIR)/usr/lib/lua/$(LUAINTERPRETER_ABIVER)/msgpack.so
 endef
 
 $(eval $(generic-package))

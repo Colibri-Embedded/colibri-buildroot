@@ -26,7 +26,7 @@ define FAIFA_INSTALL_TARGET_CMDS
 	$(TARGET_CONFIGURE_OPTS) $(MAKE) -C $(@D) \
 		PREFIX=/usr \
 		STRIP=/bin/true \
-		DESTDIR=$(TARGET_DIR) \
+		DESTDIR=$(FAIFA_TARGET_DIR) \
 		install
 endef
 

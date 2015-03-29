@@ -20,7 +20,7 @@ define ZLOG_INSTALL_STAGING_CMDS
 endef
 
 define ZLOG_INSTALL_TARGET_CMDS
-	$(MAKE) PREFIX=$(TARGET_DIR)/usr -C $(@D) install
+	$(MAKE) PREFIX=$(ZLOG_TARGET_DIR)/usr -C $(@D) install
 endef
 
 $(eval $(generic-package))

@@ -16,7 +16,7 @@ define FLASHROM_BUILD_CMDS
 endef
 
 define FLASHROM_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/flashrom $(TARGET_DIR)/usr/sbin/flashrom
+	$(INSTALL) -m 0755 -D $(@D)/flashrom $(FLASHROM_TARGET_DIR)/usr/sbin/flashrom
 endef
 
 $(eval $(generic-package))

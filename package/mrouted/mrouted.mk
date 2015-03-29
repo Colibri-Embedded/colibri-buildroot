@@ -21,7 +21,7 @@ define MROUTED_BUILD_CMDS
 endef
 
 define MROUTED_INSTALL_TARGET_CMDS
-	$(MAKE) prefix=/usr DESTDIR=$(TARGET_DIR) -C $(@D) install
+	$(MAKE) prefix=/usr DESTDIR=$(MROUTED_TARGET_DIR) -C $(@D) install
 endef
 
 $(eval $(generic-package))

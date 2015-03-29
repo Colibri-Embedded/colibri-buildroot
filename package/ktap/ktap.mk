@@ -23,7 +23,7 @@ define KTAP_BUILD_CMDS
 endef
 
 define KTAP_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m755 $(@D)/ktap  $(TARGET_DIR)/usr/bin/ktap
+	$(INSTALL) -D -m755 $(@D)/ktap  $(KTAP_TARGET_DIR)/usr/bin/ktap
 	$(MAKE) -C $(@D) $(LINUX_MAKE_FLAGS) KERNEL_SRC=$(LINUX_DIR) KVERSION=$(LINUX_VERSION_PROBED) modules_install
 endef
 

@@ -12,13 +12,13 @@ ACPID_LICENSE_FILES = COPYING
 
 define ACPID_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 0755 package/acpid/S02acpid \
-		$(TARGET_DIR)/etc/init.d/S02acpid
+		$(ACPID_TARGET_DIR)/etc/init.d/S02acpid
 endef
 
 define ACPID_SET_EVENTS
-	mkdir -p $(TARGET_DIR)/etc/acpi/events
+	mkdir -p $(ACPID_TARGET_DIR)/etc/acpi/events
 	printf "event=button[ /]power\naction=/sbin/poweroff\n" \
-		>$(TARGET_DIR)/etc/acpi/events/powerbtn
+		>$(ACPID_TARGET_DIR)/etc/acpi/events/powerbtn
 endef
 
 ACPID_POST_INSTALL_TARGET_HOOKS += ACPID_SET_EVENTS

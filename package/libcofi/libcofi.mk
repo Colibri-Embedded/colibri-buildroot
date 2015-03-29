@@ -14,7 +14,7 @@ define LIBCOFI_BUILD_CMDS
 endef
 
 define LIBCOFI_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/libcofi_rpi.so $(TARGET_DIR)/usr/lib/libcofi_rpi.so
+	$(INSTALL) -D -m 0755 $(@D)/libcofi_rpi.so $(LIBCOFI_TARGET_DIR)/usr/lib/libcofi_rpi.so
 endef
 
 $(eval $(generic-package))

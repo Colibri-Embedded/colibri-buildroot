@@ -102,12 +102,12 @@ endif
 define COREUTILS_POST_INSTALL
 	# some things go in root rather than usr
 	for f in $(COREUTILS_BIN_PROGS); do \
-		mv -f $(TARGET_DIR)/usr/bin/$$f $(TARGET_DIR)/bin/$$f || exit 1; \
+		mv -f $(COREUTILS_TARGET_DIR)/usr/bin/$$f $(COREUTILS_TARGET_DIR)/bin/$$f || exit 1; \
 	done
 	# link for archaic shells
-	ln -fs test $(TARGET_DIR)/usr/bin/[
+	ln -fs test $(COREUTILS_TARGET_DIR)/usr/bin/[
 	# gnu thinks chroot is in bin, debian thinks it's in sbin
-	mv -f $(TARGET_DIR)/usr/bin/chroot $(TARGET_DIR)/usr/sbin/chroot
+	mv -f $(COREUTILS_TARGET_DIR)/usr/bin/chroot $(COREUTILS_TARGET_DIR)/usr/sbin/chroot
 endef
 
 COREUTILS_POST_INSTALL_TARGET_HOOKS += COREUTILS_POST_INSTALL

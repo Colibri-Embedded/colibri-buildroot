@@ -19,7 +19,7 @@ GESFTPSERVER_DEPENDENCIES += \
 
 # openssh/dropbear looks here
 define GESFTPSERVER_ADD_SYMLINK
-	ln -sf gesftpserver $(TARGET_DIR)/usr/libexec/sftp-server
+	ln -sf gesftpserver $(GESFTPSERVER_TARGET_DIR)/usr/libexec/sftp-server
 endef
 
 GESFTPSERVER_POST_INSTALL_TARGET_HOOKS += GESFTPSERVER_ADD_SYMLINK

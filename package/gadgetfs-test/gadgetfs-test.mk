@@ -19,7 +19,7 @@ define GADGETFS_TEST_BUILD_CMDS
 endef
 
 define GADGETFS_TEST_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) DESTDIR=$(TARGET_DIR) prefix=/usr install
+	$(MAKE) -C $(@D) DESTDIR=$(GADGETFS_TEST_TARGET_DIR) prefix=/usr install
 endef
 
 $(eval $(generic-package))

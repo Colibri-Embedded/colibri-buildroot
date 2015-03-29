@@ -481,10 +481,10 @@ endef
 
 ifeq ($(BR2_UCLIBC_INSTALL_TEST_SUITE),y)
 define UCLIBC_INSTALL_TEST_SUITE
-	mkdir -p $(TARGET_DIR)/root/uClibc
-	cp -rdpf $(@D)/test $(TARGET_DIR)/root/uClibc
-	$(INSTALL) -D -m 0644 $(@D)/Rules.mak $(TARGET_DIR)/root/uClibc/Rules.mak
-	$(INSTALL) -D -m 0644 $(@D)/.config $(TARGET_DIR)/root/uClibc/.config
+	mkdir -p $(UCLIBC_TARGET_DIR)/root/uClibc
+	cp -rdpf $(@D)/test $(UCLIBC_TARGET_DIR)/root/uClibc
+	$(INSTALL) -D -m 0644 $(@D)/Rules.mak $(UCLIBC_TARGET_DIR)/root/uClibc/Rules.mak
+	$(INSTALL) -D -m 0644 $(@D)/.config $(UCLIBC_TARGET_DIR)/root/uClibc/.config
 endef
 endif
 
@@ -493,7 +493,7 @@ define UCLIBC_INSTALL_UTILS_TARGET
 	$(MAKE1) -C $(@D) \
 		CC="$(TARGET_CC)" CPP="$(TARGET_CPP)" LD="$(TARGET_LD)" \
 		ARCH="$(UCLIBC_TARGET_ARCH)" \
-		PREFIX=$(TARGET_DIR) \
+		PREFIX=$(UCLIBC_TARGET_DIR) \
 		utils install_utils
 endef
 endif
@@ -501,7 +501,7 @@ endif
 define UCLIBC_INSTALL_TARGET_CMDS
 	$(MAKE1) -C $(@D) \
 		$(UCLIBC_MAKE_FLAGS) \
-		PREFIX=$(TARGET_DIR) \
+		PREFIX=$(UCLIBC_TARGET_DIR) \
 		DEVEL_PREFIX=/usr/ \
 		RUNTIME_PREFIX=/ \
 		install_runtime

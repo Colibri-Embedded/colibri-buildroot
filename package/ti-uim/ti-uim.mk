@@ -14,7 +14,7 @@ endef
 
 define TI_UIM_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/uim \
-		$(TARGET_DIR)/usr/sbin/uim
+		$(TI_UIM_TARGET_DIR)/usr/sbin/uim
 endef
 
 $(eval $(generic-package))

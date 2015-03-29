@@ -12,7 +12,7 @@ MEMTEST86_LICENSE_FILES = README
 
 # memtest86+ is sensitive to toolchain changes, use the shipped binary version
 define MEMTEST86_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/precomp.bin $(TARGET_DIR)/boot/memtest86+.bin
+	$(INSTALL) -m 0755 -D $(@D)/precomp.bin $(MEMTEST86_TARGET_DIR)/boot/memtest86+.bin
 endef
 
 $(eval $(generic-package))

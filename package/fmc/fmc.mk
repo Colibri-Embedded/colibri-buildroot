@@ -24,8 +24,8 @@ define FMC_BUILD_CMDS
 endef
 
 define FMC_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/source/fmc $(TARGET_DIR)/usr/sbin/fmc
-	cp -dpfr $(@D)/etc/fmc $(TARGET_DIR)/etc/
+	$(INSTALL) -D -m 0755 $(@D)/source/fmc $(FMC_TARGET_DIR)/usr/sbin/fmc
+	cp -dpfr $(@D)/etc/fmc $(FMC_TARGET_DIR)/etc/
 endef
 
 $(eval $(generic-package))

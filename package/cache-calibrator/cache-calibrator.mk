@@ -18,7 +18,7 @@ define CACHE_CALIBRATOR_BUILD_CMDS
 endef
 
 define CACHE_CALIBRATOR_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/cache_calibrator $(TARGET_DIR)/usr/bin/cache_calibrator
+	$(INSTALL) -D -m 0755 $(@D)/cache_calibrator $(CACHE_CALIBRATOR_TARGET_DIR)/usr/bin/cache_calibrator
 endef
 
 $(eval $(generic-package))

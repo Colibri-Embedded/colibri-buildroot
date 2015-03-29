@@ -70,7 +70,7 @@ endef
 
 define SQUASHFS_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) $(SQUASHFS_MAKE_ARGS) \
-		-C $(@D)/squashfs-tools/ INSTALL_DIR=$(TARGET_DIR)/usr/bin install
+		-C $(@D)/squashfs-tools/ INSTALL_DIR=$(SQUASHFS_TARGET_DIR)/usr/bin install
 endef
 
 define HOST_SQUASHFS_BUILD_CMDS

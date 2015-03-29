@@ -108,8 +108,8 @@ ifeq ($(BR2_PACKAGE_LIBGTK3_DEMO),y)
 LIBGTK3_DEPENDENCIES += hicolor-icon-theme shared-mime-info
 else
 define LIBGTK3_REMOVE_DEMOS
-	$(RM) $(TARGET_DIR)/usr/bin/gtk3-demo \
-		$(TARGET_DIR)/usr/bin/gtk3-demo-application
+	$(RM) $(LIBGTK3_TARGET_DIR)/usr/bin/gtk3-demo \
+		$(LIBGTK3_TARGET_DIR)/usr/bin/gtk3-demo-application
 endef
 LIBGTK3_POST_INSTALL_TARGET_HOOKS += LIBGTK3_REMOVE_DEMOS
 endif
@@ -122,7 +122,7 @@ endif
 
 define LIBGTK3_COMPILE_GLIB_SCHEMAS
 	$(HOST_DIR)/usr/bin/glib-compile-schemas \
-		$(TARGET_DIR)/usr/share/glib-2.0/schemas
+		$(LIBGTK3_TARGET_DIR)/usr/share/glib-2.0/schemas
 endef
 
 LIBGTK3_POST_INSTALL_TARGET_HOOKS += LIBGTK3_COMPILE_GLIB_SCHEMAS

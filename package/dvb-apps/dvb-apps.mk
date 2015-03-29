@@ -34,7 +34,7 @@ define DVB_APPS_INSTALL_STAGING_CMDS
 endef
 
 define DVB_APPS_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) $(DVB_APPS_MAKE_OPTS) DESTDIR=$(TARGET_DIR) install
+	$(MAKE) -C $(@D) $(DVB_APPS_MAKE_OPTS) DESTDIR=$(DVB_APPS_TARGET_DIR) install
 endef
 
 $(eval $(generic-package))

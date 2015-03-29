@@ -17,7 +17,7 @@ define MAKEDEVS_BUILD_CMDS
 endef
 
 define MAKEDEVS_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 755 $(@D)/makedevs $(TARGET_DIR)/usr/sbin/makedevs
+	$(INSTALL) -D -m 755 $(@D)/makedevs $(MAKEDEVS_TARGET_DIR)/usr/sbin/makedevs
 endef
 
 define HOST_MAKEDEVS_BUILD_CMDS

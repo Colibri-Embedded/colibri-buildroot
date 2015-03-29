@@ -17,8 +17,8 @@ LIBFUSE_CONF_OPTS = \
 	--enable-util
 
 define LIBFUSE_INSTALL_TARGET_CMDS
-	cp -dpf $(STAGING_DIR)/usr/bin/fusermount $(TARGET_DIR)/usr/bin/
-	cp -dpf $(STAGING_DIR)/usr/lib/libfuse.so* $(TARGET_DIR)/usr/lib/
+	cp -dpf $(STAGING_DIR)/usr/bin/fusermount $(LIBFUSE_TARGET_DIR)/usr/bin/
+	cp -dpf $(STAGING_DIR)/usr/lib/libfuse.so* $(LIBFUSE_TARGET_DIR)/usr/lib/
 endef
 
 $(eval $(autotools-package))

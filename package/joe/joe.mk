@@ -18,7 +18,7 @@ endif
 
 ifneq ($(BR2_PACKAGE_JOE_FULL),y)
 define JOE_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/joe $(TARGET_DIR)/usr/bin/joe
+	$(INSTALL) -m 0755 -D $(@D)/joe $(JOE_TARGET_DIR)/usr/bin/joe
 endef
 endif
 

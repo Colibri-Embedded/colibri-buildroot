@@ -152,9 +152,9 @@ endef
 COLLECTD_POST_PATCH_HOOKS += COLLECTD_DROP_WERROR
 
 define COLLECTD_INSTALL_TARGET_CMDS
-	$(MAKE) DESTDIR=$(TARGET_DIR) -C $(@D) install
-	rm -f $(TARGET_DIR)/usr/bin/collectd-nagios
-	rm -f $(TARGET_DIR)/usr/share/collectd/postgresql_default.conf
+	$(MAKE) DESTDIR=$(COLLECTD_TARGET_DIR) -C $(@D) install
+	rm -f $(COLLECTD_TARGET_DIR)/usr/bin/collectd-nagios
+	rm -f $(COLLECTD_TARGET_DIR)/usr/share/collectd/postgresql_default.conf
 endef
 
 $(eval $(autotools-package))

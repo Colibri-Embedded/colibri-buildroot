@@ -106,7 +106,7 @@ endif
 # This removes some unneeded Python scripts and XML target description
 # files that are not useful for a normal usage of the debugger.
 define GDB_REMOVE_UNNEEDED_FILES
-	$(RM) -rf $(TARGET_DIR)/usr/share/gdb
+	$(RM) -rf $(GDB_TARGET_DIR)/usr/share/gdb
 endef
 
 GDB_POST_INSTALL_TARGET_HOOKS += GDB_REMOVE_UNNEEDED_FILES
@@ -117,7 +117,7 @@ GDB_POST_INSTALL_TARGET_HOOKS += GDB_REMOVE_UNNEEDED_FILES
 # in debug-root/usr/bin/gdbserver so that it matches what Crosstool-NG
 # does.
 define GDB_SDK_INSTALL_GDBSERVER
-	$(INSTALL) -D -m 0755 $(TARGET_DIR)/usr/bin/gdbserver \
+	$(INSTALL) -D -m 0755 $(GDB_TARGET_DIR)/usr/bin/gdbserver \
 		$(HOST_DIR)/usr/$(GNU_TARGET_NAME)/debug-root/usr/bin/gdbserver
 endef
 

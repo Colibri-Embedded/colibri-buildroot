@@ -13,9 +13,9 @@ NETPERF_LICENSE_FILES = COPYING
 
 define NETPERF_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 $(@D)/src/netperf \
-		$(TARGET_DIR)/usr/bin/netperf
+		$(NETPERF_TARGET_DIR)/usr/bin/netperf
 	$(INSTALL) -m 0755 $(@D)/src/netserver \
-		$(TARGET_DIR)/usr/bin/netserver
+		$(NETPERF_TARGET_DIR)/usr/bin/netserver
 endef
 
 $(eval $(autotools-package))

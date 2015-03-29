@@ -19,16 +19,16 @@ endef
 
 define SMSTOOLS3_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/smstools3/S50smsd \
-		$(TARGET_DIR)/etc/init.d/S50smsd
+		$(SMSTOOLS3_TARGET_DIR)/etc/init.d/S50smsd
 endef
 
 define SMSTOOLS3_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/src/smsd \
-		$(TARGET_DIR)/usr/bin/smsd
+		$(SMSTOOLS3_TARGET_DIR)/usr/bin/smsd
 	$(INSTALL) -m 0755 -D $(@D)/scripts/sendsms \
-		$(TARGET_DIR)/usr/bin/sendsms
+		$(SMSTOOLS3_TARGET_DIR)/usr/bin/sendsms
 	$(INSTALL) -m 0644 -D $(@D)/examples/smsd.conf.easy \
-		$(TARGET_DIR)/etc/smsd.conf
+		$(SMSTOOLS3_TARGET_DIR)/etc/smsd.conf
 endef
 
 $(eval $(generic-package))

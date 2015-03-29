@@ -103,25 +103,25 @@ ifeq ($(BR2_PACKAGE_SYSTEMD_NETWORKD),y)
 SYSTEMD_CONF_OPTS += --enable-networkd
 define SYSTEMD_INSTALL_RESOLVCONF_HOOK
 	ln -sf ../run/systemd/resolve/resolv.conf \
-		$(TARGET_DIR)/etc/resolv.conf
+		$(SYSTEMD_TARGET_DIR)/etc/resolv.conf
 endef
 else
 SYSTEMD_CONF_OPTS += --disable-networkd
 define SYSTEMD_INSTALL_SERVICE_NETWORK
 	$(INSTALL) -D -m 644 package/systemd/network.service \
-		$(TARGET_DIR)/etc/systemd/system/network.service
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+		$(SYSTEMD_TARGET_DIR)/etc/systemd/system/network.service
+	mkdir -p $(SYSTEMD_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
 	ln -fs ../network.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/network.service
+		$(SYSTEMD_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/network.service
 endef
 endif
 
 ifeq ($(BR2_PACKAGE_SYSTEMD_TIMESYNCD),y)
 SYSTEMD_CONF_OPTS += --enable-timesyncd
 define SYSTEMD_INSTALL_SERVICE_TIMESYNC
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/sysinit.target.wants
+	mkdir -p $(SYSTEMD_TARGET_DIR)/etc/systemd/system/sysinit.target.wants
 	ln -sf ../../../../lib/systemd/system/systemd-timesyncd.service \
-		$(TARGET_DIR)/etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service
+		$(SYSTEMD_TARGET_DIR)/etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service
 endef
 else
 SYSTEMD_CONF_OPTS += --disable-timesyncd
@@ -146,27 +146,27 @@ SYSTEMD_MAKE_OPTS += LIBS=-lrt
 SYSTEMD_MAKE_OPTS += LDFLAGS+=-ldl
 
 define SYSTEMD_INSTALL_INIT_HOOK
-	ln -fs ../lib/systemd/systemd $(TARGET_DIR)/sbin/init
-	ln -fs ../bin/systemctl $(TARGET_DIR)/sbin/halt
-	ln -fs ../bin/systemctl $(TARGET_DIR)/sbin/poweroff
-	ln -fs ../bin/systemctl $(TARGET_DIR)/sbin/reboot
+	ln -fs ../lib/systemd/systemd $(SYSTEMD_TARGET_DIR)/sbin/init
+	ln -fs ../bin/systemctl $(SYSTEMD_TARGET_DIR)/sbin/halt
+	ln -fs ../bin/systemctl $(SYSTEMD_TARGET_DIR)/sbin/poweroff
+	ln -fs ../bin/systemctl $(SYSTEMD_TARGET_DIR)/sbin/reboot
 
-	ln -fs ../../../lib/systemd/system/multi-user.target $(TARGET_DIR)/etc/systemd/system/default.target
+	ln -fs ../../../lib/systemd/system/multi-user.target $(SYSTEMD_TARGET_DIR)/etc/systemd/system/default.target
 endef
 
 define SYSTEMD_INSTALL_MACHINEID_HOOK
-	touch $(TARGET_DIR)/etc/machine-id
+	touch $(SYSTEMD_TARGET_DIR)/etc/machine-id
 endef
 
 define SYSTEMD_SANITIZE_PATH_IN_UNITS
-	find $(TARGET_DIR)/lib/systemd/system -name '*.service' \
+	find $(SYSTEMD_TARGET_DIR)/lib/systemd/system -name '*.service' \
 		-exec $(SED) 's,$(HOST_DIR),,g' {} \;
 endef
 
 # Disable ldconfig.service, as /sbin/ldconfig is not available when the
 # target is built with a glibc-based toolchain.
 define SYSTEMD_DISABLE_LDCONFIG_SERVICE_HOOK
-	rm -f $(TARGET_DIR)/lib/systemd/system/sysinit.target.wants/ldconfig.service
+	rm -f $(SYSTEMD_TARGET_DIR)/lib/systemd/system/sysinit.target.wants/ldconfig.service
 endef
 
 SYSTEMD_POST_INSTALL_TARGET_HOOKS += \
@@ -189,7 +189,7 @@ define SYSTEMD_USERS
 endef
 
 define SYSTEMD_DISABLE_SERVICE_TTY1
-	rm -f $(TARGET_DIR)/etc/systemd/system/getty.target.wants/getty@tty1.service
+	rm -f $(SYSTEMD_TARGET_DIR)/etc/systemd/system/getty.target.wants/getty@tty1.service
 endef
 
 ifneq ($(call qstrip,$(BR2_TARGET_GENERIC_GETTY_PORT)),)
@@ -202,7 +202,7 @@ define SYSTEMD_INSTALL_SERVICE_TTY
 		SERVICE="serial-getty"; \
 	fi; \
 	ln -fs ../../../../lib/systemd/system/$${SERVICE}@.service \
-		$(TARGET_DIR)/etc/systemd/system/getty.target.wants/$${SERVICE}@$(BR2_TARGET_GENERIC_GETTY_PORT).service
+		$(SYSTEMD_TARGET_DIR)/etc/systemd/system/getty.target.wants/$${SERVICE}@$(BR2_TARGET_GENERIC_GETTY_PORT).service
 endef
 endif
 

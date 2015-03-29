@@ -50,8 +50,8 @@ define HOST_OLA_INSTALL_CMDS
 endef
 
 # sets where to find python libs built for target and required by ola
-OLA_CONF_ENV = PYTHONPATH=$(TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages
-OLA_MAKE_ENV = PYTHONPATH=$(TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages
+OLA_CONF_ENV = PYTHONPATH=$(OLA_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages
+OLA_MAKE_ENV = PYTHONPATH=$(OLA_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages
 
 ## OLA Bindings and Interface selections
 

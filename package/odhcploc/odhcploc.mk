@@ -14,7 +14,7 @@ define ODHCPLOC_BUILD_CMDS
 endef
 
 define ODHCPLOC_INSTALL_TARGET_CMDS
-	$(MAKE) PREFIX=/usr DESTDIR=$(TARGET_DIR) -C $(@D) install
+	$(MAKE) PREFIX=/usr DESTDIR=$(ODHCPLOC_TARGET_DIR) -C $(@D) install
 endef
 
 $(eval $(generic-package))

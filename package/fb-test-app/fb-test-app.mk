@@ -14,10 +14,10 @@ define FB_TEST_APP_BUILD_CMDS
 endef
 
 define FB_TEST_APP_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/perf $(TARGET_DIR)/usr/bin/fb-test-perf
-	$(INSTALL) -D -m 0755 $(@D)/rect $(TARGET_DIR)/usr/bin/fb-test-rect
-	$(INSTALL) -D -m 0755 $(@D)/fb-test $(TARGET_DIR)/usr/bin/fb-test
-	$(INSTALL) -D -m 0755 $(@D)/offset $(TARGET_DIR)/usr/bin/fb-test-offset
+	$(INSTALL) -D -m 0755 $(@D)/perf $(FB_TEST_APP_TARGET_DIR)/usr/bin/fb-test-perf
+	$(INSTALL) -D -m 0755 $(@D)/rect $(FB_TEST_APP_TARGET_DIR)/usr/bin/fb-test-rect
+	$(INSTALL) -D -m 0755 $(@D)/fb-test $(FB_TEST_APP_TARGET_DIR)/usr/bin/fb-test
+	$(INSTALL) -D -m 0755 $(@D)/offset $(FB_TEST_APP_TARGET_DIR)/usr/bin/fb-test-offset
 endef
 
 $(eval $(generic-package))

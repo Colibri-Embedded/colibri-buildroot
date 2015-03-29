@@ -28,11 +28,11 @@ define LIBSELINUX_INSTALL_STAGING_CMDS
 endef
 
 define LIBSELINUX_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) $(LIBSELINUX_MAKE_OPTS) DESTDIR=$(TARGET_DIR) install
+	$(MAKE) -C $(@D) $(LIBSELINUX_MAKE_OPTS) DESTDIR=$(LIBSELINUX_TARGET_DIR) install
 	# Create the selinuxfs mount point
-	if [ ! -d "$(TARGET_DIR)/selinux" ]; then mkdir $(TARGET_DIR)/selinux; fi
-	if ! grep -q "selinuxfs" $(TARGET_DIR)/etc/fstab; then \
-		echo "none /selinux selinuxfs noauto 0 0" >> $(TARGET_DIR)/etc/fstab ; fi
+	if [ ! -d "$(LIBSELINUX_TARGET_DIR)/selinux" ]; then mkdir $(LIBSELINUX_TARGET_DIR)/selinux; fi
+	if ! grep -q "selinuxfs" $(LIBSELINUX_TARGET_DIR)/etc/fstab; then \
+		echo "none /selinux selinuxfs noauto 0 0" >> $(LIBSELINUX_TARGET_DIR)/etc/fstab ; fi
 endef
 
 HOST_LIBSELINUX_DEPENDENCIES = \

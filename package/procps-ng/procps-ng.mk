@@ -24,8 +24,8 @@ PROCPS_NG_DEPENDENCIES += gettext
 PROCPS_NG_CONF_OPTS += LIBS=-lintl
 endif
 
-# We need this to make procps-ng binaries installed in $(TARGET_DIR)/usr
-# instead of $(TARGET_DIR)/usr/usr
+# We need this to make procps-ng binaries installed in $(PROCPS_NG_TARGET_DIR)/usr
+# instead of $(PROCPS_NG_TARGET_DIR)/usr/usr
 PROCPS_NG_CONF_OPTS += --exec-prefix=
 
 $(eval $(autotools-package))

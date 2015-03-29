@@ -61,21 +61,21 @@ endif
 
 define RSYSLOG_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/rsyslog/S01logging \
-		$(TARGET_DIR)/etc/init.d/S01logging
+		$(RSYSLOG_TARGET_DIR)/etc/init.d/S01logging
 endef
 
 define RSYSLOG_INSTALL_INIT_SYSTEMD
 	ln -sf /lib/systemd/system/rsyslog.service \
-		$(TARGET_DIR)/etc/systemd/system/syslog.service
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+		$(RSYSLOG_TARGET_DIR)/etc/systemd/system/syslog.service
+	mkdir -p $(RSYSLOG_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
 	ln -sf ../syslog.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/syslog.service
+		$(RSYSLOG_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/syslog.service
 endef
 
 define RSYSLOG_INSTALL_CONF
 	$(INSTALL) -m 0644 -D $(@D)/platform/redhat/rsyslog.conf \
-		$(TARGET_DIR)/etc/rsyslog.conf
-	mkdir -p $(TARGET_DIR)/etc/rsyslog.d
+		$(RSYSLOG_TARGET_DIR)/etc/rsyslog.conf
+	mkdir -p $(RSYSLOG_TARGET_DIR)/etc/rsyslog.d
 endef
 
 RSYSLOG_POST_INSTALL_TARGET_HOOKS += RSYSLOG_INSTALL_CONF

@@ -51,7 +51,7 @@ endif
 ifeq ($(BR2_STATIC_LIBS),y)
 	SLANG_MAKE_OPTS = static
 	SLANG_INSTALL_STAGING_OPTS = DESTDIR=$(STAGING_DIR) install-static
-	SLANG_INSTALL_TARGET_OPTS = DESTDIR=$(TARGET_DIR) install-static
+	SLANG_INSTALL_TARGET_OPTS = DESTDIR=$(SLANG_TARGET_DIR) install-static
 endif
 
 $(eval $(autotools-package))

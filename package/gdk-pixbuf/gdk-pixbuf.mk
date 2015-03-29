@@ -47,7 +47,7 @@ GDK_PIXBUF_DEPENDENCIES += \
 
 define GDK_PIXBUF_INSTALL_INIT_SYSV
 	$(INSTALL) -m 755 -D package/gdk-pixbuf/S26gdk-pixbuf \
-		$(TARGET_DIR)/etc/init.d/S26gdk-pixbuf
+		$(GDK_PIXBUF_TARGET_DIR)/etc/init.d/S26gdk-pixbuf
 endef
 
 $(eval $(autotools-package))

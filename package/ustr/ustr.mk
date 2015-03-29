@@ -35,10 +35,10 @@ define USTR_INSTALL_STAGING_CMDS
 endef
 
 define USTR_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) $(TARGET_CONFIGURE_OPTS) DESTDIR=$(TARGET_DIR) \
+	$(MAKE) -C $(@D) $(TARGET_CONFIGURE_OPTS) DESTDIR=$(USTR_TARGET_DIR) \
 		$(USTR_INSTALL_TARGETS)
-	$(RM) -f $(TARGET_DIR)/usr/lib/libustr-debug*
-	$(RM) -rf $(TARGET_DIR)/usr/share/ustr-$(USTR_VERSION)
+	$(RM) -f $(USTR_TARGET_DIR)/usr/lib/libustr-debug*
+	$(RM) -rf $(USTR_TARGET_DIR)/usr/share/ustr-$(USTR_VERSION)
 endef
 
 define HOST_USTR_BUILD_CMDS

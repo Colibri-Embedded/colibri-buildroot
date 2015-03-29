@@ -22,7 +22,7 @@ define LIBPFM4_INSTALL_STAGING_CMDS
 endef
 
 define LIBPFM4_INSTALL_TARGET_CMDS
-	make -C $(@D) $(LIBPFM4_FLAGS) PREFIX=$(TARGET_DIR)/usr install
+	make -C $(@D) $(LIBPFM4_FLAGS) PREFIX=$(LIBPFM4_TARGET_DIR)/usr install
 endef
 
 $(eval $(generic-package))

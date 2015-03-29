@@ -106,7 +106,7 @@ define SAMBA4_BUILD_CMDS
 endef
 
 define SAMBA4_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR=$(TARGET_DIR) install
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR=$(SAMBA4_TARGET_DIR) install
 endef
 
 # Samba just installs .py files so the purge causes problems with some tools
@@ -114,21 +114,21 @@ ifeq ($(BR2_PACKAGE_PYTHON_PYC_ONLY),y)
 define SAMBA4_BUILD_PYC_FILES
 	PYTHONPATH="$(PYTHON_PATH)" \
 		$(HOST_DIR)/usr/bin/python -c "import compileall; \
-		compileall.compile_dir('$(TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/samba')"
+		compileall.compile_dir('$(SAMBA4_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/samba')"
 endef
 SAMBA4_POST_INSTALL_TARGET_HOOKS += SAMBA4_BUILD_PYC_FILES
 endif
 
 define SAMBA4_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/samba4/S91smb \
-		$(TARGET_DIR)/etc/init.d/S91smb
+		$(SAMBA4_TARGET_DIR)/etc/init.d/S91smb
 endef
 
 # uClibc doesn't honor $ORIGIN so we need to move a few libs
 ifeq ($(BR2_TOOLCHAIN_USES_UCLIBC),y)
 define SAMBA4_MOVE_LIBS
-	mv -f $(TARGET_DIR)/usr/lib/samba/libreplace* $(TARGET_DIR)/usr/lib
-	mv -f $(TARGET_DIR)/usr/lib/samba/libtalloc* $(TARGET_DIR)/usr/lib
+	mv -f $(SAMBA4_TARGET_DIR)/usr/lib/samba/libreplace* $(SAMBA4_TARGET_DIR)/usr/lib
+	mv -f $(SAMBA4_TARGET_DIR)/usr/lib/samba/libtalloc* $(SAMBA4_TARGET_DIR)/usr/lib
 endef
 SAMBA4_POST_INSTALL_TARGET_HOOKS += SAMBA4_MOVE_LIBS
 endif

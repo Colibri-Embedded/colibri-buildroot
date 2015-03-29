@@ -29,7 +29,7 @@ define NETCAT_OPENBSD_BUILD_CMDS
 endef
 
 define NETCAT_OPENBSD_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 755 -D $(@D)/nc $(TARGET_DIR)/usr/bin/nc
+	$(INSTALL) -m 755 -D $(@D)/nc $(NETCAT_OPENBSD_TARGET_DIR)/usr/bin/nc
 endef
 
 $(eval $(generic-package))

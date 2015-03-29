@@ -26,7 +26,7 @@ ifneq ($(BR2_NBD_SERVER),y)
 endif
 
 define NBD_CLEANUP_AFTER_INSTALL
-	rm -f $(addprefix $(TARGET_DIR)/usr/sbin/, $(NBD_TOREMOVE))
+	rm -f $(addprefix $(NBD_TARGET_DIR)/usr/sbin/, $(NBD_TOREMOVE))
 endef
 
 NBD_POST_INSTALL_TARGET_HOOKS += NBD_CLEANUP_AFTER_INSTALL

@@ -16,14 +16,14 @@ define LRZSZ_POST_CONFIGURE_HOOKS
 endef
 
 define LRZSZ_BUILD_HOOKS
-	$(MAKE) CROSS_COMPILE="$(TARGET_CROSS)" prefix="$(TARGET_DIR)" -C $(@D)
+	$(MAKE) CROSS_COMPILE="$(TARGET_CROSS)" prefix="$(LRZSZ_TARGET_DIR)" -C $(@D)
 endef
 
 define LRZSZ_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/src/lrz $(TARGET_DIR)/usr/bin/rz
-	$(INSTALL) -m 0755 -D $(@D)/src/lsz $(TARGET_DIR)/usr/bin/sz
-	ln -sf rz $(TARGET_DIR)/usr/bin/lrz
-	ln -sf sz $(TARGET_DIR)/usr/bin/lsz
+	$(INSTALL) -m 0755 -D $(@D)/src/lrz $(LRZSZ_TARGET_DIR)/usr/bin/rz
+	$(INSTALL) -m 0755 -D $(@D)/src/lsz $(LRZSZ_TARGET_DIR)/usr/bin/sz
+	ln -sf rz $(LRZSZ_TARGET_DIR)/usr/bin/lrz
+	ln -sf sz $(LRZSZ_TARGET_DIR)/usr/bin/lsz
 endef
 
 $(eval $(autotools-package))

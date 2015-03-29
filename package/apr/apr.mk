@@ -37,7 +37,7 @@ APR_CONF_ENV += apr_cv_use_lfs64=yes
 endif
 
 define APR_CLEANUP_UNNEEDED_FILES
-	$(RM) -rf $(TARGET_DIR)/usr/build-1/
+	$(RM) -rf $(APR_TARGET_DIR)/usr/build-1/
 endef
 
 APR_POST_INSTALL_TARGET_HOOKS += APR_CLEANUP_UNNEEDED_FILES

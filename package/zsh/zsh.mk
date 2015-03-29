@@ -13,7 +13,7 @@ ZSH_LICENSE_FILES = LICENCE
 
 # Remove versioned zsh-x.y.z binary taking up space
 define ZSH_TARGET_INSTALL_FIXUPS
-	rm -f $(TARGET_DIR)/bin/zsh-$(ZSH_VERSION)
+	rm -f $(ZSH_TARGET_DIR)/bin/zsh-$(ZSH_VERSION)
 endef
 ZSH_POST_INSTALL_TARGET_HOOKS += ZSH_TARGET_INSTALL_FIXUPS
 

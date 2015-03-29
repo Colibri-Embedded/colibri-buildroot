@@ -44,15 +44,15 @@ define VSFTPD_BUILD_CMDS
 endef
 
 define VSFTPD_INSTALL_INIT_SYSV
-	$(INSTALL) -D -m 755 package/vsftpd/S70vsftpd $(TARGET_DIR)/etc/init.d/S70vsftpd
+	$(INSTALL) -D -m 755 package/vsftpd/S70vsftpd $(VSFTPD_TARGET_DIR)/etc/init.d/S70vsftpd
 endef
 
 define VSFTPD_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 755 $(@D)/vsftpd $(TARGET_DIR)/usr/sbin/vsftpd
-	test -f $(TARGET_DIR)/etc/vsftpd.conf || \
+	$(INSTALL) -D -m 755 $(@D)/vsftpd $(VSFTPD_TARGET_DIR)/usr/sbin/vsftpd
+	test -f $(VSFTPD_TARGET_DIR)/etc/vsftpd.conf || \
 		$(INSTALL) -D -m 644 $(@D)/vsftpd.conf \
-			$(TARGET_DIR)/etc/vsftpd.conf
-	$(INSTALL) -d -m 700 $(TARGET_DIR)/usr/share/empty
+			$(VSFTPD_TARGET_DIR)/etc/vsftpd.conf
+	$(INSTALL) -d -m 700 $(VSFTPD_TARGET_DIR)/usr/share/empty
 endef
 
 $(eval $(generic-package))

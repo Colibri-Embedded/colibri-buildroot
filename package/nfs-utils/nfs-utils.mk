@@ -42,11 +42,11 @@ NFS_UTILS_POST_INSTALL_TARGET_HOOKS += NFS_UTILS_INSTALL_FIXUP
 
 define NFS_UTILS_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 0755 package/nfs-utils/S60nfs \
-		$(TARGET_DIR)/etc/init.d/S60nfs
+		$(NFS_UTILS_TARGET_DIR)/etc/init.d/S60nfs
 endef
 
 define NFS_UTILS_REMOVE_NFSIOSTAT
-	rm -f $(TARGET_DIR)/usr/sbin/nfsiostat
+	rm -f $(NFS_UTILS_TARGET_DIR)/usr/sbin/nfsiostat
 endef
 
 # nfsiostat is interpreted python, so remove it unless it's in the target

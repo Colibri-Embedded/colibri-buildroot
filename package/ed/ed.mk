@@ -25,7 +25,7 @@ define ED_BUILD_CMDS
 endef
 
 define ED_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) DESTDIR="$(TARGET_DIR)" install
+	$(MAKE) -C $(@D) DESTDIR="$(ED_TARGET_DIR)" install
 endef
 
 $(eval $(generic-package))

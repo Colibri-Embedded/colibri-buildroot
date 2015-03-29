@@ -19,14 +19,14 @@ endif
 # Nice lsusb.py script only if there's python
 ifeq ($(BR2_PACKAGE_PYTHON),)
 define USBUTILS_REMOVE_PYTHON
-	rm -f $(TARGET_DIR)/usr/bin/lsusb.py
+	rm -f $(USBUTILS_TARGET_DIR)/usr/bin/lsusb.py
 endef
 
 USBUTILS_POST_INSTALL_TARGET_HOOKS += USBUTILS_REMOVE_PYTHON
 endif
 
 define USBUTILS_TARGET_CLEANUP
-	rm -f $(TARGET_DIR)/usr/bin/usb-devices
+	rm -f $(USBUTILS_TARGET_DIR)/usr/bin/usb-devices
 endef
 
 USBUTILS_POST_INSTALL_TARGET_HOOKS += USBUTILS_TARGET_CLEANUP

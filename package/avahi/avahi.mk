@@ -161,20 +161,20 @@ define AVAHI_USERS
 endef
 
 define AVAHI_REMOVE_INITSCRIPT
-	rm -rf $(TARGET_DIR)/etc/init.d/avahi-*
+	rm -rf $(AVAHI_TARGET_DIR)/etc/init.d/avahi-*
 endef
 
 AVAHI_POST_INSTALL_TARGET_HOOKS += AVAHI_REMOVE_INITSCRIPT
 
 ifeq ($(BR2_PACKAGE_AVAHI_AUTOIPD),y)
 define AVAHI_INSTALL_AUTOIPD
-	rm -f $(TARGET_DIR)/var/lib/avahi-autoipd
-	$(INSTALL) -d -m 0755 $(TARGET_DIR)/var/lib
-	ln -sf /tmp/avahi-autoipd $(TARGET_DIR)/var/lib/avahi-autoipd
+	rm -f $(AVAHI_TARGET_DIR)/var/lib/avahi-autoipd
+	$(INSTALL) -d -m 0755 $(AVAHI_TARGET_DIR)/var/lib
+	ln -sf /tmp/avahi-autoipd $(AVAHI_TARGET_DIR)/var/lib/avahi-autoipd
 endef
 
 define AVAHI_INSTALL_AUTOIPD_INIT_SYSV
-	$(INSTALL) -D -m 0755 package/avahi/S05avahi-setup.sh $(TARGET_DIR)/etc/init.d/S05avahi-setup.sh
+	$(INSTALL) -D -m 0755 package/avahi/S05avahi-setup.sh $(AVAHI_TARGET_DIR)/etc/init.d/S05avahi-setup.sh
 endef
 
 AVAHI_POST_INSTALL_TARGET_HOOKS += AVAHI_INSTALL_AUTOIPD
@@ -183,20 +183,20 @@ endif
 ifeq ($(BR2_PACKAGE_AVAHI_DAEMON),y)
 
 define AVAHI_INSTALL_INIT_SYSTEMD
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+	mkdir -p $(AVAHI_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
 
 	ln -fs /lib/systemd/system/avahi-daemon.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/avahi-daemon.service
+		$(AVAHI_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/avahi-daemon.service
 
 	ln -fs /lib/systemd/system/avahi-dnsconfd.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/avahi-dnsconfd.service
+		$(AVAHI_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/avahi-dnsconfd.service
 
 	$(INSTALL) -D -m 644 package/avahi/avahi_tmpfiles.conf \
-		$(TARGET_DIR)/usr/lib/tmpfiles.d/avahi.conf
+		$(AVAHI_TARGET_DIR)/usr/lib/tmpfiles.d/avahi.conf
 endef
 
 define AVAHI_INSTALL_DAEMON_INIT_SYSV
-	$(INSTALL) -D -m 0755 package/avahi/S50avahi-daemon $(TARGET_DIR)/etc/init.d/S50avahi-daemon
+	$(INSTALL) -D -m 0755 package/avahi/S50avahi-daemon $(AVAHI_TARGET_DIR)/etc/init.d/S50avahi-daemon
 endef
 
 endif

@@ -22,13 +22,13 @@ define TRINITY_BUILD_CMDS
 endef
 
 define TRINITY_INSTALL_TARGET_CMDS
-	$(TARGET_CONFIGURE_OPTS) $(MAKE) -C $(@D) DESTDIR=$(TARGET_DIR)/usr install
+	$(TARGET_CONFIGURE_OPTS) $(MAKE) -C $(@D) DESTDIR=$(TRINITY_TARGET_DIR)/usr install
 endef
 
 # Install helper scripts
 define TRINITY_INSTALL_HELPER_SCRIPTS
-	mkdir -p $(TARGET_DIR)/usr/libexec/trinity
-	cp -p $(@D)/scripts/* $(TARGET_DIR)/usr/libexec/trinity/
+	mkdir -p $(TRINITY_TARGET_DIR)/usr/libexec/trinity
+	cp -p $(@D)/scripts/* $(TRINITY_TARGET_DIR)/usr/libexec/trinity/
 endef
 TRINITY_POST_INSTALL_TARGET_HOOKS += TRINITY_INSTALL_HELPER_SCRIPTS
 

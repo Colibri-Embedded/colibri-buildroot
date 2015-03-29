@@ -26,7 +26,7 @@ RRDTOOL_CONF_OPTS = \
 RRDTOOL_MAKE = $(MAKE1)
 
 define RRDTOOL_REMOVE_EXAMPLES
-	rm -rf $(TARGET_DIR)/usr/share/rrdtool/examples
+	rm -rf $(RRDTOOL_TARGET_DIR)/usr/share/rrdtool/examples
 endef
 
 RRDTOOL_POST_INSTALL_TARGET_HOOKS += RRDTOOL_REMOVE_EXAMPLES

@@ -17,7 +17,7 @@ OPKG_AUTORECONF = YES
 
 # Ensure directory for lockfile exists
 define OPKG_CREATE_LOCKDIR
-	mkdir -p $(TARGET_DIR)/usr/lib/opkg
+	mkdir -p $(OPKG_TARGET_DIR)/usr/lib/opkg
 endef
 
 ifeq ($(BR2_PACKAGE_OPKG_GPG_SIGN),y)

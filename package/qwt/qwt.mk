@@ -54,8 +54,8 @@ define QWT_INSTALL_STAGING_CMDS
 endef
 
 define QWT_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) install INSTALL_ROOT=$(TARGET_DIR)
-	rm -Rf $(TARGET_DIR)/usr/mkspecs
+	$(MAKE) -C $(@D) install INSTALL_ROOT=$(QWT_TARGET_DIR)
+	rm -Rf $(QWT_TARGET_DIR)/usr/mkspecs
 endef
 
 $(eval $(generic-package))

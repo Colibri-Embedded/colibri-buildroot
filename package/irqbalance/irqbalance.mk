@@ -21,15 +21,15 @@ IRQBALANCE_PRE_CONFIGURE_HOOKS += IRQBALANCE_PRECONFIGURE
 
 define IRQBALANCE_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 755 package/irqbalance/S13irqbalance \
-		$(TARGET_DIR)/etc/init.d/S13irqbalance
+		$(IRQBALANCE_TARGET_DIR)/etc/init.d/S13irqbalance
 endef
 
 define IRQBALANCE_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -D -m 644 package/irqbalance/irqbalance.service \
-		$(TARGET_DIR)/etc/systemd/system/irqbalance.service
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+		$(IRQBALANCE_TARGET_DIR)/etc/systemd/system/irqbalance.service
+	mkdir -p $(IRQBALANCE_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
 	ln -fs ../irqbalance.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/irqbalance.service
+		$(IRQBALANCE_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/irqbalance.service
 endef
 
 $(eval $(autotools-package))

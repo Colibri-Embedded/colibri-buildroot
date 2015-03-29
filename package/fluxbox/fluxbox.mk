@@ -24,7 +24,7 @@ endif
 
 define FLUXBOX_INSTALL_XSESSION_FILE
 	$(INSTALL) -m 0755 -D package/fluxbox/xsession \
-		$(TARGET_DIR)/root/.xsession
+		$(FLUXBOX_TARGET_DIR)/root/.xsession
 endef
 
 FLUXBOX_POST_INSTALL_TARGET_HOOKS += FLUXBOX_INSTALL_XSESSION_FILE

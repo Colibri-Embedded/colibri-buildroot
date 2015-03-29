@@ -24,7 +24,7 @@ else
 endif
 
 define HASERL_REMOVE_EXAMPLES
-	rm -rf $(TARGET_DIR)/usr/share/haserl
+	rm -rf $(HASERL_TARGET_DIR)/usr/share/haserl
 endef
 
 HASERL_POST_INSTALL_TARGET_HOOKS += HASERL_REMOVE_EXAMPLES

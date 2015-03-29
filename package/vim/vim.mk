@@ -30,24 +30,24 @@ VIM_LICENSE_FILES = README.txt
 
 define VIM_INSTALL_TARGET_CMDS
 	cd $(@D)/src; \
-		$(MAKE) DESTDIR=$(TARGET_DIR) installvimbin; \
-		$(MAKE) DESTDIR=$(TARGET_DIR) installtools; \
-		$(MAKE) DESTDIR=$(TARGET_DIR) installlinks
+		$(MAKE) DESTDIR=$(VIM_TARGET_DIR) installvimbin; \
+		$(MAKE) DESTDIR=$(VIM_TARGET_DIR) installtools; \
+		$(MAKE) DESTDIR=$(VIM_TARGET_DIR) installlinks
 endef
 
 define VIM_INSTALL_RUNTIME_CMDS
 	cd $(@D)/src; \
-		$(MAKE) DESTDIR=$(TARGET_DIR) installrtbase; \
-		$(MAKE) DESTDIR=$(TARGET_DIR) installmacros
+		$(MAKE) DESTDIR=$(VIM_TARGET_DIR) installrtbase; \
+		$(MAKE) DESTDIR=$(VIM_TARGET_DIR) installmacros
 endef
 
 define VIM_REMOVE_DOCS
-	find $(TARGET_DIR)/usr/share/vim -type f -name "*.txt" -delete
+	find $(VIM_TARGET_DIR)/usr/share/vim -type f -name "*.txt" -delete
 endef
 
 # Avoid oopses with vipw/vigr, lack of $EDITOR and 'vi' command expectation
 define VIM_INSTALL_VI_SYMLINK
-	ln -sf /usr/bin/vim $(TARGET_DIR)/bin/vi
+	ln -sf /usr/bin/vim $(VIM_TARGET_DIR)/bin/vi
 endef
 VIM_POST_INSTALL_TARGET_HOOKS += VIM_INSTALL_VI_SYMLINK
 

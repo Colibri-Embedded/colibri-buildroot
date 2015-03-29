@@ -35,7 +35,7 @@ define AXEL_BUILD_CMDS
 endef
 
 define AXEL_INSTALL_TARGET_CMDS
-	$(MAKE) DESTDIR=$(TARGET_DIR) -C $(@D) install
+	$(MAKE) DESTDIR=$(AXEL_TARGET_DIR) -C $(@D) install
 endef
 
 $(eval $(generic-package))

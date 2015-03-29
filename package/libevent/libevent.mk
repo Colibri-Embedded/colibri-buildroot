@@ -14,7 +14,7 @@ LIBEVENT_LICENSE_FILES = LICENSE
 LIBEVENT_AUTORECONF = YES
 
 define LIBEVENT_REMOVE_PYSCRIPT
-	rm $(TARGET_DIR)/usr/bin/event_rpcgen.py
+	rm $(LIBEVENT_TARGET_DIR)/usr/bin/event_rpcgen.py
 endef
 
 # libevent installs a python script to target - get rid of it if we

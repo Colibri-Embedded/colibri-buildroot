@@ -19,7 +19,7 @@ define MJPG_STREAMER_BUILD_CMDS
 endef
 
 define MJPG_STREAMER_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR=$(TARGET_DIR)/usr install
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR=$(MJPG_STREAMER_TARGET_DIR)/usr install
 endef
 
 $(eval $(generic-package))

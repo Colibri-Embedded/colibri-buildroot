@@ -16,7 +16,7 @@ define RAMSPEED_BUILD_CMDS
 endef
 
 define RAMSPEED_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/ramspeed $(TARGET_DIR)/usr/bin/ramspeed
+	$(INSTALL) -m 0755 -D $(@D)/ramspeed $(RAMSPEED_TARGET_DIR)/usr/bin/ramspeed
 endef
 
 $(eval $(generic-package))

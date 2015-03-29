@@ -37,58 +37,58 @@ endif
 
 ifeq ($(BR2_PACKAGE_DHCP_SERVER),y)
 define DHCP_INSTALL_SERVER
-	mkdir -p $(TARGET_DIR)/var/lib
-	(cd $(TARGET_DIR)/var/lib; ln -snf /tmp dhcp)
-	$(INSTALL) -m 0755 -D $(@D)/server/dhcpd $(TARGET_DIR)/usr/sbin/dhcpd
+	mkdir -p $(DHCP_TARGET_DIR)/var/lib
+	(cd $(DHCP_TARGET_DIR)/var/lib; ln -snf /tmp dhcp)
+	$(INSTALL) -m 0755 -D $(@D)/server/dhcpd $(DHCP_TARGET_DIR)/usr/sbin/dhcpd
 	$(INSTALL) -m 0644 -D package/dhcp/dhcpd.conf \
-		$(TARGET_DIR)/etc/dhcp/dhcpd.conf
+		$(DHCP_TARGET_DIR)/etc/dhcp/dhcpd.conf
 endef
 endif
 
 ifeq ($(BR2_PACKAGE_DHCP_RELAY),y)
 define DHCP_INSTALL_RELAY
-	mkdir -p $(TARGET_DIR)/var/lib
-	(cd $(TARGET_DIR)/var/lib; ln -snf /tmp dhcp)
+	mkdir -p $(DHCP_TARGET_DIR)/var/lib
+	(cd $(DHCP_TARGET_DIR)/var/lib; ln -snf /tmp dhcp)
 	$(INSTALL) -m 0755 -D $(DHCP_DIR)/relay/dhcrelay \
-		$(TARGET_DIR)/usr/sbin/dhcrelay
+		$(DHCP_TARGET_DIR)/usr/sbin/dhcrelay
 endef
 endif
 
 ifeq ($(BR2_PACKAGE_DHCP_CLIENT),y)
 define DHCP_INSTALL_CLIENT
-	mkdir -p $(TARGET_DIR)/var/lib
-	(cd $(TARGET_DIR)/var/lib; ln -snf /tmp dhcp)
+	mkdir -p $(DHCP_TARGET_DIR)/var/lib
+	(cd $(DHCP_TARGET_DIR)/var/lib; ln -snf /tmp dhcp)
 	$(INSTALL) -m 0755 -D $(DHCP_DIR)/client/dhclient \
-		$(TARGET_DIR)/sbin/dhclient
+		$(DHCP_TARGET_DIR)/sbin/dhclient
 	$(INSTALL) -m 0644 -D package/dhcp/dhclient.conf \
-		$(TARGET_DIR)/etc/dhcp/dhclient.conf
+		$(DHCP_TARGET_DIR)/etc/dhcp/dhclient.conf
 	$(INSTALL) -m 0755 -D package/dhcp/dhclient-script \
-		$(TARGET_DIR)/sbin/dhclient-script
+		$(DHCP_TARGET_DIR)/sbin/dhclient-script
 endef
 endif
 
 # Options don't matter, scripts won't start if binaries aren't there
 define DHCP_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/dhcp/S80dhcp-server \
-		$(TARGET_DIR)/etc/init.d/S80dhcp-server
+		$(DHCP_TARGET_DIR)/etc/init.d/S80dhcp-server
 	$(INSTALL) -m 0755 -D package/dhcp/S80dhcp-relay \
-		$(TARGET_DIR)/etc/init.d/S80dhcp-relay
+		$(DHCP_TARGET_DIR)/etc/init.d/S80dhcp-relay
 endef
 
 ifeq ($(BR2_PACKAGE_DHCP_SERVER),y)
 define DHCP_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -D -m 644 package/dhcp/dhcpd.service \
-		$(TARGET_DIR)/lib/systemd/system/dhcpd.service
+		$(DHCP_TARGET_DIR)/lib/systemd/system/dhcpd.service
 
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+	mkdir -p $(DHCP_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
 
 	ln -sf ../../../../lib/systemd/system/dhcpd.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/dhcpd.service
+		$(DHCP_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/dhcpd.service
 
 	echo "d /var/lib/dhcp 0755 - - - -" > \
-		$(TARGET_DIR)/usr/lib/tmpfiles.d/dhcpd.conf
+		$(DHCP_TARGET_DIR)/usr/lib/tmpfiles.d/dhcpd.conf
 	echo "f /var/lib/dhcp/dhcpd.leases - - - - -" >> \
-		$(TARGET_DIR)/usr/lib/tmpfiles.d/dhcpd.conf
+		$(DHCP_TARGET_DIR)/usr/lib/tmpfiles.d/dhcpd.conf
 endef
 endif
 

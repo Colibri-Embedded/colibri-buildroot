@@ -35,7 +35,7 @@ define DHCPCD_BUILD_CMDS
 endef
 
 define DHCPCD_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) install DESTDIR=$(TARGET_DIR)
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) install DESTDIR=$(DHCPCD_TARGET_DIR)
 endef
 
 # NOTE: Even though this package has a configure script, it is not generated

@@ -38,7 +38,7 @@ endef
 
 define LIBCLI_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D) \
-		$(LIBCLI_MAKE_ARGS) DESTDIR=$(TARGET_DIR) PREFIX=/usr install
+		$(LIBCLI_MAKE_ARGS) DESTDIR=$(LIBCLI_TARGET_DIR) PREFIX=/usr install
 endef
 
 $(eval $(generic-package))

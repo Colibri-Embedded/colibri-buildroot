@@ -53,7 +53,7 @@ endif
 
 define NETATALK_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/netatalk/S50netatalk \
-		$(TARGET_DIR)/etc/init.d/S50netatalk
+		$(NETATALK_TARGET_DIR)/etc/init.d/S50netatalk
 endef
 
 $(eval $(autotools-package))

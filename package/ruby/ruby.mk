@@ -75,9 +75,9 @@ RUBY_POST_CONFIGURE_HOOKS += RUBY_REMOVE_VERCONF_H
 # built and a target compiler.
 RUBY_EXTENSIONS_REMOVE = rake* rdoc* rubygems*
 define RUBY_REMOVE_RUBYGEMS
-	rm -f $(addprefix $(TARGET_DIR)/usr/bin/, gem rdoc ri rake)
-	rm -rf $(TARGET_DIR)/usr/lib/ruby/gems
-	rm -rf $(addprefix $(TARGET_DIR)/usr/lib/ruby/$(RUBY_VERSION_EXT)/, \
+	rm -f $(addprefix $(RUBY_TARGET_DIR)/usr/bin/, gem rdoc ri rake)
+	rm -rf $(RUBY_TARGET_DIR)/usr/lib/ruby/gems
+	rm -rf $(addprefix $(RUBY_TARGET_DIR)/usr/lib/ruby/$(RUBY_VERSION_EXT)/, \
 		$(RUBY_EXTENSIONS_REMOVE))
 endef
 RUBY_POST_INSTALL_TARGET_HOOKS += RUBY_REMOVE_RUBYGEMS

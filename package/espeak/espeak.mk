@@ -37,7 +37,7 @@ define ESPEAK_BUILD_CMDS
 endef
 
 define ESPEAK_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D)/src DESTDIR="$(TARGET_DIR)" install
+	$(MAKE) -C $(@D)/src DESTDIR="$(ESPEAK_TARGET_DIR)" install
 endef
 
 $(eval $(generic-package))

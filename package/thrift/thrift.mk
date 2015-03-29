@@ -59,7 +59,7 @@ endef
 
 # Install runtime only
 define THRIFT_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)/lib DESTDIR=$(TARGET_DIR) install
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)/lib DESTDIR=$(THRIFT_TARGET_DIR) install
 endef
 
 $(eval $(autotools-package))

@@ -30,7 +30,7 @@ QUOTA_CONF_ENV = \
 
 # Package uses autoconf but not automake.
 QUOTA_INSTALL_TARGET_OPTS = \
-	ROOTDIR=$(TARGET_DIR) \
+	ROOTDIR=$(QUOTA_TARGET_DIR) \
 	install
 
 $(eval $(autotools-package))

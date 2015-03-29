@@ -14,7 +14,7 @@ USB_MODESWITCH_DATA_LICENSE_FILES = COPYING
 # Nothing to build, it is a pure data package
 
 define USB_MODESWITCH_DATA_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR=$(TARGET_DIR) install
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR=$(USB_MODESWITCH_DATA_TARGET_DIR) install
 endef
 
 $(eval $(generic-package))

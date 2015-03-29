@@ -14,7 +14,7 @@ define FXLOAD_BUILD_CMDS
 endef
 
 define FXLOAD_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) $(TARGET_CONFIGURE_OPTS) prefix=$(TARGET_DIR) -C $(@D) install
+	$(TARGET_MAKE_ENV) $(MAKE) $(TARGET_CONFIGURE_OPTS) prefix=$(FXLOAD_TARGET_DIR) -C $(@D) install
 endef
 
 $(eval $(generic-package))

@@ -103,7 +103,7 @@ define NODEJS_INSTALL_MODULES
 	# If you're having trouble with module installation, adding -d to the
 	# npm install call below and setting npm_config_rollback=false can both
 	# help in diagnosing the problem.
-	(cd $(TARGET_DIR)/usr/lib && mkdir -p node_modules && \
+	(cd $(NODEJS_TARGET_DIR)/usr/lib && mkdir -p node_modules && \
 		$(TARGET_CONFIGURE_OPTS) \
 		LD="$(TARGET_CXX)" \
 		npm_config_arch=$(NODEJS_CPU) \
@@ -117,7 +117,7 @@ endif
 define NODEJS_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) PYTHON=$(HOST_DIR)/usr/bin/python2 \
 		$(MAKE) -C $(@D) install \
-		DESTDIR=$(TARGET_DIR) \
+		DESTDIR=$(NODEJS_TARGET_DIR) \
 		$(TARGET_CONFIGURE_OPTS) \
 		LD="$(TARGET_CXX)"
 	$(NODEJS_INSTALL_MODULES)

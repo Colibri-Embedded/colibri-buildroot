@@ -21,9 +21,9 @@ define PPS_TOOLS_INSTALL_STAGING_CMDS
 endef
 
 define PPS_TOOLS_INSTALL_TARGET_CMDS
-	mkdir -p $(TARGET_DIR)/usr/include/sys $(TARGET_DIR)/usr/bin
+	mkdir -p $(PPS_TOOLS_TARGET_DIR)/usr/include/sys $(PPS_TOOLS_TARGET_DIR)/usr/bin
 	$(TARGET_MAKE_ENV) $(MAKE) $(TARGET_CONFIGURE_OPTS) \
-		DESTDIR=$(TARGET_DIR) -C $(@D) install
+		DESTDIR=$(PPS_TOOLS_TARGET_DIR) -C $(@D) install
 endef
 
 $(eval $(generic-package))

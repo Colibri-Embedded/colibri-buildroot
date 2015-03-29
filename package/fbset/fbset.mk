@@ -19,7 +19,7 @@ define FBSET_BUILD_CMDS
 endef
 
 define FBSET_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 755 $(@D)/fbset $(TARGET_DIR)/usr/sbin/fbset
+	$(INSTALL) -D -m 755 $(@D)/fbset $(FBSET_TARGET_DIR)/usr/sbin/fbset
 endef
 
 $(eval $(generic-package))

@@ -16,7 +16,7 @@ endef
 
 define TSTOOLS_INSTALL_TARGET_CMDS
 	$(TARGET_CONFIGURE_OPTS) $(TARGET_MAKE_ENV) $(MAKE) -C $(@D) \
-		DESTDIR=$(TARGET_DIR) install
+		DESTDIR=$(TSTOOLS_TARGET_DIR) install
 endef
 
 $(eval $(generic-package))

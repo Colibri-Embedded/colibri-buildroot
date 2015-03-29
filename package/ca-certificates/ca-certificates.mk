@@ -16,22 +16,22 @@ define CA_CERTIFICATES_BUILD_CMDS
 endef
 
 define CA_CERTIFICATES_INSTALL_TARGET_CMDS
-	$(INSTALL) -d -m 0755 $(TARGET_DIR)/usr/share/ca-certificates
-	$(INSTALL) -d -m 0755 $(TARGET_DIR)/etc/ssl/certs
-	$(MAKE) -C $(@D) install DESTDIR=$(TARGET_DIR)
-	rm -f $(TARGET_DIR)/usr/sbin/update-ca-certificates
+	$(INSTALL) -d -m 0755 $(CA_CERTIFICATES_TARGET_DIR)/usr/share/ca-certificates
+	$(INSTALL) -d -m 0755 $(CA_CERTIFICATES_TARGET_DIR)/etc/ssl/certs
+	$(MAKE) -C $(@D) install DESTDIR=$(CA_CERTIFICATES_TARGET_DIR)
+	rm -f $(CA_CERTIFICATES_TARGET_DIR)/usr/sbin/update-ca-certificates
 
 	# Remove any existing certificates under /etc/ssl/certs
-	rm -f  $(TARGET_DIR)/etc/ssl/certs/*
+	rm -f  $(CA_CERTIFICATES_TARGET_DIR)/etc/ssl/certs/*
 
 	# Create symlinks to certificates under /etc/ssl/certs
-	cd $(TARGET_DIR) ;\
+	cd $(CA_CERTIFICATES_TARGET_DIR) ;\
 	for i in `find usr/share/ca-certificates -name "*.crt"` ; do \
 		ln -sf ../../../$$i etc/ssl/certs/`basename $${i} .crt`.pem ;\
 	done
 
 	# Create symlinks to the certificates by their hash values
-	$(HOST_DIR)/usr/bin/c_rehash $(TARGET_DIR)/etc/ssl/certs
+	$(HOST_DIR)/usr/bin/c_rehash $(CA_CERTIFICATES_TARGET_DIR)/etc/ssl/certs
 endef
 
 $(eval $(generic-package))

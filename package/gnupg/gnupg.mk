@@ -39,14 +39,14 @@ endif
 
 ifneq ($(BR2_PACKAGE_GNUPG_GPGV),y)
 define GNUPG_REMOVE_GPGV
-	rm -f $(TARGET_DIR)/usr/bin/gpgv
+	rm -f $(GNUPG_TARGET_DIR)/usr/bin/gpgv
 endef
 GNUPG_POST_INSTALL_TARGET_HOOKS += GNUPG_REMOVE_GPGV
 endif
 
 ifneq ($(BR2_PACKAGE_GNUPG_GPGSPLIT),y)
 define GNUPG_REMOVE_GPGSPLIT
-	rm -f $(TARGET_DIR)/usr/bin/gpgsplit
+	rm -f $(GNUPG_TARGET_DIR)/usr/bin/gpgsplit
 endef
 GNUPG_POST_INSTALL_TARGET_HOOKS += GNUPG_REMOVE_GPGSPLIT
 endif

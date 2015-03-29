@@ -50,8 +50,8 @@ else
 SPICE_CONF_OPTS += --disable-tunnel
 endif
 
-SPICE_CONF_ENV = PYTHONPATH=$(TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages
-SPICE_MAKE_ENV = PYTHONPATH=$(TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages
+SPICE_CONF_ENV = PYTHONPATH=$(SPICE_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages
+SPICE_MAKE_ENV = PYTHONPATH=$(SPICE_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages
 
 # We need to tweak spice.pc because it /forgets/ (for static linking) that
 # it should link against libz and libjpeg. libz is pkg-config-aware, while

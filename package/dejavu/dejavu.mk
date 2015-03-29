@@ -45,16 +45,16 @@ ifeq ($(BR2_PACKAGE_FONTCONFIG),y)
 define DEJAVU_FONTCONFIG_CONF_INSTALL_CMDS
 	for i in $(DEJAVU_FONTCONFIG_CONF_INSTALL) ; do \
 		$(INSTALL) -D -m 0644 $(@D)/fontconfig/$$i \
-			$(TARGET_DIR)/usr/share/fontconfig/conf.avail/$$i || exit 1 ; \
+			$(DEJAVU_TARGET_DIR)/usr/share/fontconfig/conf.avail/$$i || exit 1 ; \
 	done
 endef
 endif
 
 define DEJAVU_INSTALL_TARGET_CMDS
-	mkdir -p $(TARGET_DIR)/usr/share/fonts/dejavu/
+	mkdir -p $(DEJAVU_TARGET_DIR)/usr/share/fonts/dejavu/
 	for i in $(DEJAVU_FONTS_INSTALL) ; do \
 		$(INSTALL) -m 0644 $(@D)/ttf/$$i \
-			$(TARGET_DIR)/usr/share/fonts/dejavu/ || exit 1 ; \
+			$(DEJAVU_TARGET_DIR)/usr/share/fonts/dejavu/ || exit 1 ; \
 	done
 	$(DEJAVU_FONTCONFIG_CONF_INSTALL_CMDS)
 endef

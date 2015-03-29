@@ -32,7 +32,7 @@ endef
 
 define START_STOP_DAEMON_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/utils/start-stop-daemon \
-		$(TARGET_DIR)/sbin/start-stop-daemon
+		$(START_STOP_DAEMON_TARGET_DIR)/sbin/start-stop-daemon
 endef
 
 $(eval $(autotools-package))

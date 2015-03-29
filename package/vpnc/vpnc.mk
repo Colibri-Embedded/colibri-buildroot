@@ -22,7 +22,7 @@ endef
 define VPNC_INSTALL_TARGET_CMDS
 	$(MAKE) -C $(@D) install $(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(VPNC_CPPFLAGS)" LDFLAGS="$(VPNC_LDFLAGS)" \
-		DESTDIR="$(TARGET_DIR)" PREFIX=/usr
+		DESTDIR="$(VPNC_TARGET_DIR)" PREFIX=/usr
 endef
 
 $(eval $(generic-package))

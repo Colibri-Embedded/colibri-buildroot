@@ -44,7 +44,7 @@ endif
 # install gatttool (For some reason upstream choose not to do it by default)
 ifeq ($(BR2_PACKAGE_BLUEZ5_UTILS_GATTTOOL),y)
 define BLUEZ5_UTILS_INSTALL_GATTTOOL
-	$(INSTALL) -D -m 0755 $(@D)/attrib/gatttool $(TARGET_DIR)/usr/bin/gatttool
+	$(INSTALL) -D -m 0755 $(@D)/attrib/gatttool $(BLUEZ5_UTILS_TARGET_DIR)/usr/bin/gatttool
 endef
 BLUEZ5_UTILS_POST_INSTALL_TARGET_HOOKS += BLUEZ5_UTILS_INSTALL_GATTTOOL
 endif

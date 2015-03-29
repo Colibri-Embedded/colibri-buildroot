@@ -29,7 +29,7 @@ WAYLAND_POST_INSTALL_STAGING_HOOKS += WAYLAND_SCANNER_PC
 
 # Remove the DTD from the target, it's not needed at runtime
 define WAYLAND_TARGET_CLEANUP
-	rm -rf $(TARGET_DIR)/usr/share/wayland
+	rm -rf $(WAYLAND_TARGET_DIR)/usr/share/wayland
 endef
 WAYLAND_POST_INSTALL_TARGET_HOOKS += WAYLAND_TARGET_CLEANUP
 

@@ -55,7 +55,7 @@ define BOTAN_INSTALL_STAGING_CMDS
 endef
 
 define BOTAN_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) DESTDIR="$(TARGET_DIR)/usr" install
+	$(MAKE) -C $(@D) DESTDIR="$(BOTAN_TARGET_DIR)/usr" install
 endef
 
 $(eval $(generic-package))

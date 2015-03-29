@@ -16,7 +16,7 @@ endef
 
 define EXPLORERCANVAS_INSTALL_TARGET_CMDS
 	$(INSTALL) -D $(@D)/excanvas.compiled.js \
-		$(TARGET_DIR)/var/www/excanvas.js
+		$(EXPLORERCANVAS_TARGET_DIR)/var/www/excanvas.js
 endef
 
 $(eval $(generic-package))

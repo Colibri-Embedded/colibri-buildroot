@@ -25,9 +25,9 @@ define ZMQPP_BUILD_CMDS
 endef
 
 define ZMQPP_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -d $(TARGET_DIR)/usr/include/zmqpp
+	$(INSTALL) -m 0755 -d $(ZMQPP_TARGET_DIR)/usr/include/zmqpp
 	$(TARGET_MAKE_ENV) $(MAKE) $(TARGET_CONFIGURE_OPTS) \
-		$(ZMQPP_MAKE_OPTS) DESTDIR=$(TARGET_DIR) install -C $(@D)
+		$(ZMQPP_MAKE_OPTS) DESTDIR=$(ZMQPP_TARGET_DIR) install -C $(@D)
 endef
 
 define ZMQPP_INSTALL_STAGING_CMDS

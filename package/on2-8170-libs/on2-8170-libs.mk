@@ -19,8 +19,8 @@ define ON2_8170_LIBS_INSTALL_STAGING_CMDS
 endef
 
 define ON2_8170_LIBS_INSTALL_TARGET_CMDS
-	mkdir -p $(TARGET_DIR)/usr/lib
-	cp -dpf $(@D)/*.so $(TARGET_DIR)/usr/lib
+	mkdir -p $(ON2_8170_LIBS_TARGET_DIR)/usr/lib
+	cp -dpf $(@D)/*.so $(ON2_8170_LIBS_TARGET_DIR)/usr/lib
 endef
 
 $(eval $(generic-package))

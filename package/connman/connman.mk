@@ -28,7 +28,7 @@ CONNMAN_DEPENDENCIES += \
 	$(if $(BR2_PACKAGE_CONNMAN_WISPR),gnutls)
 
 define CONNMAN_INSTALL_INIT_SYSV
-	$(INSTALL) -m 0755 -D package/connman/S45connman $(TARGET_DIR)/etc/init.d/S45connman
+	$(INSTALL) -m 0755 -D package/connman/S45connman $(CONNMAN_TARGET_DIR)/etc/init.d/S45connman
 endef
 
 
@@ -37,7 +37,7 @@ CONNMAN_CONF_OPTS += --enable-client
 CONNMAN_DEPENDENCIES += readline
 
 define CONNMAN_INSTALL_CM
-	$(INSTALL) -m 0755 -D $(@D)/client/connmanctl $(TARGET_DIR)/usr/bin/connmanctl
+	$(INSTALL) -m 0755 -D $(@D)/client/connmanctl $(CONNMAN_TARGET_DIR)/usr/bin/connmanctl
 endef
 
 CONNMAN_POST_INSTALL_TARGET_HOOKS += CONNMAN_INSTALL_CM

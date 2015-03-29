@@ -24,20 +24,20 @@ define OLSR_BUILD_CMDS
 endef
 
 define OLSR_INSTALL_TARGET_CMDS
-	$(TARGET_CONFIGURE_OPTS) $(MAKE) -C $(@D) DESTDIR=$(TARGET_DIR) \
+	$(TARGET_CONFIGURE_OPTS) $(MAKE) -C $(@D) DESTDIR=$(OLSR_TARGET_DIR) \
 		prefix="/usr" install_bin
 	for p in $(OLSR_PLUGINS) ; do \
 		$(TARGET_CONFIGURE_OPTS) $(MAKE) -C $(@D)/lib/$$p \
-			LDCONFIG=/bin/true DESTDIR=$(TARGET_DIR) \
+			LDCONFIG=/bin/true DESTDIR=$(OLSR_TARGET_DIR) \
 			prefix="/usr" install ; \
 	done
 	$(INSTALL) -D -m 0644 $(@D)/files/olsrd.conf.default.lq \
-		$(TARGET_DIR)/etc/olsrd/olsrd.conf
+		$(OLSR_TARGET_DIR)/etc/olsrd/olsrd.conf
 endef
 
 define OLSR_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 0755 package/olsr/S50olsr \
-		$(TARGET_DIR)/etc/init.d/S50olsr
+		$(OLSR_TARGET_DIR)/etc/init.d/S50olsr
 endef
 
 $(eval $(generic-package))

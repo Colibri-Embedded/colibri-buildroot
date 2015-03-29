@@ -22,11 +22,11 @@ endef
 
 define TINYALSA_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/libtinyalsa.so \
-		$(TARGET_DIR)/usr/lib/libtinyalsa.so
-	$(INSTALL) -D -m 0755 $(@D)/tinyplay $(TARGET_DIR)/usr/bin/tinyplay
-	$(INSTALL) -D -m 0755 $(@D)/tinycap $(TARGET_DIR)/usr/bin/tinycap
-	$(INSTALL) -D -m 0755 $(@D)/tinymix $(TARGET_DIR)/usr/bin/tinymix
-	$(INSTALL) -D -m 0755 $(@D)/tinypcminfo $(TARGET_DIR)/usr/bin/tinypcminfo
+		$(TINYALSA_TARGET_DIR)/usr/lib/libtinyalsa.so
+	$(INSTALL) -D -m 0755 $(@D)/tinyplay $(TINYALSA_TARGET_DIR)/usr/bin/tinyplay
+	$(INSTALL) -D -m 0755 $(@D)/tinycap $(TINYALSA_TARGET_DIR)/usr/bin/tinycap
+	$(INSTALL) -D -m 0755 $(@D)/tinymix $(TINYALSA_TARGET_DIR)/usr/bin/tinymix
+	$(INSTALL) -D -m 0755 $(@D)/tinypcminfo $(TINYALSA_TARGET_DIR)/usr/bin/tinypcminfo
 endef
 
 $(eval $(generic-package))

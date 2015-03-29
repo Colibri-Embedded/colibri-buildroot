@@ -96,7 +96,7 @@ endef
 
 define MTD_INSTALL_TARGET_CMDS
 	for f in $(MTD_TARGETS_y) ; do \
-		$(INSTALL) -D -m 0755 $(@D)/$$f $(TARGET_DIR)/usr/sbin/$${f##*/} ; \
+		$(INSTALL) -D -m 0755 $(@D)/$$f $(MTD_TARGET_DIR)/usr/sbin/$${f##*/} ; \
 	done
 endef
 

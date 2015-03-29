@@ -16,7 +16,7 @@ endef
 
 define BLKTRACE_INSTALL_TARGET_CMDS
 	$(MAKE1) -C $(@D) $(TARGET_CONFIGURE_OPTS) install \
-		DESTDIR=$(TARGET_DIR) prefix=/usr
+		DESTDIR=$(BLKTRACE_TARGET_DIR) prefix=/usr
 endef
 
 $(eval $(generic-package))

@@ -161,18 +161,18 @@ endef
 define TI_GFX_INSTALL_BINS_CMDS
 	$(foreach bin,$(TI_GFX_BIN),
 		$(INSTALL) -D -m 0755 $(@D)/$(TI_GFX_BIN_PATH)/$(bin) \
-			$(TARGET_DIR)/usr/bin/$(bin)
+			$(TI_GFX_TARGET_DIR)/usr/bin/$(bin)
 	)
 	$(if $(BR2_PACKAGE_TI_GFX_DEBUG),
 		$(INSTALL) -D -m 0755 package/ti-gfx/esrev.sh \
-			$(TARGET_DIR)/usr/sbin/esrev
+			$(TI_GFX_TARGET_DIR)/usr/sbin/esrev
 	)
 endef
 
 define TI_GFX_INSTALL_CONF_CMDS
 	# libs use the following file for configuration.
 	$(INSTALL) -D -m 0644 package/ti-gfx/powervr.ini \
-		$(TARGET_DIR)/etc/powervr.ini
+		$(TI_GFX_TARGET_DIR)/etc/powervr.ini
 endef
 
 ifeq ($(BR2_PACKAGE_TI_GFX_DEMOS),y)
@@ -180,20 +180,20 @@ define TI_GFX_INSTALL_DEMOS_CMDS
 	$(foreach demo,$(TI_GFX_DEMOS),
 		$(INSTALL) -D -m 0755 \
 		$(@D)/$(TI_GFX_DEMOS_LOC)/$(demo)/$(TI_GFX_DEMOS_BIN_LOC)/OGLES2$(demo) \
-		$(TARGET_DIR)/usr/bin/OGLES2$(demo)
+		$(TI_GFX_TARGET_DIR)/usr/bin/OGLES2$(demo)
 	)
 endef
 endif
 
 define TI_GFX_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 0755 package/ti-gfx/S80ti-gfx \
-		$(TARGET_DIR)/etc/init.d/S80ti-gfx
+		$(TI_GFX_TARGET_DIR)/etc/init.d/S80ti-gfx
 endef
 
 define TI_GFX_INSTALL_TARGET_CMDS
 	$(TI_GFX_INSTALL_KM_CMDS)
 	$(TI_GFX_INSTALL_BINS_CMDS)
-	$(call TI_GFX_INSTALL_LIBS,$(TARGET_DIR))
+	$(call TI_GFX_INSTALL_LIBS,$(TI_GFX_TARGET_DIR))
 	$(TI_GFX_INSTALL_CONF_CMDS)
 	$(TI_GFX_INSTALL_DEMOS_CMDS)
 endef

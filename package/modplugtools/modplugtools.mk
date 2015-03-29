@@ -15,6 +15,6 @@ MODPLUGTOOLS_DEPENDENCIES = libao libmodplug
 # various backends via libao. This excludes the 'mpplay' subdir, which contains
 # 'modplugplay' that can play only through the deprecated OSS interface.
 MODPLUGTOOLS_MAKE_OPTS = SUBDIRS=mp123
-MODPLUGTOOLS_INSTALL_TARGET_OPTS = SUBDIRS=mp123 DESTDIR=$(TARGET_DIR) install
+MODPLUGTOOLS_INSTALL_TARGET_OPTS = SUBDIRS=mp123 DESTDIR=$(MODPLUGTOOLS_TARGET_DIR) install
 
 $(eval $(autotools-package))

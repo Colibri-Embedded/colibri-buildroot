@@ -16,7 +16,7 @@ endef
 
 define JQUERY_VALIDATION_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0644 -D $(@D)/dist/jquery.validate.min.js \
-		$(TARGET_DIR)/var/www/jquery.validate.js
+		$(JQUERY_VALIDATION_TARGET_DIR)/var/www/jquery.validate.js
 endef
 
 $(eval $(generic-package))

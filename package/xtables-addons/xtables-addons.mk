@@ -27,7 +27,7 @@ define XTABLES_ADDONS_BUILD_CMDS
 endef
 
 define XTABLES_ADDONS_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) $(LINUX_MAKE_FLAGS) DESTDIR="$(TARGET_DIR)" install
+	$(MAKE) -C $(@D) $(LINUX_MAKE_FLAGS) DESTDIR="$(XTABLES_ADDONS_TARGET_DIR)" install
 endef
 
 $(eval $(autotools-package))

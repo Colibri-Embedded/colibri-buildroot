@@ -85,20 +85,20 @@ define PYTHON_PYGAME_CONFIGURE_CMDS
 endef
 
 define PYTHON_PYGAME_REMOVE_DOC
-	rm -rf $(TARGET_DIR)/usr/lib/python*/site-packages/pygame/docs
+	rm -rf $(PYTHON_PYGAME_TARGET_DIR)/usr/lib/python*/site-packages/pygame/docs
 endef
 
 PYTHON_PYGAME_POST_INSTALL_TARGET_HOOKS += PYTHON_PYGAME_REMOVE_DOC
 
 define PYTHON_PYGAME_REMOVE_TESTS
-	rm -rf $(TARGET_DIR)/usr/lib/python*/site-packages/pygame/tests
+	rm -rf $(PYTHON_PYGAME_TARGET_DIR)/usr/lib/python*/site-packages/pygame/tests
 endef
 
 PYTHON_PYGAME_POST_INSTALL_TARGET_HOOKS += PYTHON_PYGAME_REMOVE_TESTS
 
 ifneq ($(BR2_PACKAGE_PYTHON_PYGAME_EXAMPLES),y)
 define PYTHON_PYGAME_REMOVE_EXAMPLES
-	rm -rf $(TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/pygame/examples
+	rm -rf $(PYTHON_PYGAME_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/pygame/examples
 endef
 PYTHON_PYGAME_POST_INSTALL_TARGET_HOOKS += PYTHON_PYGAME_REMOVE_EXAMPLES
 endif

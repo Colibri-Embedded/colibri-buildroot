@@ -29,7 +29,7 @@ endef
 
 define LIBGLEW_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) \
-		GLEW_DEST="$(TARGET_DIR)/usr" LIBDIR="$(TARGET_DIR)/usr/lib" \
+		GLEW_DEST="$(LIBGLEW_TARGET_DIR)/usr" LIBDIR="$(LIBGLEW_TARGET_DIR)/usr/lib" \
 		$(TARGET_CONFIGURE_OPTS) install
 endef
 

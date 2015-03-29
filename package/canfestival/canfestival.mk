@@ -45,7 +45,7 @@ define CANFESTIVAL_INSTALL_TARGET_CMDS
 	for d in $(CANFESTIVAL_INSTALLED-y) ; do \
 		$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)/$$d install \
 			PYTHON=$(HOST_DIR)/usr/bin/python2 \
-			DESTDIR=$(TARGET_DIR) || exit 1 ; \
+			DESTDIR=$(CANFESTIVAL_TARGET_DIR) || exit 1 ; \
 	done
 endef
 

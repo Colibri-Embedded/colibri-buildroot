@@ -15,7 +15,7 @@ endef
 
 define JQUERY_SPARKLINE_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0644 -D $(@D)/$(JQUERY_SPARKLINE_SOURCE) \
-		$(TARGET_DIR)/var/www/jquery.sparkline.js
+		$(JQUERY_SPARKLINE_TARGET_DIR)/var/www/jquery.sparkline.js
 endef
 
 $(eval $(generic-package))

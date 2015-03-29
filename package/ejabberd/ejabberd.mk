@@ -29,12 +29,12 @@ EJABBERD_CONF_ENV = \
 		ac_cv_erlang_lib_dir_$(lib)="$(shell package/ejabberd/check-erlang-lib $(lib))")
 
 define EJABBERD_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) DESTDIR=$(TARGET_DIR) install -C $(@D)
+	$(TARGET_MAKE_ENV) $(MAKE) DESTDIR=$(EJABBERD_TARGET_DIR) install -C $(@D)
 endef
 
 # Delete HOST_DIR prefix from ERL path in ejabberctl script.
 define EJABBERD_FIX_EJABBERDCTL
-	$(SED) 's,ERL=$(HOST_DIR),ERL=,' '$(TARGET_DIR)/usr/sbin/ejabberdctl'
+	$(SED) 's,ERL=$(HOST_DIR),ERL=,' '$(EJABBERD_TARGET_DIR)/usr/sbin/ejabberdctl'
 endef
 
 EJABBERD_POST_INSTALL_TARGET_HOOKS += EJABBERD_FIX_EJABBERDCTL
@@ -45,7 +45,7 @@ endef
 
 define EJABBERD_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 0755 package/ejabberd/S50ejabberd \
-		$(TARGET_DIR)/etc/init.d/S50ejabberd
+		$(EJABBERD_TARGET_DIR)/etc/init.d/S50ejabberd
 endef
 
 $(eval $(rebar-package))

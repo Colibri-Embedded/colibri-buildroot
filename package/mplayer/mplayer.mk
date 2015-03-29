@@ -167,7 +167,7 @@ define MPLAYER_BUILD_CMDS
 endef
 
 define MPLAYER_INSTALL_TARGET_CMDS
-	$(MAKE) DESTDIR=$(TARGET_DIR) -C $(@D) install
+	$(MAKE) DESTDIR=$(MPLAYER_TARGET_DIR) -C $(@D) install
 endef
 
 $(eval $(generic-package))

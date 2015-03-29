@@ -14,7 +14,7 @@ define YAVTA_BUILD_CMDS
 endef
 
 define YAVTA_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/yavta $(TARGET_DIR)/usr/bin/yavta
+	$(INSTALL) -m 0755 -D $(@D)/yavta $(YAVTA_TARGET_DIR)/usr/bin/yavta
 endef
 
 $(eval $(generic-package))

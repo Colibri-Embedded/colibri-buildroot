@@ -55,7 +55,7 @@ KMOD_DEPENDENCIES += $(if $(BR2_PACKAGE_BUSYBOX),busybox)
 
 define KMOD_INSTALL_TOOLS
 	for i in depmod insmod lsmod modinfo modprobe rmmod; do \
-		ln -sf ../usr/bin/kmod $(TARGET_DIR)/sbin/$$i; \
+		ln -sf ../usr/bin/kmod $(KMOD_TARGET_DIR)/sbin/$$i; \
 	done
 endef
 

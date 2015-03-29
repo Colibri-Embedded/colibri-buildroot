@@ -17,8 +17,8 @@ endef
 
 define MEMSTAT_INSTALL_TARGET_CMDS
 	$(INSTALL) -D $(@D)/memstat.conf -m 0644 \
-		$(TARGET_DIR)/etc/memstat.conf
-	$(INSTALL) -D $(@D)/memstat $(TARGET_DIR)/usr/bin/memstat
+		$(MEMSTAT_TARGET_DIR)/etc/memstat.conf
+	$(INSTALL) -D $(@D)/memstat $(MEMSTAT_TARGET_DIR)/usr/bin/memstat
 endef
 
 $(eval $(generic-package))

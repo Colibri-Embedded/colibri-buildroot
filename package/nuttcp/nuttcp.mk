@@ -17,7 +17,7 @@ endef
 
 define NUTTCP_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 $(@D)/nuttcp-$(NUTTCP_VERSION) \
-		$(TARGET_DIR)/usr/bin/nuttcp
+		$(NUTTCP_TARGET_DIR)/usr/bin/nuttcp
 endef
 
 $(eval $(generic-package))

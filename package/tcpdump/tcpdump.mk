@@ -26,7 +26,7 @@ endif
 
 # make install installs an unneeded extra copy of the tcpdump binary
 define TCPDUMP_REMOVE_DUPLICATED_BINARY
-	rm -f $(TARGET_DIR)/usr/sbin/tcpdump.$(TCPDUMP_VERSION)
+	rm -f $(TCPDUMP_TARGET_DIR)/usr/sbin/tcpdump.$(TCPDUMP_VERSION)
 endef
 
 TCPDUMP_POST_INSTALL_TARGET_HOOKS += TCPDUMP_REMOVE_DUPLICATED_BINARY

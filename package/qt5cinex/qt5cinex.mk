@@ -31,12 +31,12 @@ endef
 # sub-directory, which isn't very practical to install in /usr/bin/.
 define QT5CINEX_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/Qt5_CinematicExperience \
-		$(TARGET_DIR)/usr/share/Qt5/CinematicExperience/Qt5_CinematicExperience
+		$(QT5CINEX_TARGET_DIR)/usr/share/Qt5/CinematicExperience/Qt5_CinematicExperience
 	$(INSTALL) -D -m 0664 $(@D)/Qt5_CinematicExperience.qml \
-		$(TARGET_DIR)/usr/share/Qt5/CinematicExperience/Qt5_CinematicExperience.qml
-	cp -dpfr $(@D)/content $(TARGET_DIR)/usr/share/Qt5/CinematicExperience/content
+		$(QT5CINEX_TARGET_DIR)/usr/share/Qt5/CinematicExperience/Qt5_CinematicExperience.qml
+	cp -dpfr $(@D)/content $(QT5CINEX_TARGET_DIR)/usr/share/Qt5/CinematicExperience/content
 	$(INSTALL) -m 0755 -D package/qt5cinex/CinematicExperience-demo \
-		$(TARGET_DIR)/usr/bin/CinematicExperience-demo
+		$(QT5CINEX_TARGET_DIR)/usr/bin/CinematicExperience-demo
 endef
 
 $(eval $(generic-package))

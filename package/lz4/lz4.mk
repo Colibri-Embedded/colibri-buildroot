@@ -34,7 +34,7 @@ define LZ4_INSTALL_STAGING_CMDS
 endef
 
 define LZ4_INSTALL_TARGET_CMDS
-	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D) install DESTDIR=$(TARGET_DIR)
+	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D) install DESTDIR=$(LZ4_TARGET_DIR)
 endef
 
 $(eval $(generic-package))

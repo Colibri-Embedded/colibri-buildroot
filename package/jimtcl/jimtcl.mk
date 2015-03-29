@@ -21,7 +21,7 @@ JIMTCL_HEADERS_TO_INSTALL = \
 
 ifeq ($(BR2_PACKAGE_TCL),)
 define JIMTCL_LINK_TCLSH
-	ln -sf jimsh $(TARGET_DIR)/usr/bin/tclsh
+	ln -sf jimsh $(JIMTCL_TARGET_DIR)/usr/bin/tclsh
 endef
 endif
 
@@ -34,8 +34,8 @@ JIMTCL_SHARED = --shared
 JIMTCL_LIB = so.$(JIMTCL_VERSION)
 JIMTCL_INSTALL_LIB = \
 	$(INSTALL) -D $(@D)/libjim.$(JIMTCL_LIB) \
-	$(TARGET_DIR)/usr/lib/libjim.$(JIMTCL_LIB); \
-	ln -s libjim.$(JIMTCL_LIB) $(TARGET_DIR)/usr/lib/libjim.so
+	$(JIMTCL_TARGET_DIR)/usr/lib/libjim.$(JIMTCL_LIB); \
+	ln -s libjim.$(JIMTCL_LIB) $(JIMTCL_TARGET_DIR)/usr/lib/libjim.so
 endif
 
 define JIMTCL_CONFIGURE_CMDS
@@ -59,7 +59,7 @@ define JIMTCL_INSTALL_STAGING_CMDS
 endef
 
 define JIMTCL_INSTALL_TARGET_CMDS
-	$(INSTALL) -D $(@D)/jimsh $(TARGET_DIR)/usr/bin/jimsh
+	$(INSTALL) -D $(@D)/jimsh $(JIMTCL_TARGET_DIR)/usr/bin/jimsh
 	$(JIMTCL_INSTALL_LIB)
 	$(JIMTCL_LINK_TCLSH)
 endef

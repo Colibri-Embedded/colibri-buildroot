@@ -21,7 +21,7 @@ define MTDEV2TUIO_BUILD_CMDS
 endef
 
 define MTDEV2TUIO_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/mtdev2tuio $(TARGET_DIR)/usr/bin/mtdev2tuio
+	$(INSTALL) -D -m 0755 $(@D)/mtdev2tuio $(MTDEV2TUIO_TARGET_DIR)/usr/bin/mtdev2tuio
 endef
 
 $(eval $(generic-package))

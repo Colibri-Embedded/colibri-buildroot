@@ -15,7 +15,7 @@ define TREE_BUILD_CMDS
 endef
 
 define TREE_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/tree $(TARGET_DIR)/usr/bin/tree
+	$(INSTALL) -D -m 0755 $(@D)/tree $(TREE_TARGET_DIR)/usr/bin/tree
 endef
 
 $(eval $(generic-package))

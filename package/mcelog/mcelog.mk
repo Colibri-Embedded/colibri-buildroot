@@ -15,7 +15,7 @@ define MCELOG_BUILD_CMDS
 endef
 
 define MCELOG_INSTALL_TARGET_CMDS
-	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D) DESTDIR=$(TARGET_DIR) install
+	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D) DESTDIR=$(MCELOG_TARGET_DIR) install
 endef
 
 $(eval $(generic-package))

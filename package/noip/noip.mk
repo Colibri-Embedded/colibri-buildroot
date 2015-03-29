@@ -18,7 +18,7 @@ define NOIP_BUILD_CMDS
 endef
 
 define NOIP_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/noip2 $(TARGET_DIR)/usr/sbin/noip2
+	$(INSTALL) -m 0755 -D $(@D)/noip2 $(NOIP_TARGET_DIR)/usr/sbin/noip2
 endef
 
 $(eval $(generic-package))

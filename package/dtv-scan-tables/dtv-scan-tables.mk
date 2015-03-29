@@ -19,8 +19,8 @@ DTV_SCAN_TABLES_LICENSE_FILES = COPYING COPYING.LGPL
 
 define DTV_SCAN_TABLES_INSTALL_TARGET_CMDS
 	for f in atsc dvb-c dvb-s dvb-t; do \
-		$(INSTALL) -d -m 0755 $(TARGET_DIR)/usr/share/dvb/$$f; \
-		$(INSTALL) $(@D)/$$f/* $(TARGET_DIR)/usr/share/dvb/$$f; \
+		$(INSTALL) -d -m 0755 $(DTV_SCAN_TABLES_TARGET_DIR)/usr/share/dvb/$$f; \
+		$(INSTALL) $(@D)/$$f/* $(DTV_SCAN_TABLES_TARGET_DIR)/usr/share/dvb/$$f; \
 	done
 endef
 

@@ -16,7 +16,7 @@ define FCONFIG_BUILD_CMDS
 endef
 
 define FCONFIG_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/fconfig $(TARGET_DIR)/sbin/fconfig
+	$(INSTALL) -D -m 0755 $(@D)/fconfig $(FCONFIG_TARGET_DIR)/sbin/fconfig
 endef
 
 $(eval $(generic-package))

@@ -33,12 +33,12 @@ endif
 
 define BANDWIDTHD_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -D -m 644 package/bandwidthd/bandwidthd.service \
-		$(TARGET_DIR)/usr/lib/systemd/system/bandwidthd.service
+		$(BANDWIDTHD_TARGET_DIR)/usr/lib/systemd/system/bandwidthd.service
 
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+	mkdir -p $(BANDWIDTHD_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
 
 	ln -sf /usr/lib/systemd/system/bandwidthd.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/bandwidthd.service
+		$(BANDWIDTHD_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/bandwidthd.service
 endef
 
 $(eval $(autotools-package))

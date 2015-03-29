@@ -14,7 +14,7 @@ define KEXEC_LITE_BUILD_CMDS
 endef
 
 define KEXEC_LITE_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 755 $(@D)/kexec $(TARGET_DIR)/usr/sbin/kexec
+	$(INSTALL) -D -m 755 $(@D)/kexec $(KEXEC_LITE_TARGET_DIR)/usr/sbin/kexec
 endef
 
 $(eval $(generic-package))

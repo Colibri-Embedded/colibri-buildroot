@@ -67,12 +67,12 @@ QT_CONFIGURE_OPTS += -no-qt3support
 endif
 
 ifeq ($(BR2_PACKAGE_QT_DEMOS),y)
-QT_CONFIGURE_OPTS += -demosdir $(TARGET_DIR)/usr/share/qt/demos
+QT_CONFIGURE_OPTS += -demosdir $(QT_TARGET_DIR)/usr/share/qt/demos
 else
 QT_CONFIGURE_OPTS += -nomake demos
 endif
 ifeq ($(BR2_PACKAGE_QT_EXAMPLES),y)
-QT_CONFIGURE_OPTS += -examplesdir $(TARGET_DIR)/usr/share/qt/examples
+QT_CONFIGURE_OPTS += -examplesdir $(QT_TARGET_DIR)/usr/share/qt/examples
 else
 QT_CONFIGURE_OPTS += -nomake examples
 endif
@@ -647,9 +647,9 @@ endef
 # Library installation
 ifeq ($(BR2_PACKAGE_QT_SHARED),y)
 define QT_INSTALL_TARGET_LIBS
-	mkdir -p $(TARGET_DIR)/usr/lib
+	mkdir -p $(QT_TARGET_DIR)/usr/lib
 	for lib in $(QT_INSTALL_LIBS); do \
-		cp -dpf $(STAGING_DIR)/usr/lib/lib$${lib}.so.* $(TARGET_DIR)/usr/lib ; \
+		cp -dpf $(STAGING_DIR)/usr/lib/lib$${lib}.so.* $(QT_TARGET_DIR)/usr/lib ; \
 	done
 endef
 endif
@@ -657,16 +657,16 @@ endif
 # Plugin installation
 define QT_INSTALL_TARGET_PLUGINS
 	if [ -d $(STAGING_DIR)/usr/lib/qt/plugins/ ] ; then \
-		mkdir -p $(TARGET_DIR)/usr/lib/qt/plugins ; \
-		cp -dpfr $(STAGING_DIR)/usr/lib/qt/plugins/* $(TARGET_DIR)/usr/lib/qt/plugins ; \
+		mkdir -p $(QT_TARGET_DIR)/usr/lib/qt/plugins ; \
+		cp -dpfr $(STAGING_DIR)/usr/lib/qt/plugins/* $(QT_TARGET_DIR)/usr/lib/qt/plugins ; \
 	fi
 endef
 
 # Import installation
 define QT_INSTALL_TARGET_IMPORTS
 	if [ -d $(STAGING_DIR)/usr/lib/qt/imports/ ] ; then \
-		mkdir -p $(TARGET_DIR)/usr/lib/qt/imports ; \
-		cp -dpfr $(STAGING_DIR)/usr/lib/qt/imports/* $(TARGET_DIR)/usr/lib/qt/imports ; \
+		mkdir -p $(QT_TARGET_DIR)/usr/lib/qt/imports ; \
+		cp -dpfr $(STAGING_DIR)/usr/lib/qt/imports/* $(QT_TARGET_DIR)/usr/lib/qt/imports ; \
 	fi
 endef
 
@@ -674,15 +674,15 @@ endef
 ifeq ($(BR2_PACKAGE_QT_EMBEDDED),y)
 ifneq ($(QT_FONTS),)
 define QT_INSTALL_TARGET_FONTS
-	mkdir -p $(TARGET_DIR)/usr/lib/fonts
-	cp -dpf $(QT_FONTS) $(TARGET_DIR)/usr/lib/fonts
+	mkdir -p $(QT_TARGET_DIR)/usr/lib/fonts
+	cp -dpf $(QT_FONTS) $(QT_TARGET_DIR)/usr/lib/fonts
 endef
 endif
 
 ifeq ($(BR2_PACKAGE_QT_QTFREETYPE)$(BR2_PACKAGE_QT_SYSTEMFREETYPE),y)
 define QT_INSTALL_TARGET_FONTS_TTF
-	mkdir -p $(TARGET_DIR)/usr/lib/fonts
-	cp -dpf $(STAGING_DIR)/usr/lib/fonts/*.ttf $(TARGET_DIR)/usr/lib/fonts
+	mkdir -p $(QT_TARGET_DIR)/usr/lib/fonts
+	cp -dpf $(STAGING_DIR)/usr/lib/fonts/*.ttf $(QT_TARGET_DIR)/usr/lib/fonts
 endef
 endif
 endif # BR2_PACKAGE_QT_EMBEDDED
@@ -692,15 +692,15 @@ define QT_INSTALL_TARGET_POWERVR
 	# Note: this overwrites the default powervr.ini provided by the ti-gfx
 	# package.
 	$(INSTALL) -D -m 0644 package/qt/powervr.ini \
-		$(TARGET_DIR)/etc/powervr.ini
+		$(QT_TARGET_DIR)/etc/powervr.ini
 endef
 endif
 
 ifeq ($(BR2_PACKAGE_QT_TRANSLATION_FILES),y)
 define QT_INSTALL_TARGET_TRANSLATIONS
 	if [ -d $(STAGING_DIR)/usr/share/qt/translations/ ] ; then \
-		mkdir -p $(TARGET_DIR)/usr/share/qt/translations ; \
-		cp -dpfr $(STAGING_DIR)/usr/share/qt/translations/* $(TARGET_DIR)/usr/share/qt/translations ; \
+		mkdir -p $(QT_TARGET_DIR)/usr/share/qt/translations ; \
+		cp -dpfr $(STAGING_DIR)/usr/share/qt/translations/* $(QT_TARGET_DIR)/usr/share/qt/translations ; \
 	fi
 endef
 endif

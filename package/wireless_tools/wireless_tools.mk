@@ -33,8 +33,8 @@ define WIRELESS_TOOLS_BUILD_CMDS
 endef
 
 define WIRELESS_TOOLS_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) PREFIX="$(TARGET_DIR)" LDCONFIG=/bin/true $(WIRELESS_TOOLS_INSTALL_TARGETS)
-	$(MAKE) -C $(@D) INSTALL_MAN="$(TARGET_DIR)/usr/share/man" install-man
+	$(MAKE) -C $(@D) PREFIX="$(WIRELESS_TOOLS_TARGET_DIR)" LDCONFIG=/bin/true $(WIRELESS_TOOLS_INSTALL_TARGETS)
+	$(MAKE) -C $(@D) INSTALL_MAN="$(WIRELESS_TOOLS_TARGET_DIR)/usr/share/man" install-man
 endef
 
 $(eval $(generic-package))

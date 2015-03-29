@@ -35,7 +35,7 @@ endef
 
 define INFOZIP_INSTALL_TARGET_CMDS
 	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D) -f unix/Makefile install \
-		prefix=$(TARGET_DIR)/usr
+		prefix=$(INFOZIP_TARGET_DIR)/usr
 endef
 
 define HOST_INFOZIP_BUILD_CMDS

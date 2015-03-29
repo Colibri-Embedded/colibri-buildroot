@@ -23,7 +23,7 @@ HOST_SHARED_MIME_INFO_MAKE = $(MAKE1)
 
 define SHARED_MIME_INFO_INSTALL_TARGET_CMDS
 	$(HOST_MAKE_ENV) $(SHARED_MIME_INFO_HOST_BINARY) $(STAGING_DIR)/usr/share/mime
-	$(INSTALL) -D $(STAGING_DIR)/usr/share/mime/mime.cache $(TARGET_DIR)/usr/share/mime/mime.cache
+	$(INSTALL) -D $(STAGING_DIR)/usr/share/mime/mime.cache $(SHARED_MIME_INFO_TARGET_DIR)/usr/share/mime/mime.cache
 endef
 
 $(eval $(autotools-package))

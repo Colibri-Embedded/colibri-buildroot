@@ -15,11 +15,11 @@ LITE_LICENSE = LGPLv2.1+
 LITE_LICENSE_FILES = COPYING
 
 define LITE_FINALIZE_INSTALL
-	$(INSTALL) -d $(TARGET_DIR)/usr/share/LiTE/examples/
-	$(INSTALL) -d $(TARGET_DIR)/usr/share/fonts/truetype/
-	$(INSTALL) -m0644 $(@D)/data/*.png $(TARGET_DIR)/usr/share/LiTE/
-	$(INSTALL) -m0644 $(@D)/examples/*.png $(TARGET_DIR)/usr/share/LiTE/examples/
-	$(INSTALL) -m0644 $(@D)/fonts/*.ttf $(TARGET_DIR)/usr/share/fonts/truetype/
+	$(INSTALL) -d $(LITE_TARGET_DIR)/usr/share/LiTE/examples/
+	$(INSTALL) -d $(LITE_TARGET_DIR)/usr/share/fonts/truetype/
+	$(INSTALL) -m0644 $(@D)/data/*.png $(LITE_TARGET_DIR)/usr/share/LiTE/
+	$(INSTALL) -m0644 $(@D)/examples/*.png $(LITE_TARGET_DIR)/usr/share/LiTE/examples/
+	$(INSTALL) -m0644 $(@D)/fonts/*.ttf $(LITE_TARGET_DIR)/usr/share/fonts/truetype/
 endef
 
 LITE_POST_INSTALL_TARGET_HOOKS += LITE_FINALIZE_INSTALL

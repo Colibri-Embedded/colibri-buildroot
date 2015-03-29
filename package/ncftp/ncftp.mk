@@ -37,7 +37,7 @@ endif
 ifeq ($(BR2_PACKAGE_NCFTP_BATCH),y)
 	NCFTP_TARGET_BINS += ncftpbatch
 	NCFTP_INSTALL_NCFTP_BATCH = \
-		ln -sf /usr/bin/ncftpbatch $(TARGET_DIR)/usr/bin/ncftpspooler
+		ln -sf /usr/bin/ncftpbatch $(NCFTP_TARGET_DIR)/usr/bin/ncftpspooler
 endif
 
 ifeq ($(BR2_PACKAGE_NCFTP_BOOKMARKS),y)
@@ -46,7 +46,7 @@ ifeq ($(BR2_PACKAGE_NCFTP_BOOKMARKS),y)
 endif
 
 define NCFTP_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 $(addprefix $(NCFTP_DIR)/bin/, $(NCFTP_TARGET_BINS)) $(TARGET_DIR)/usr/bin
+	$(INSTALL) -m 0755 $(addprefix $(NCFTP_DIR)/bin/, $(NCFTP_TARGET_BINS)) $(NCFTP_TARGET_DIR)/usr/bin
 	$(NCFTP_INSTALL_NCFTP_BATCH)
 endef
 

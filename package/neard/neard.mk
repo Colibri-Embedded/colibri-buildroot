@@ -20,7 +20,7 @@ endif
 
 define NEARD_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 0755 package/neard/S53neard \
-		$(TARGET_DIR)/etc/init.d/S53neard
+		$(NEARD_TARGET_DIR)/etc/init.d/S53neard
 endef
 
 $(eval $(autotools-package))

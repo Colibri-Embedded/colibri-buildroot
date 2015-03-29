@@ -29,7 +29,7 @@ define DUMA_INSTALL_STAGING_CMDS
 endef
 
 define DUMA_INSTALL_TARGET_CMDS
-	$(MAKE) OS=linux prefix=$(TARGET_DIR)/usr install -C $(@D)
+	$(MAKE) OS=linux prefix=$(DUMA_TARGET_DIR)/usr install -C $(@D)
 endef
 
 $(eval $(generic-package))

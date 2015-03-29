@@ -16,14 +16,14 @@ XENOMAI_LICENSE = headers: GPLv2+ with exception, libraries: LGPLv2.1+, kernel: 
 XENOMAI_LICENSE_FILES = debian/copyright include/COPYING src/skins/native/COPYING ksrc/nucleus/COPYING
 
 XENOMAI_INSTALL_STAGING = YES
-XENOMAI_INSTALL_TARGET_OPTS = DESTDIR=$(TARGET_DIR) install-user
+XENOMAI_INSTALL_TARGET_OPTS = DESTDIR=$(XENOMAI_TARGET_DIR) install-user
 XENOMAI_INSTALL_STAGING_OPTS = DESTDIR=$(STAGING_DIR) install-user
 
 XENOMAI_CONF_OPTS += --includedir=/usr/include/xenomai/ --disable-doc-install
 
 define XENOMAI_REMOVE_DEVFILES
 	for i in xeno-config xeno-info wrap-link.sh ; do \
-		rm -f $(TARGET_DIR)/usr/bin/$$i ; \
+		rm -f $(XENOMAI_TARGET_DIR)/usr/bin/$$i ; \
 	done
 endef
 
@@ -31,13 +31,13 @@ XENOMAI_POST_INSTALL_TARGET_HOOKS += XENOMAI_REMOVE_DEVFILES
 
 ifeq ($(BR2_PACKAGE_XENOMAI_TESTSUITE),)
 define XENOMAI_REMOVE_TESTSUITE
-	rm -rf $(TARGET_DIR)/usr/share/xenomai/
+	rm -rf $(XENOMAI_TARGET_DIR)/usr/share/xenomai/
 	for i in klatency rtdm xeno xeno-load check-vdso \
 		irqloop cond-torture-posix switchtest arith \
 		sigtest clocktest cyclictest latency wakeup-time \
 		xeno-test cond-torture-native mutex-torture-posix \
 		mutex-torture-native ; do \
-		rm -f $(TARGET_DIR)/usr/bin/$$i ; \
+		rm -f $(XENOMAI_TARGET_DIR)/usr/bin/$$i ; \
 	done
 endef
 
@@ -47,9 +47,9 @@ endif
 ifeq ($(BR2_PACKAGE_XENOMAI_RTCAN),)
 define XENOMAI_REMOVE_RTCAN_PROGS
 	for i in rtcanrecv rtcansend ; do \
-		rm -f $(TARGET_DIR)/usr/bin/$$i ; \
+		rm -f $(XENOMAI_TARGET_DIR)/usr/bin/$$i ; \
 	done
-	rm -f $(TARGET_DIR)/usr/sbin/rtcanconfig
+	rm -f $(XENOMAI_TARGET_DIR)/usr/sbin/rtcanconfig
 endef
 
 XENOMAI_POST_INSTALL_TARGET_HOOKS += XENOMAI_REMOVE_RTCAN_PROGS
@@ -59,10 +59,10 @@ ifeq ($(BR2_PACKAGE_XENOMAI_ANALOGY),)
 define XENOMAI_REMOVE_ANALOGY
 	for i in cmd_bits cmd_read cmd_write insn_write \
 		insn_bits insn_read ; do \
-		rm -f $(TARGET_DIR)/usr/bin/$$i ; \
+		rm -f $(XENOMAI_TARGET_DIR)/usr/bin/$$i ; \
 	done
-	rm -f $(TARGET_DIR)/usr/sbin/analogy_config
-	rm -f $(TARGET_DIR)/usr/lib/libanalogy.*
+	rm -f $(XENOMAI_TARGET_DIR)/usr/sbin/analogy_config
+	rm -f $(XENOMAI_TARGET_DIR)/usr/lib/libanalogy.*
 endef
 
 XENOMAI_POST_INSTALL_TARGET_HOOKS += XENOMAI_REMOVE_ANALOGY
@@ -78,9 +78,9 @@ XENOMAI_REMOVE_SKIN_LIST += $(if $(BR2_PACKAGE_XENOMAI_VRTX_SKIN),,vrtx)
 
 define XENOMAI_REMOVE_SKINS
 	for i in $(XENOMAI_REMOVE_SKIN_LIST) ; do \
-		rm -f $(TARGET_DIR)/usr/lib/lib$$i.* ; \
+		rm -f $(XENOMAI_TARGET_DIR)/usr/lib/lib$$i.* ; \
 		if [ $$i == "posix" ] ; then \
-			rm -f $(TARGET_DIR)/usr/lib/posix.wrappers ; \
+			rm -f $(XENOMAI_TARGET_DIR)/usr/lib/posix.wrappers ; \
 		fi ; \
 	done
 endef
@@ -97,9 +97,9 @@ ifeq ($(BR2_PACKAGE_HAS_UDEV),y)
 XENOMAI_DEPENDENCIES += udev
 
 define XENOMAI_INSTALL_UDEV_RULES
-	if test -d $(TARGET_DIR)/etc/udev/rules.d ; then \
+	if test -d $(XENOMAI_TARGET_DIR)/etc/udev/rules.d ; then \
 		for f in $(@D)/ksrc/nucleus/udev/*.rules ; do \
-			cp $$f $(TARGET_DIR)/etc/udev/rules.d/ || exit 1 ; \
+			cp $$f $(XENOMAI_TARGET_DIR)/etc/udev/rules.d/ || exit 1 ; \
 		done ; \
 	fi;
 endef

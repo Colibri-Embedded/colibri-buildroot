@@ -17,7 +17,7 @@ define XVKBD_BUILD_CMDS
 endef
 
 define XVKBD_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) DESTDIR=$(TARGET_DIR) install
+	$(MAKE) -C $(@D) DESTDIR=$(XVKBD_TARGET_DIR) install
 endef
 
 XVKBD_DEPENDENCIES = \

@@ -224,7 +224,7 @@ FLEX := $(shell which flex || type -p flex)
 BISON := $(shell which bison || type -p bison)
 SED := $(shell which sed || type -p sed) -i -e
 UNZIP := $(shell which unzip || type -p unzip) -q
-FAKEROOT := $(shell which fakeroot || type -p fakeroot)
+FAKEROOT := $(HOST_DIR)/usr/bin/fakeroot
 
 APPLY_PATCHES = support/scripts/apply-patches.sh $(if $(QUIET),-s)
 

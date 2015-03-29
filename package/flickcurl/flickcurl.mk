@@ -15,7 +15,7 @@ FLICKCURL_DEPENDENCIES = libcurl libxml2 host-pkgconf
 
 ifeq ($(BR2_PACKAGE_FLICKCURL_UTILS),)
 define FLICKCURL_REMOVE_UTILS
-	rm -f $(TARGET_DIR)/usr/bin/flickcurl $(TARGET_DIR)/usr/bin/flickrdf
+	rm -f $(FLICKCURL_TARGET_DIR)/usr/bin/flickcurl $(FLICKCURL_TARGET_DIR)/usr/bin/flickrdf
 endef
 FLICKCURL_POST_INSTALL_TARGET_HOOKS += FLICKCURL_REMOVE_UTILS
 endif

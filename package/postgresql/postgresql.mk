@@ -51,8 +51,8 @@ define POSTGRESQL_USERS
 endef
 
 define POSTGRESQL_INSTALL_TARGET_FIXUP
-	$(INSTALL) -dm 0700 $(TARGET_DIR)/var/lib/pgsql
-	$(RM) -rf $(TARGET_DIR)/usr/lib/postgresql/pgxs
+	$(INSTALL) -dm 0700 $(POSTGRESQL_TARGET_DIR)/var/lib/pgsql
+	$(RM) -rf $(POSTGRESQL_TARGET_DIR)/usr/lib/postgresql/pgxs
 endef
 
 POSTGRESQL_POST_INSTALL_TARGET_HOOKS += POSTGRESQL_INSTALL_TARGET_FIXUP
@@ -66,15 +66,15 @@ POSTGRESQL_POST_INSTALL_STAGING_HOOKS += POSTGRESQL_INSTALL_CUSTOM_PG_CONFIG
 
 define POSTGRESQL_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/postgresql/S50postgresql \
-		$(TARGET_DIR)/etc/init.d/S50postgresql
+		$(POSTGRESQL_TARGET_DIR)/etc/init.d/S50postgresql
 endef
 
 define POSTGRESQL_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -D -m 644 package/postgresql/postgresql.service \
-		$(TARGET_DIR)/etc/systemd/system/postgresql.service
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+		$(POSTGRESQL_TARGET_DIR)/etc/systemd/system/postgresql.service
+	mkdir -p $(POSTGRESQL_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
 	ln -fs ../postgresql.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/postgresql.service
+		$(POSTGRESQL_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/postgresql.service
 endef
 
 $(eval $(autotools-package))

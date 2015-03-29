@@ -62,28 +62,28 @@ endif
 
 # fix rebuild (dbus makefile errors out if /var/lib/dbus is a symlink)
 define DBUS_REMOVE_VAR_LIB_DBUS
-	rm -rf $(TARGET_DIR)/var/lib/dbus
+	rm -rf $(DBUS_TARGET_DIR)/var/lib/dbus
 endef
 
 DBUS_POST_BUILD_HOOKS += DBUS_REMOVE_VAR_LIB_DBUS
 
 define DBUS_REMOVE_DEVFILES
-	rm -rf $(TARGET_DIR)/usr/lib/dbus-1.0
+	rm -rf $(DBUS_TARGET_DIR)/usr/lib/dbus-1.0
 endef
 
 DBUS_POST_INSTALL_TARGET_HOOKS += DBUS_REMOVE_DEVFILES
 
 define DBUS_INSTALL_TARGET_FIXUP
-	mkdir -p $(TARGET_DIR)/var/lib
-	rm -rf $(TARGET_DIR)/var/lib/dbus
-	ln -sf /tmp/dbus $(TARGET_DIR)/var/lib/dbus
+	mkdir -p $(DBUS_TARGET_DIR)/var/lib
+	rm -rf $(DBUS_TARGET_DIR)/var/lib/dbus
+	ln -sf /tmp/dbus $(DBUS_TARGET_DIR)/var/lib/dbus
 endef
 
 DBUS_POST_INSTALL_TARGET_HOOKS += DBUS_INSTALL_TARGET_FIXUP
 
 define DBUS_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/dbus/S30dbus \
-		$(TARGET_DIR)/etc/init.d/S30dbus
+		$(DBUS_TARGET_DIR)/etc/init.d/S30dbus
 endef
 
 HOST_DBUS_DEPENDENCIES = host-pkgconf host-expat

@@ -71,10 +71,10 @@ ERLANG_REMOVE_PACKAGES += megaco
 endif
 
 define ERLANG_REMOVE_UNUSED
-	find $(TARGET_DIR)/usr/lib/erlang -type d -name src -prune -exec rm -rf {} \;
-	find $(TARGET_DIR)/usr/lib/erlang -type d -name examples -prune -exec rm -rf {} \;
+	find $(ERLANG_TARGET_DIR)/usr/lib/erlang -type d -name src -prune -exec rm -rf {} \;
+	find $(ERLANG_TARGET_DIR)/usr/lib/erlang -type d -name examples -prune -exec rm -rf {} \;
 	for package in $(ERLANG_REMOVE_PACKAGES); do \
-		rm -rf $(TARGET_DIR)/usr/lib/erlang/lib/$${package}-*; \
+		rm -rf $(ERLANG_TARGET_DIR)/usr/lib/erlang/lib/$${package}-*; \
 	done
 endef
 

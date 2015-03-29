@@ -31,16 +31,16 @@ define SG3_UTILS_REMOVE_PROGS
 		scan senddiag ses ses_microcode start stpg sync test_rwbuf \
 		turs unmap verify vpd write_buffer write_long \
 		write_same write_verify wr_mode xcopy; do \
-		$(RM) $(TARGET_DIR)/usr/bin/sg_$${prog} ; \
+		$(RM) $(SG3_UTILS_TARGET_DIR)/usr/bin/sg_$${prog} ; \
 	done
 	for prog in \
 		logging_level mandat readcap ready satl start stop \
 		temperature; do \
-		$(RM) $(TARGET_DIR)/usr/bin/scsi_$${prog} ; \
+		$(RM) $(SG3_UTILS_TARGET_DIR)/usr/bin/scsi_$${prog} ; \
 	done
 	for prog in \
 		sginfo sgm_dd sgp_dd; do \
-		$(RM) $(TARGET_DIR)/usr/bin/$${prog}; \
+		$(RM) $(SG3_UTILS_TARGET_DIR)/usr/bin/$${prog}; \
 	done
 endef
 

@@ -309,9 +309,9 @@ LINUX_FIRMWARE_ALL_LICENSE_FILES += WHENCE
 LINUX_FIRMWARE_LICENSE_FILES = $(sort $(LINUX_FIRMWARE_ALL_LICENSE_FILES))
 
 define LINUX_FIRMWARE_INSTALL_TARGET_CMDS
-	mkdir -p $(TARGET_DIR)/lib/firmware
+	mkdir -p $(LINUX_FIRMWARE_TARGET_DIR)/lib/firmware
 	$(TAR) c -C $(@D) $(sort $(LINUX_FIRMWARE_FILES)) | \
-		$(TAR) x -C $(TARGET_DIR)/lib/firmware
+		$(TAR) x -C $(LINUX_FIRMWARE_TARGET_DIR)/lib/firmware
 endef
 
 endif

@@ -18,7 +18,7 @@ endef
 define EXFAT_UTILS_INSTALL_TARGET_CMDS
 	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) CCFLAGS="$(TARGET_CFLAGS) -std=c99" $(SCONS) \
-		DESTDIR=$(TARGET_DIR)/usr/bin install)
+		DESTDIR=$(EXFAT_UTILS_TARGET_DIR)/usr/bin install)
 endef
 
 $(eval $(generic-package))

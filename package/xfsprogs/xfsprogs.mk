@@ -17,6 +17,6 @@ XFSPROGS_CONF_OPTS = \
 	INSTALL_GROUP=root \
 	--enable-static
 
-XFSPROGS_INSTALL_TARGET_OPTS = DIST_ROOT=$(TARGET_DIR) install
+XFSPROGS_INSTALL_TARGET_OPTS = DIST_ROOT=$(XFSPROGS_TARGET_DIR) install
 
 $(eval $(autotools-package))

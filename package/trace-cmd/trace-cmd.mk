@@ -41,9 +41,9 @@ define TRACE_CMD_BUILD_CMDS
 endef
 
 define TRACE_CMD_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/trace-cmd $(TARGET_DIR)/usr/bin/trace-cmd
-	$(INSTALL) -d -m 0755 $(TARGET_DIR)/usr/lib/trace-cmd/plugins
-	$(INSTALL) -D -m 0755 $(@D)/plugin_*.so $(TARGET_DIR)/usr/lib/trace-cmd/plugins
+	$(INSTALL) -D -m 0755 $(@D)/trace-cmd $(TRACE_CMD_TARGET_DIR)/usr/bin/trace-cmd
+	$(INSTALL) -d -m 0755 $(TRACE_CMD_TARGET_DIR)/usr/lib/trace-cmd/plugins
+	$(INSTALL) -D -m 0755 $(@D)/plugin_*.so $(TRACE_CMD_TARGET_DIR)/usr/lib/trace-cmd/plugins
 endef
 
 $(eval $(generic-package))

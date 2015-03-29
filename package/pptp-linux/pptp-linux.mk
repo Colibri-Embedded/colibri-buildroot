@@ -20,7 +20,7 @@ define PPTP_LINUX_BUILD_CMDS
 endef
 
 define PPTP_LINUX_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/pptp $(TARGET_DIR)/usr/sbin/pptp
+	$(INSTALL) -m 0755 -D $(@D)/pptp $(PPTP_LINUX_TARGET_DIR)/usr/sbin/pptp
 endef
 
 $(eval $(generic-package))

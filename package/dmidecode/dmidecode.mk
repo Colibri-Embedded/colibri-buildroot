@@ -14,7 +14,7 @@ define DMIDECODE_BUILD_CMDS
 endef
 
 define DMIDECODE_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) prefix=/usr DESTDIR=$(TARGET_DIR) install
+	$(MAKE) -C $(@D) prefix=/usr DESTDIR=$(DMIDECODE_TARGET_DIR) install
 endef
 
 $(eval $(generic-package))

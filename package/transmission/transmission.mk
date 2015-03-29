@@ -38,7 +38,7 @@ ifeq ($(BR2_PACKAGE_TRANSMISSION_DAEMON),y)
 
 define TRANSMISSION_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/transmission/S92transmission \
-		$(TARGET_DIR)/etc/init.d/S92transmission
+		$(TRANSMISSION_TARGET_DIR)/etc/init.d/S92transmission
 endef
 
 else

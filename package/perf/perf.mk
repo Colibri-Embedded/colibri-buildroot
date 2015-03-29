@@ -17,7 +17,7 @@ PERF_MAKE_FLAGS = \
 	NO_GTK2=1 \
 	NO_LIBPERL=1 \
 	NO_LIBPYTHON=1 \
-	DESTDIR=$(TARGET_DIR) \
+	DESTDIR=$(PERF_TARGET_DIR) \
 	prefix=/usr \
 	WERROR=0 \
 	ASCIIDOC=
@@ -62,7 +62,7 @@ endef
 define PERF_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(LINUX_DIR)/tools/perf \
 		$(PERF_MAKE_FLAGS) O=$(@D) install
-	$(RM) -rf $(TARGET_DIR)/usr/libexec/perf-core/scripts/
+	$(RM) -rf $(PERF_TARGET_DIR)/usr/libexec/perf-core/scripts/
 endef
 
 $(eval $(generic-package))

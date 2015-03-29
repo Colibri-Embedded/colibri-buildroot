@@ -16,7 +16,7 @@ define FIS_BUILD_CMDS
 endef
 
 define FIS_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/fis $(TARGET_DIR)/sbin/fis
+	$(INSTALL) -m 0755 -D $(@D)/fis $(FIS_TARGET_DIR)/sbin/fis
 endef
 
 $(eval $(generic-package))

@@ -24,7 +24,7 @@ define JACK2_BUILD_CMDS
 endef
 
 define JACK2_INSTALL_TARGET_CMDS
-	(cd $(@D); $(HOST_DIR)/usr/bin/python2 ./waf --destdir=$(TARGET_DIR) \
+	(cd $(@D); $(HOST_DIR)/usr/bin/python2 ./waf --destdir=$(JACK2_TARGET_DIR) \
 		install)
 endef
 

@@ -15,7 +15,7 @@ endef
 
 define JQUERY_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0644 -D $(@D)/$(JQUERY_SOURCE) \
-		$(TARGET_DIR)/var/www/jquery.js
+		$(JQUERY_TARGET_DIR)/var/www/jquery.js
 endef
 
 $(eval $(generic-package))

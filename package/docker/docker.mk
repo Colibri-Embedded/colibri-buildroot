@@ -19,7 +19,7 @@ endef
 
 define DOCKER_INSTALL_TARGET_CMDS
 	$(TARGET_CONFIGURE_OPTS) $(TARGET_MAKE_ENV) $(MAKE) -C $(@D) \
-		XLIBPATH=$(STAGING_DIR)/usr/lib PREFIX=$(TARGET_DIR)/usr install
+		XLIBPATH=$(STAGING_DIR)/usr/lib PREFIX=$(DOCKER_TARGET_DIR)/usr install
 endef
 
 $(eval $(generic-package))

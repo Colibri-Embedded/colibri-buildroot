@@ -15,7 +15,7 @@ define SREDIRD_BUILD_CMDS
 endef
 
 define SREDIRD_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/sredird $(TARGET_DIR)/usr/sbin/sredird
+	$(INSTALL) -D -m 0755 $(@D)/sredird $(SREDIRD_TARGET_DIR)/usr/sbin/sredird
 endef
 
 $(eval $(generic-package))

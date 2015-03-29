@@ -30,7 +30,7 @@ define OPENTYRIAN_BUILD_CMDS
 endef
 
 define OPENTYRIAN_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/opentyrian $(TARGET_DIR)/usr/bin/opentyrian
+	$(INSTALL) -D -m 0755 $(@D)/opentyrian $(OPENTYRIAN_TARGET_DIR)/usr/bin/opentyrian
 endef
 
 $(eval $(generic-package))

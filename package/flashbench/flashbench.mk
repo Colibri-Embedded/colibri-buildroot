@@ -23,8 +23,8 @@ define FLASHBENCH_BUILD_CMDS
 endef
 
 define FLASHBENCH_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 755 -D $(@D)/flashbench $(TARGET_DIR)/usr/bin/flashbench
-	$(INSTALL) -m 755 -D $(@D)/erase $(TARGET_DIR)/usr/bin/erase
+	$(INSTALL) -m 755 -D $(@D)/flashbench $(FLASHBENCH_TARGET_DIR)/usr/bin/flashbench
+	$(INSTALL) -m 755 -D $(@D)/erase $(FLASHBENCH_TARGET_DIR)/usr/bin/erase
 endef
 
 $(eval $(generic-package))

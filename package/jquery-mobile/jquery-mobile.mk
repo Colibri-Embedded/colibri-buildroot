@@ -30,17 +30,17 @@ endif
 
 ifeq ($(BR2_PACKAGE_JQUERY_MOBILE_DEMOS),y)
 define JQUERY_MOBILE_INSTALL_DEMOS
-	mkdir -p $(TARGET_DIR)/var/www/demos
-	cp -r $(@D)/demos/* $(TARGET_DIR)/var/www/demos
+	mkdir -p $(JQUERY_MOBILE_TARGET_DIR)/var/www/demos
+	cp -r $(@D)/demos/* $(JQUERY_MOBILE_TARGET_DIR)/var/www/demos
 endef
 endif
 
 define JQUERY_MOBILE_INSTALL_TARGET_CMDS
 	for f in $(JQUERY_MOBILE_INSTALLED_FILES) ; do \
-		$(INSTALL) -m 0644 -D $(@D)/$$f $(TARGET_DIR)/var/www/$$f || break ; \
+		$(INSTALL) -m 0644 -D $(@D)/$$f $(JQUERY_MOBILE_TARGET_DIR)/var/www/$$f || break ; \
 	done
-	mkdir -p $(TARGET_DIR)/var/www/images
-	cp -r $(@D)/images/* $(TARGET_DIR)/var/www/images
+	mkdir -p $(JQUERY_MOBILE_TARGET_DIR)/var/www/images
+	cp -r $(@D)/images/* $(JQUERY_MOBILE_TARGET_DIR)/var/www/images
 	$(JQUERY_MOBILE_INSTALL_DEMOS)
 endef
 

@@ -84,7 +84,7 @@ ifeq ($(BR2_PACKAGE_WPA_SUPPLICANT_DBUS_OLD),y)
 define WPA_SUPPLICANT_INSTALL_DBUS_OLD
 	$(INSTALL) -m 0644 -D \
 		$(@D)/wpa_supplicant/dbus/$(WPA_SUPPLICANT_DBUS_OLD_SERVICE).service \
-		$(TARGET_DIR)/usr/share/dbus-1/system-services/$(WPA_SUPPLICANT_DBUS_OLD_SERVICE).service
+		$(WPA_SUPPLICANT_TARGET_DIR)/usr/share/dbus-1/system-services/$(WPA_SUPPLICANT_DBUS_OLD_SERVICE).service
 endef
 endif
 
@@ -93,7 +93,7 @@ ifeq ($(BR2_PACKAGE_WPA_SUPPLICANT_DBUS_NEW),y)
 define WPA_SUPPLICANT_INSTALL_DBUS_NEW
 	$(INSTALL) -m 0644 -D \
 		$(@D)/wpa_supplicant/dbus/$(WPA_SUPPLICANT_DBUS_NEW_SERVICE).service \
-		$(TARGET_DIR)/usr/share/dbus-1/system-services/$(WPA_SUPPLICANT_DBUS_NEW_SERVICE).service
+		$(WPA_SUPPLICANT_TARGET_DIR)/usr/share/dbus-1/system-services/$(WPA_SUPPLICANT_DBUS_NEW_SERVICE).service
 endef
 endif
 
@@ -133,14 +133,14 @@ endef
 ifeq ($(BR2_PACKAGE_WPA_SUPPLICANT_CLI),y)
 define WPA_SUPPLICANT_INSTALL_CLI
 	$(INSTALL) -m 0755 -D $(@D)/$(WPA_SUPPLICANT_SUBDIR)/wpa_cli \
-		$(TARGET_DIR)/usr/sbin/wpa_cli
+		$(WPA_SUPPLICANT_TARGET_DIR)/usr/sbin/wpa_cli
 endef
 endif
 
 ifeq ($(BR2_PACKAGE_WPA_SUPPLICANT_PASSPHRASE),y)
 define WPA_SUPPLICANT_INSTALL_PASSPHRASE
 	$(INSTALL) -m 0755 -D $(@D)/$(WPA_SUPPLICANT_SUBDIR)/wpa_passphrase \
-		$(TARGET_DIR)/usr/sbin/wpa_passphrase
+		$(WPA_SUPPLICANT_TARGET_DIR)/usr/sbin/wpa_passphrase
 endef
 endif
 
@@ -148,7 +148,7 @@ ifeq ($(BR2_PACKAGE_DBUS),y)
 define WPA_SUPPLICANT_INSTALL_DBUS
 	$(INSTALL) -m 0644 -D \
 		$(@D)/wpa_supplicant/dbus/dbus-wpa_supplicant.conf \
-		$(TARGET_DIR)/etc/dbus-1/system.d/wpa_supplicant.conf
+		$(WPA_SUPPLICANT_TARGET_DIR)/etc/dbus-1/system.d/wpa_supplicant.conf
 	$(WPA_SUPPLICANT_INSTALL_DBUS_OLD)
 	$(WPA_SUPPLICANT_INSTALL_DBUS_NEW)
 endef
@@ -156,9 +156,9 @@ endif
 
 define WPA_SUPPLICANT_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/$(WPA_SUPPLICANT_SUBDIR)/wpa_supplicant \
-		$(TARGET_DIR)/usr/sbin/wpa_supplicant
+		$(WPA_SUPPLICANT_TARGET_DIR)/usr/sbin/wpa_supplicant
 	$(INSTALL) -m 644 -D package/wpa_supplicant/wpa_supplicant.conf \
-		$(TARGET_DIR)/etc/wpa_supplicant.conf
+		$(WPA_SUPPLICANT_TARGET_DIR)/etc/wpa_supplicant.conf
 	$(WPA_SUPPLICANT_INSTALL_CLI)
 	$(WPA_SUPPLICANT_INSTALL_PASSPHRASE)
 	$(WPA_SUPPLICANT_INSTALL_DBUS)

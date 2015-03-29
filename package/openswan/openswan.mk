@@ -34,7 +34,7 @@ endef
 
 define OPENSWAN_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) \
-		$(OPENSWAN_MAKE_OPTS) DESTDIR=$(TARGET_DIR) install
+		$(OPENSWAN_MAKE_OPTS) DESTDIR=$(OPENSWAN_TARGET_DIR) install
 endef
 
 $(eval $(generic-package))

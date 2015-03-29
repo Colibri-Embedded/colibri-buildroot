@@ -15,7 +15,7 @@ define SSTRIP_BUILD_CMDS
 endef
 
 define SSTRIP_INSTALL_TARGET_CMDS
-	$(INSTALL) -D $(@D)/sstrip $(TARGET_DIR)/usr/bin/sstrip
+	$(INSTALL) -D $(@D)/sstrip $(SSTRIP_TARGET_DIR)/usr/bin/sstrip
 endef
 
 define HOST_SSTRIP_BUILD_CMDS

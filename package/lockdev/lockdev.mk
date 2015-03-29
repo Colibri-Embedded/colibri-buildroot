@@ -31,7 +31,7 @@ define LOCKDEV_CREATE_LINKS_STAGING
 endef
 
 define LOCKDEV_CREATE_LINKS_TARGET
-	ln -sf liblockdev.$(LOCKDEV_VERSION).so $(TARGET_DIR)/usr/lib/liblockdev.so.$(LOCKDEV_MAJOR)
+	ln -sf liblockdev.$(LOCKDEV_VERSION).so $(LOCKDEV_TARGET_DIR)/usr/lib/liblockdev.so.$(LOCKDEV_MAJOR)
 endef
 endif
 
@@ -45,7 +45,7 @@ define LOCKDEV_INSTALL_STAGING_CMDS
 endef
 
 define LOCKDEV_INSTALL_TARGET_CMDS
-	$(MAKE1) basedir=$(TARGET_DIR)/usr -C $(@D) $(LOCKDEV_INSTALL_ARGS)
+	$(MAKE1) basedir=$(LOCKDEV_TARGET_DIR)/usr -C $(@D) $(LOCKDEV_INSTALL_ARGS)
 	$(LOCKDEV_CREATE_LINKS_TARGET)
 endef
 

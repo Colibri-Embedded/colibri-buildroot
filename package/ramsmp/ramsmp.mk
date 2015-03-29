@@ -16,7 +16,7 @@ define RAMSMP_BUILD_CMDS
 endef
 
 define RAMSMP_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/ramsmp $(TARGET_DIR)/usr/bin/ramsmp
+	$(INSTALL) -m 0755 -D $(@D)/ramsmp $(RAMSMP_TARGET_DIR)/usr/bin/ramsmp
 endef
 
 $(eval $(generic-package))

@@ -146,7 +146,7 @@ endif
 
 ifeq ($(BR2_PACKAGE_LIBGTK2_DEMO),)
 define LIBGTK2_POST_INSTALL_TWEAKS
-	rm -rf $(TARGET_DIR)/usr/share/gtk-2.0/demo $(TARGET_DIR)/usr/bin/gtk-demo
+	rm -rf $(LIBGTK2_TARGET_DIR)/usr/share/gtk-2.0/demo $(LIBGTK2_TARGET_DIR)/usr/bin/gtk-demo
 endef
 
 LIBGTK2_POST_INSTALL_TARGET_HOOKS += LIBGTK2_POST_INSTALL_TWEAKS

@@ -14,8 +14,8 @@ UX500_FIRMWARE_REDISTRIBUTE = NO
 # The CG2900 linux driver has to load firmware named CG29XX_* but the firmware
 # filenames contained in this package are CG2900_* hence the code below
 define UX500_FIRMWARE_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) DESTDIR=$(TARGET_DIR) install
-	for f in $(TARGET_DIR)/lib/firmware/CG2900* ; do \
+	$(MAKE) -C $(@D) DESTDIR=$(UX500_FIRMWARE_TARGET_DIR) install
+	for f in $(UX500_FIRMWARE_TARGET_DIR)/lib/firmware/CG2900* ; do \
 		mv $$f $${f/CG2900/CG29XX}; \
 	done
 endef

@@ -17,8 +17,8 @@ define PIFMRDS_BUILD_CMDS
 endef
 
 define PIFMRDS_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/src/pi_fm_rds $(TARGET_DIR)/usr/bin/pi_fm_rds
-	$(INSTALL) -D -m 0755 $(@D)/src/rds_wav $(TARGET_DIR)/usr/bin/rds_wav
+	$(INSTALL) -D -m 0755 $(@D)/src/pi_fm_rds $(PIFMRDS_TARGET_DIR)/usr/bin/pi_fm_rds
+	$(INSTALL) -D -m 0755 $(@D)/src/rds_wav $(PIFMRDS_TARGET_DIR)/usr/bin/rds_wav
 endef
 
 $(eval $(generic-package))

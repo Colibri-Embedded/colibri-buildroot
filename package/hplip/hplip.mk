@@ -37,8 +37,8 @@ else
 endif
 
 define HPLIP_POST_INSTALL_TARGET_FIXUP
-	mkdir -p $(TARGET_DIR)/usr/share/hplip/data/models
-	cp $(@D)/data/models/* $(TARGET_DIR)/usr/share/hplip/data/models
+	mkdir -p $(HPLIP_TARGET_DIR)/usr/share/hplip/data/models
+	cp $(@D)/data/models/* $(HPLIP_TARGET_DIR)/usr/share/hplip/data/models
 endef
 HPLIP_POST_INSTALL_TARGET_HOOKS += HPLIP_POST_INSTALL_TARGET_FIXUP
 

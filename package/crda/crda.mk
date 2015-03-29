@@ -37,7 +37,7 @@ define CRDA_BUILD_CMDS
 endef
 
 define CRDA_INSTALL_TARGET_CMDS
-	$(TARGET_CONFIGURE_OPTS) $(MAKE) install -C $(@D) DESTDIR=$(TARGET_DIR)
+	$(TARGET_CONFIGURE_OPTS) $(MAKE) install -C $(@D) DESTDIR=$(CRDA_TARGET_DIR)
 endef
 
 $(eval $(generic-package))

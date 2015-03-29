@@ -42,7 +42,7 @@ SDL_SOUND_CONF_OPTS += --disable-mmx
 endif
 
 define SDL_SOUND_REMOVE_PLAYSOUND
-	rm $(addprefix $(TARGET_DIR)/usr/bin/,playsound playsound_simple)
+	rm $(addprefix $(SDL_SOUND_TARGET_DIR)/usr/bin/,playsound playsound_simple)
 endef
 
 ifneq ($(BR2_PACKAGE_SDL_SOUND_PLAYSOUND),y)

@@ -31,8 +31,8 @@ MONO_CONF_OPTS = --disable-gtk-doc \
 # architecture-independent, we simply copy them to the target.
 define MONO_INSTALL_LIBS
 	rsync -av --exclude=*.so --exclude=*.mdb \
-		$(HOST_DIR)/usr/lib/mono $(TARGET_DIR)/usr/lib/
-	rsync -av $(HOST_DIR)/etc/mono $(TARGET_DIR)/etc
+		$(HOST_DIR)/usr/lib/mono $(MONO_TARGET_DIR)/usr/lib/
+	rsync -av $(HOST_DIR)/etc/mono $(MONO_TARGET_DIR)/etc
 endef
 
 MONO_POST_INSTALL_TARGET_HOOKS += MONO_INSTALL_LIBS

@@ -18,7 +18,7 @@ KEXEC_CONF_OPTS += --without-zlib
 endif
 
 define KEXEC_REMOVE_LIB_TOOLS
-	rm -rf $(TARGET_DIR)/usr/lib/kexec-tools
+	rm -rf $(KEXEC_TARGET_DIR)/usr/lib/kexec-tools
 endef
 
 KEXEC_POST_INSTALL_TARGET_HOOKS += KEXEC_REMOVE_LIB_TOOLS

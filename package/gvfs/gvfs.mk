@@ -70,15 +70,15 @@ GVFS_CONF_OPTS += --disable-samba
 endif
 
 define GVFS_REMOVE_USELESS_BINARY
-	rm $(TARGET_DIR)/usr/bin/gvfs-less
+	rm $(GVFS_TARGET_DIR)/usr/bin/gvfs-less
 endef
 
 define GVFS_REMOVE_TARGET_SCHEMAS
-	rm $(TARGET_DIR)/usr/share/glib-2.0/schemas/*.xml
+	rm $(GVFS_TARGET_DIR)/usr/share/glib-2.0/schemas/*.xml
 endef
 
 define GVFS_COMPILE_SCHEMAS
-	$(HOST_DIR)/usr/bin/glib-compile-schemas --targetdir=$(TARGET_DIR)/usr/share/glib-2.0/schemas $(STAGING_DIR)/usr/share/glib-2.0/schemas
+	$(HOST_DIR)/usr/bin/glib-compile-schemas --targetdir=$(GVFS_TARGET_DIR)/usr/share/glib-2.0/schemas $(STAGING_DIR)/usr/share/glib-2.0/schemas
 endef
 
 GVFS_POST_INSTALL_TARGET_HOOKS += \

@@ -205,22 +205,22 @@ endef
 KODI_PRE_CONFIGURE_HOOKS += KODI_BOOTSTRAP
 
 define KODI_CLEAN_UNUSED_ADDONS
-	rm -Rf $(TARGET_DIR)/usr/share/kodi/addons/screensaver.rsxs.plasma
-	rm -Rf $(TARGET_DIR)/usr/share/kodi/addons/visualization.milkdrop
-	rm -Rf $(TARGET_DIR)/usr/share/kodi/addons/visualization.projectm
-	rm -Rf $(TARGET_DIR)/usr/share/kodi/addons/visualization.itunes
+	rm -Rf $(KODI_TARGET_DIR)/usr/share/kodi/addons/screensaver.rsxs.plasma
+	rm -Rf $(KODI_TARGET_DIR)/usr/share/kodi/addons/visualization.milkdrop
+	rm -Rf $(KODI_TARGET_DIR)/usr/share/kodi/addons/visualization.projectm
+	rm -Rf $(KODI_TARGET_DIR)/usr/share/kodi/addons/visualization.itunes
 endef
 KODI_POST_INSTALL_TARGET_HOOKS += KODI_CLEAN_UNUSED_ADDONS
 
 define KODI_CLEAN_CONFLUENCE_SKIN
-	find $(TARGET_DIR)/usr/share/kodi/addons/skin.confluence/media -name *.png -delete
-	find $(TARGET_DIR)/usr/share/kodi/addons/skin.confluence/media -name *.jpg -delete
+	find $(KODI_TARGET_DIR)/usr/share/kodi/addons/skin.confluence/media -name *.png -delete
+	find $(KODI_TARGET_DIR)/usr/share/kodi/addons/skin.confluence/media -name *.jpg -delete
 endef
 KODI_POST_INSTALL_TARGET_HOOKS += KODI_CLEAN_CONFLUENCE_SKIN
 
 define KODI_INSTALL_BR_WRAPPER
 	$(INSTALL) -D -m 0755 package/kodi/br-kodi \
-		$(TARGET_DIR)/usr/bin/br-kodi
+		$(KODI_TARGET_DIR)/usr/bin/br-kodi
 endef
 KODI_POST_INSTALL_TARGET_HOOKS += KODI_INSTALL_BR_WRAPPER
 
@@ -230,26 +230,26 @@ KODI_POST_INSTALL_TARGET_HOOKS += KODI_INSTALL_BR_WRAPPER
 # easily change that, so create /.kodi as a symlink where we want the
 # config to eventually be. Add synlinks for the legacy XBMC name as well
 define KODI_INSTALL_CONFIG_DIR
-	$(INSTALL) -d -m 0755 $(TARGET_DIR)/var/kodi
-	ln -sf /var/kodi $(TARGET_DIR)/.kodi
-	ln -sf /var/kodi $(TARGET_DIR)/var/xbmc
-	ln -sf /var/kodi $(TARGET_DIR)/.xbmc
+	$(INSTALL) -d -m 0755 $(KODI_TARGET_DIR)/var/kodi
+	ln -sf /var/kodi $(KODI_TARGET_DIR)/.kodi
+	ln -sf /var/kodi $(KODI_TARGET_DIR)/var/xbmc
+	ln -sf /var/kodi $(KODI_TARGET_DIR)/.xbmc
 endef
 KODI_POST_INSTALL_TARGET_HOOKS += KODI_INSTALL_CONFIG_DIR
 
 define KODI_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 755 package/kodi/S50kodi \
-		$(TARGET_DIR)/etc/init.d/S50kodi
+		$(KODI_TARGET_DIR)/etc/init.d/S50kodi
 endef
 
 define KODI_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -D -m 644 package/kodi/kodi.service \
-		$(TARGET_DIR)/etc/systemd/system/kodi.service
+		$(KODI_TARGET_DIR)/etc/systemd/system/kodi.service
 
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+	mkdir -p $(KODI_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
 
 	ln -fs ../kodi.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/kodi.service
+		$(KODI_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/kodi.service
 endef
 
 $(eval $(autotools-package))

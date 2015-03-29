@@ -31,7 +31,7 @@ endef
 
 define OPEN2300_INSTALL_TARGET_CMDS
 	for prog in $(OPEN2300_BINS); do \
-		$(INSTALL) -D -m 0755 $(@D)/$$prog $(TARGET_DIR)/usr/bin/$$prog ; \
+		$(INSTALL) -D -m 0755 $(@D)/$$prog $(OPEN2300_TARGET_DIR)/usr/bin/$$prog ; \
 	done
 endef
 

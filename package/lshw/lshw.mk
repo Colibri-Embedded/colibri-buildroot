@@ -24,7 +24,7 @@ define LSHW_BUILD_CMDS
 endef
 
 define LSHW_INSTALL_TARGET_CMDS
-	$(LSHW_MAKE_ENV) $(MAKE) -C $(@D)/src DESTDIR=$(TARGET_DIR) \
+	$(LSHW_MAKE_ENV) $(MAKE) -C $(@D)/src DESTDIR=$(LSHW_TARGET_DIR) \
 		$(LSHW_MAKE_OPTS) install
 endef
 

@@ -18,7 +18,7 @@ define FIO_BUILD_CMDS
 endef
 
 define FIO_INSTALL_TARGET_CMDS
-	$(INSTALL) -D $(@D)/fio $(TARGET_DIR)/usr/bin/fio
+	$(INSTALL) -D $(@D)/fio $(FIO_TARGET_DIR)/usr/bin/fio
 endef
 
 $(eval $(generic-package))

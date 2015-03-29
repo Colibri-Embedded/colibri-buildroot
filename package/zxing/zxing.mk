@@ -34,7 +34,7 @@ define ZXING_INSTALL_STAGING_CMDS
 endef
 
 define ZXING_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D)/cpp/core/src DESTDIR=$(TARGET_DIR) install
+	$(MAKE) -C $(@D)/cpp/core/src DESTDIR=$(ZXING_TARGET_DIR) install
 endef
 
 $(eval $(generic-package))

@@ -27,7 +27,7 @@ endef
 
 define IOZONE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 755 $(@D)/src/current/iozone \
-		$(TARGET_DIR)/usr/bin/iozone
+		$(IOZONE_TARGET_DIR)/usr/bin/iozone
 endef
 
 $(eval $(generic-package))

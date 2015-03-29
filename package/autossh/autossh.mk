@@ -11,7 +11,7 @@ AUTOSSH_LICENSE = Modified BSD
 AUTOSSH_LICENSE_FILES = autossh.c
 
 define AUTOSSH_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 755 -D $(@D)/autossh $(TARGET_DIR)/usr/bin/autossh
+	$(INSTALL) -m 755 -D $(@D)/autossh $(AUTOSSH_TARGET_DIR)/usr/bin/autossh
 endef
 
 $(eval $(autotools-package))

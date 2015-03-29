@@ -13,7 +13,7 @@ ifeq ($(BR2_PACKAGE_GD)$(BR2_PACKAGE_LIBPNG),yy)
 VNSTAT_DEPENDENCIES = gd
 VNSTAT_GD_MAKE_OPT = all
 define VNSTAT_INSTALL_VNSTATI_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/src/vnstati $(TARGET_DIR)/usr/bin/vnstati
+	$(INSTALL) -D -m 0755 $(@D)/src/vnstati $(VNSTAT_TARGET_DIR)/usr/bin/vnstati
 endef
 endif
 
@@ -22,8 +22,8 @@ define VNSTAT_BUILD_CMDS
 endef
 
 define VNSTAT_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/src/vnstat $(TARGET_DIR)/usr/bin/vnstat
-	$(INSTALL) -D -m 0755 $(@D)/src/vnstatd $(TARGET_DIR)/usr/sbin/vnstatd
+	$(INSTALL) -D -m 0755 $(@D)/src/vnstat $(VNSTAT_TARGET_DIR)/usr/bin/vnstat
+	$(INSTALL) -D -m 0755 $(@D)/src/vnstatd $(VNSTAT_TARGET_DIR)/usr/sbin/vnstatd
 	$(VNSTAT_INSTALL_VNSTATI_CMDS)
 endef
 

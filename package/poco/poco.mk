@@ -61,7 +61,7 @@ define POCO_INSTALL_STAGING_CMDS
 endef
 
 define POCO_INSTALL_TARGET_CMDS
-	$(MAKE) DESTDIR=$(TARGET_DIR) POCO_TARGET_OSARCH=$(ARCH) install -C $(@D)
+	$(MAKE) DESTDIR=$(POCO_TARGET_DIR) POCO_TARGET_OSARCH=$(ARCH) install -C $(@D)
 endef
 
 $(eval $(generic-package))

@@ -25,7 +25,7 @@ endef
 
 define WVDIAL_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(WVDIAL_MAKE_ENV) $(WVDIAL_MAKE) \
-		prefix="$(TARGET_DIR)/usr" PPPDIR="$(TARGET_DIR)/etc/ppp/peers" \
+		prefix="$(WVDIAL_TARGET_DIR)/usr" PPPDIR="$(WVDIAL_TARGET_DIR)/etc/ppp/peers" \
 		install -C $(@D)
 endef
 

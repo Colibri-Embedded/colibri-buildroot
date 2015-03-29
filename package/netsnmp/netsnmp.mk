@@ -33,7 +33,7 @@ NETSNMP_CONF_OPTS = \
 	--with-out-transports="Unix" \
 	--disable-manuals
 NETSNMP_INSTALL_STAGING_OPTS = DESTDIR=$(STAGING_DIR) LIB_LDCONFIG_CMD=true install
-NETSNMP_INSTALL_TARGET_OPTS = DESTDIR=$(TARGET_DIR) LIB_LDCONFIG_CMD=true install
+NETSNMP_INSTALL_TARGET_OPTS = DESTDIR=$(NETSNMP_TARGET_DIR) LIB_LDCONFIG_CMD=true install
 NETSNMP_MAKE = $(MAKE1)
 NETSNMP_CONFIG_SCRIPTS = net-snmp-config
 
@@ -70,7 +70,7 @@ endif
 # Remove IPv6 MIBs if there's no IPv6
 ifneq ($(BR2_INET_IPV6),y)
 define NETSNMP_REMOVE_MIBS_IPV6
-	rm -f $(TARGET_DIR)/usr/share/snmp/mibs/IPV6*
+	rm -f $(NETSNMP_TARGET_DIR)/usr/share/snmp/mibs/IPV6*
 endef
 
 NETSNMP_POST_INSTALL_TARGET_HOOKS += NETSNMP_REMOVE_MIBS_IPV6
@@ -78,7 +78,7 @@ endif
 
 define NETSNMP_REMOVE_BLOAT_MIBS
 	for mib in $(NETSNMP_BLOAT_MIBS); do \
-		rm -f $(TARGET_DIR)/usr/share/snmp/mibs/$$mib-MIB.txt; \
+		rm -f $(NETSNMP_TARGET_DIR)/usr/share/snmp/mibs/$$mib-MIB.txt; \
 	done
 endef
 
@@ -86,7 +86,7 @@ NETSNMP_POST_INSTALL_TARGET_HOOKS += NETSNMP_REMOVE_BLOAT_MIBS
 
 define NETSNMP_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 0755 package/netsnmp/S59snmpd \
-		$(TARGET_DIR)/etc/init.d/S59snmpd
+		$(NETSNMP_TARGET_DIR)/etc/init.d/S59snmpd
 endef
 
 define NETSNMP_STAGING_NETSNMP_CONFIG_FIXUP

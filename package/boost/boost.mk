@@ -124,7 +124,7 @@ define BOOST_INSTALL_TARGET_CMDS
 	(cd $(@D) && ./b2 -j$(PARALLEL_JOBS) -q -d+1 \
 	--user-config=$(@D)/user-config.jam \
 	$(BOOST_OPTS) \
-	--prefix=$(TARGET_DIR)/usr \
+	--prefix=$(BOOST_TARGET_DIR)/usr \
 	--ignore-site-config \
 	--layout=$(BOOST_LAYOUT) install )
 endef

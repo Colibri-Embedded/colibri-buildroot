@@ -53,8 +53,8 @@ endef
 
 define SUNXI_CEDARX_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 755 $(SUNXI_CEDARX_BIN_DIR)/libvecore/libvecore.so \
-		$(TARGET_DIR)/usr/lib/libvecore.so
-	$(call SUNXI_CEDARX_INSTALL_AVHEAP, $(TARGET_DIR))
+		$(SUNXI_CEDARX_TARGET_DIR)/usr/lib/libvecore.so
+	$(call SUNXI_CEDARX_INSTALL_AVHEAP, $(SUNXI_CEDARX_TARGET_DIR))
 endef
 
 $(eval $(generic-package))

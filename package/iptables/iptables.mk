@@ -29,19 +29,19 @@ IPTABLES_DEPENDENCIES += libnfnetlink
 endif
 
 define IPTABLES_TARGET_SYMLINK_CREATE
-	ln -sf xtables-multi $(TARGET_DIR)/usr/sbin/iptables
-	ln -sf xtables-multi $(TARGET_DIR)/usr/sbin/iptables-save
-	ln -sf xtables-multi $(TARGET_DIR)/usr/sbin/iptables-restore
+	ln -sf xtables-multi $(IPTABLES_TARGET_DIR)/usr/sbin/iptables
+	ln -sf xtables-multi $(IPTABLES_TARGET_DIR)/usr/sbin/iptables-save
+	ln -sf xtables-multi $(IPTABLES_TARGET_DIR)/usr/sbin/iptables-restore
 endef
 
 define IPTABLES_TARGET_IPV6_SYMLINK_CREATE
-	ln -sf xtables-multi $(TARGET_DIR)/usr/sbin/ip6tables
-	ln -sf xtables-multi $(TARGET_DIR)/usr/sbin/ip6tables-save
-	ln -sf xtables-multi $(TARGET_DIR)/usr/sbin/ip6tables-restore
+	ln -sf xtables-multi $(IPTABLES_TARGET_DIR)/usr/sbin/ip6tables
+	ln -sf xtables-multi $(IPTABLES_TARGET_DIR)/usr/sbin/ip6tables-save
+	ln -sf xtables-multi $(IPTABLES_TARGET_DIR)/usr/sbin/ip6tables-restore
 endef
 
 define IPTABLES_TARGET_IPV6_REMOVE
-	rm -f $(TARGET_DIR)/usr/lib/libip6tc.*
+	rm -f $(IPTABLES_TARGET_DIR)/usr/lib/libip6tc.*
 endef
 
 IPTABLES_POST_INSTALL_TARGET_HOOKS += IPTABLES_TARGET_SYMLINK_CREATE

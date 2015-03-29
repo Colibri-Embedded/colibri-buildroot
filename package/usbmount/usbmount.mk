@@ -12,17 +12,17 @@ USBMOUNT_LICENSE = BSD-2c
 USBMOUNT_LICENSE_FILES = debian/copyright
 
 define USBMOUNT_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/usbmount $(TARGET_DIR)/usr/share/usbmount/usbmount
+	$(INSTALL) -m 0755 -D $(@D)/usbmount $(USBMOUNT_TARGET_DIR)/usr/share/usbmount/usbmount
 
 	$(INSTALL) -m 0755 -D $(@D)/00_create_model_symlink 	\
-		$(TARGET_DIR)/etc/usbmount/usbmount.d/00_create_model_symlink
+		$(USBMOUNT_TARGET_DIR)/etc/usbmount/usbmount.d/00_create_model_symlink
 	$(INSTALL) -m 0755 -D $(@D)/00_remove_model_symlink 	\
-		$(TARGET_DIR)/etc/usbmount/usbmount.d/00_remove_model_symlink
+		$(USBMOUNT_TARGET_DIR)/etc/usbmount/usbmount.d/00_remove_model_symlink
 
-	$(INSTALL) -m 0644 -D $(@D)/usbmount.rules $(TARGET_DIR)/lib/udev/rules.d/usbmount.rules
-	$(INSTALL) -m 0644 -D $(@D)/usbmount.conf $(TARGET_DIR)/etc/usbmount/usbmount.conf
+	$(INSTALL) -m 0644 -D $(@D)/usbmount.rules $(USBMOUNT_TARGET_DIR)/lib/udev/rules.d/usbmount.rules
+	$(INSTALL) -m 0644 -D $(@D)/usbmount.conf $(USBMOUNT_TARGET_DIR)/etc/usbmount/usbmount.conf
 
-	mkdir -p $(addprefix $(TARGET_DIR)/media/usb,0 1 2 3 4 5 6 7)
+	mkdir -p $(addprefix $(USBMOUNT_TARGET_DIR)/media/usb,0 1 2 3 4 5 6 7)
 endef
 
 $(eval $(generic-package))

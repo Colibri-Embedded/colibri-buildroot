@@ -46,7 +46,7 @@ define HOST_LUAROCKS_INSTALL_CMDS
 	echo "}"                                                >> $(LUAROCKS_CONFIG_FILE)
 	echo "external_deps_dirs = { [[$(STAGING_DIR)/usr]] }"  >> $(LUAROCKS_CONFIG_FILE)
 	echo "gcc_rpath = false"                                >> $(LUAROCKS_CONFIG_FILE)
-	echo "rocks_trees = { [[$(TARGET_DIR)/usr]] }"          >> $(LUAROCKS_CONFIG_FILE)
+	echo "rocks_trees = { [[$(LUAROCKS_TARGET_DIR)/usr]] }"          >> $(LUAROCKS_CONFIG_FILE)
 	echo "wrap_bin_scripts = false"                         >> $(LUAROCKS_CONFIG_FILE)
 	echo "deps_mode = [[none]]"                             >> $(LUAROCKS_CONFIG_FILE)
 endef
@@ -56,9 +56,9 @@ $(eval $(host-generic-package))
 LUAROCKS_RUN = LUA_PATH="$(HOST_DIR)/usr/share/lua/$(LUAINTERPRETER_ABIVER)/?.lua" \
 	$(LUA_RUN) $(HOST_DIR)/usr/bin/luarocks
 
-define LUAROCKS_FINALIZE_TARGET
-	rm -rf $(TARGET_DIR)/usr/lib/luarocks
-endef
+#define LUAROCKS_FINALIZE_TARGET
+#	rm -rf $(LUAROCKS_TARGET_DIR)/usr/lib/luarocks
+#endef
 
 TARGET_FINALIZE_HOOKS += LUAROCKS_FINALIZE_TARGET
 

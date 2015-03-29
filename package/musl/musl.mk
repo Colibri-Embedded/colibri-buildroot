@@ -42,8 +42,8 @@ endef
 
 define MUSL_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) \
-		DESTDIR=$(TARGET_DIR) install-libs
-	$(RM) $(addprefix $(TARGET_DIR)/lib/,crt1.o crtn.o crti.o Scrt1.o)
+		DESTDIR=$(MUSL_TARGET_DIR) install-libs
+	$(RM) $(addprefix $(MUSL_TARGET_DIR)/lib/,crt1.o crtn.o crti.o Scrt1.o)
 endef
 
 $(eval $(generic-package))

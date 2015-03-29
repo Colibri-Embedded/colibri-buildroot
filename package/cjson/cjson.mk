@@ -22,8 +22,8 @@ define CJSON_INSTALL_STAGING_CMDS
 endef
 
 define CJSON_INSTALL_TARGET_CMDS
-	$(INSTALL) -D $(@D)/cJSON.h $(TARGET_DIR)/usr/include/cJSON.h
-	$(INSTALL) -D $(@D)/libcJSON.so $(TARGET_DIR)/usr/lib/libcJSON.so
+	$(INSTALL) -D $(@D)/cJSON.h $(CJSON_TARGET_DIR)/usr/include/cJSON.h
+	$(INSTALL) -D $(@D)/libcJSON.so $(CJSON_TARGET_DIR)/usr/lib/libcJSON.so
 endef
 
 $(eval $(generic-package))

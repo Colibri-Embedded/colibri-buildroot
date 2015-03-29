@@ -14,7 +14,7 @@ define JHEAD_BUILD_CMDS
 endef
 
 define JHEAD_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/jhead $(TARGET_DIR)/usr/bin/jhead
+	$(INSTALL) -m 0755 -D $(@D)/jhead $(JHEAD_TARGET_DIR)/usr/bin/jhead
 endef
 
 $(eval $(generic-package))

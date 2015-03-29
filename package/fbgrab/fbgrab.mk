@@ -15,7 +15,7 @@ define FBGRAB_BUILD_CMDS
 endef
 
 define FBGRAB_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/fbgrab $(TARGET_DIR)/usr/bin/fbgrab
+	$(INSTALL) -m 0755 -D $(@D)/fbgrab $(FBGRAB_TARGET_DIR)/usr/bin/fbgrab
 endef
 
 $(eval $(generic-package))

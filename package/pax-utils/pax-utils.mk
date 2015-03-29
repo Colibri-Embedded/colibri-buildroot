@@ -21,7 +21,7 @@ HOST_PAX_UTILS_DEPENDENCIES =
 # lddtree and symtree need bash
 ifeq ($(BR2_PACKAGE_BASH),)
 define PAX_UTILS_REMOVE_BASH_TOOLS
-	rm -f $(TARGET_DIR)/usr/bin/{lddtree,symtree}
+	rm -f $(PAX_UTILS_TARGET_DIR)/usr/bin/{lddtree,symtree}
 endef
 endif
 PAX_UTILS_POST_INSTALL_TARGET_HOOKS += PAX_UTILS_REMOVE_BASH_TOOLS
@@ -40,7 +40,7 @@ endef
 
 define PAX_UTILS_INSTALL_TARGET_CMDS
 	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D) \
-		DESTDIR="$(TARGET_DIR)" install
+		DESTDIR="$(PAX_UTILS_TARGET_DIR)" install
 endef
 
 $(eval $(generic-package))

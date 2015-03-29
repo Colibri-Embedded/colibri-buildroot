@@ -15,12 +15,12 @@ define NETPLUG_BUILD_CMDS
 endef
 
 define NETPLUG_INSTALL_TARGET_CMDS
-	$(MAKE) DESTDIR=$(TARGET_DIR) -C $(@D) install
+	$(MAKE) DESTDIR=$(NETPLUG_TARGET_DIR) -C $(@D) install
 endef
 
 define NETPLUG_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/netplug/S29netplug \
-		$(TARGET_DIR)/etc/init.d/S29netplug
+		$(NETPLUG_TARGET_DIR)/etc/init.d/S29netplug
 endef
 
 $(eval $(generic-package))

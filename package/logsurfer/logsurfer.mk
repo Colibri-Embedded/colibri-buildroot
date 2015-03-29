@@ -9,7 +9,7 @@ LOGSURFER_SITE = http://downloads.sourceforge.net/project/logsurfer/logsurfer/lo
 
 define LOGSURFER_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/src/logsurfer \
-		$(TARGET_DIR)/usr/bin/logsurfer
+		$(LOGSURFER_TARGET_DIR)/usr/bin/logsurfer
 endef
 
 $(eval $(autotools-package))

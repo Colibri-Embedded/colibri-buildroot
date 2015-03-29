@@ -221,20 +221,20 @@ define NGINX_BUILD_CMDS
 endef
 
 define NGINX_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR=$(TARGET_DIR) install
-	-$(RM) $(TARGET_DIR)/usr/bin/nginx.old
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR=$(NGINX_TARGET_DIR) install
+	-$(RM) $(NGINX_TARGET_DIR)/usr/bin/nginx.old
 	$(INSTALL) -D -m 0664 package/nginx/nginx.logrotate \
-		$(TARGET_DIR)/etc/logrotate.d/nginx
+		$(NGINX_TARGET_DIR)/etc/logrotate.d/nginx
 endef
 
 define NGINX_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -D -m 0644 package/nginx/nginx.service \
-		$(TARGET_DIR)/usr/lib/systemd/system/nginx.service
+		$(NGINX_TARGET_DIR)/usr/lib/systemd/system/nginx.service
 endef
 
 define NGINX_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 0755 package/nginx/S50nginx \
-		$(TARGET_DIR)/etc/init.d/S50nginx
+		$(NGINX_TARGET_DIR)/etc/init.d/S50nginx
 endef
 
 $(eval $(generic-package))

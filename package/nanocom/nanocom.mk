@@ -20,7 +20,7 @@ define NANOCOM_BUILD_CMDS
 endef
 
 define NANOCOM_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/nanocom $(TARGET_DIR)/usr/bin/nanocom
+	$(INSTALL) -m 0755 -D $(@D)/nanocom $(NANOCOM_TARGET_DIR)/usr/bin/nanocom
 endef
 
 $(eval $(generic-package))

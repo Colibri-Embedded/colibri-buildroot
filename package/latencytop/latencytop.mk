@@ -17,7 +17,7 @@ define LATENCYTOP_BUILD_CMDS
 endef
 
 define LATENCYTOP_INSTALL_TARGET_CMDS
-	$(MAKE) install -C $(@D) DESTDIR=$(TARGET_DIR) HAS_GTK_GUI=
+	$(MAKE) install -C $(@D) DESTDIR=$(LATENCYTOP_TARGET_DIR) HAS_GTK_GUI=
 endef
 
 $(eval $(generic-package))

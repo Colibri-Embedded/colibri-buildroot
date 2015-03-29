@@ -15,13 +15,13 @@ define TINYHTTPD_BUILD_CMDS
 endef
 
 define TINYHTTPD_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/httpd $(TARGET_DIR)/usr/sbin/tinyhttpd
-	mkdir -p $(TARGET_DIR)/var/www
+	$(INSTALL) -m 0755 -D $(@D)/httpd $(TINYHTTPD_TARGET_DIR)/usr/sbin/tinyhttpd
+	mkdir -p $(TINYHTTPD_TARGET_DIR)/var/www
 endef
 
 define TINYHTTPD_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/tinyhttpd/S85tinyhttpd \
-		$(TARGET_DIR)/etc/init.d/S85tinyhttpd
+		$(TINYHTTPD_TARGET_DIR)/etc/init.d/S85tinyhttpd
 endef
 
 $(eval $(generic-package))

@@ -32,7 +32,7 @@ endif
 
 # Remove /usr/share/lftp
 define LFTP_REMOVE_DATA
-	$(RM) -fr $(TARGET_DIR)/usr/share/lftp
+	$(RM) -fr $(LFTP_TARGET_DIR)/usr/share/lftp
 endef
 
 LFTP_POST_INSTALL_TARGET_HOOKS += LFTP_REMOVE_DATA
@@ -48,7 +48,7 @@ LFTP_MODULES_TO_REMOVE-$(BR2_PACKAGE_LFTP_PROTO_SFTP) += proto-sftp.so
 
 define LFTP_REMOVE_MODULES
 	for f in $(LFTP_MODULES_TO_REMOVE-) ; do \
-		$(RM) -f $(TARGET_DIR)/usr/lib/lftp/$(LFTP_VERSION)/$$f ; \
+		$(RM) -f $(LFTP_TARGET_DIR)/usr/lib/lftp/$(LFTP_VERSION)/$$f ; \
 	done
 endef
 
