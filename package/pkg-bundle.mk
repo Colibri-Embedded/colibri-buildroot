@@ -13,9 +13,32 @@
 #
 ################################################################################
 
+define bundle-install-package
+	$(CORE_BUNDLE_FAKEROOT) $(CORE_BUNDLE_FAKEROOT_ENV) tar -C $(3) -xf $$($(2)_TARGET_ARCHIVE);
+endef
+
+ifeq ($(BR2_TARGET_ROOTFS_COLIBRI_LZ4),y)
+BUNDLE_SQUASHFS_ARGS += -comp lz4
+else
+ifeq ($(BR2_TARGET_ROOTFS_COLIBRI_LZO),y)
+BUNDLE_SQUASHFS_ARGS += -comp lzo
+else
+ifeq ($(BR2_TARGET_ROOTFS_COLIBRI_LZMA),y)
+BUNDLE_SQUASHFS_ARGS += -comp lzma
+else
+ifeq ($(BR2_TARGET_ROOTFS_COLIBRI_XZ),y)
+BUNDLE_SQUASHFS_ARGS += -comp xz
+else
+BUNDLE_SQUASHFS_ARGS += -comp gzip
+endif
+endif
+endif
+endif
+
+BUNDLE_SQUASHFS_ARGS += -b 512K -no-xattrs -noappend
 
 ################################################################################
-# inner-virtual-package -- defines the dependency rules of the virtual
+# inner-bundle-package -- defines the dependency rules of the virtual
 # package against its provider.
 #
 #  argument 1 is the lowercase package name
@@ -32,30 +55,59 @@
 # We need to use second-expansion for the $(error ...) call, below,
 # so it is not evaluated now, but as part of the generated make code.
 
-define inner-virtual-package
+MKSQUASHFS := $(HOST_DIR)/usr/bin/mksquashfs
+
+define inner-bundle-package
+
+ifndef $(2)_MKSQUASHFS
+ ifdef $(3)_MKSQUASHFS
+  $(2)_MKSQUASHFS = $$($(3)_MKSQUASHFS)
+ else
+  $(2)_MKSQUASHFS ?= $$(MKSQUASHFS)
+ endif
+endif
 
 # Ensure the virtual package has an implementation defined.
-ifeq ($$(BR2_PACKAGE_HAS_$(2)),y)
-ifeq ($$(call qstrip,$$(BR2_PACKAGE_PROVIDES_$(2))),)
-$$(error No implementation selected for virtual package $(1). Configuration error)
-endif
-endif
+#~ ifeq ($$(BR2_PACKAGE_HAS_$(2)),y)
+#~ ifeq ($$(call qstrip,$$(BR2_PACKAGE_PROVIDES_$(2))),)
+#~ $$(error No implementation selected for virtual package $(1). Configuration error)
+#~ endif
+#~ endif
+
+$(2)_ADD_TOOLCHAIN_DEPENDENCY = NO
+
+$(2)_ARCHIVE_TARGET = NO
 
 # A virtual package does not have any source associated
 $(2)_SOURCE =
 
+$(2)_BUNDLE_IMAGE = $(1)-$$($(2)_VERSION).cb
+
 # Fake a version string, so it looks nicer in the build log
-$(2)_VERSION = virtual
+#$(2)_VERSION = virtual
 
 # This must be repeated from inner-generic-package, otherwise we get an empty
 # _DEPENDENCIES
-ifeq ($(4),host)
-$(2)_DEPENDENCIES ?= $$(filter-out host-toolchain $(1),\
-	$$(patsubst host-host-%,host-%,$$(addprefix host-,$$($(3)_DEPENDENCIES))))
-endif
+#ifeq ($(4),host)
+#$(2)_DEPENDENCIES ?= $$(filter-out host-toolchain $(1),\
+#	$$(patsubst host-host-%,host-%,$$(addprefix host-,$$($(3)_DEPENDENCIES))))
+#endif
 
 # Add dependency against the provider
-$(2)_DEPENDENCIES += $$(call qstrip,$$(BR2_PACKAGE_PROVIDES_$(2)))
+$(2)_DEPENDENCIES += $$(call qstrip,$$($(2)_PACKAGES)) host-squashfs
+
+#
+# Target installation step. Only define it if not already defined by
+# the package .mk file.
+#
+ifndef $(2)_INSTALL_TARGET_CMDS
+define $(2)_INSTALL_TARGET_CMDS
+	mkdir -p $$($(2)_TARGET_DIR)
+	$(foreach pkgname,$(CORE_BUNDLE_PACKAGES),$(call bundle-install-package,$(pkgname),$(call UPPERCASE,$(pkgname)), $$($(2)_TARGET_DIR)))
+	$$($(2)_MKSQUASHFS) $$($(2)_TARGET_DIR) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) $(BUNDLE_SQUASHFS_ARGS) 
+#	rm -rf $$($(2)_TARGET_DIR)
+endef
+endif
 
 # Call the generic package infrastructure to generate the necessary
 # make targets
@@ -67,5 +119,5 @@ endef
 # virtual-package -- the target generator macro for virtual packages
 ################################################################################
 
-virtual-package = $(call inner-virtual-package,$(pkgname),$(call UPPERCASE,$(pkgname)),$(call UPPERCASE,$(pkgname)),target)
-host-virtual-package = $(call inner-virtual-package,host-$(pkgname),$(call UPPERCASE,host-$(pkgname)),$(call UPPERCASE,$(pkgname)),host)
+bundle-package = $(call inner-bundle-package,$(pkgname),$(call UPPERCASE,$(pkgname)),$(call UPPERCASE,$(pkgname)),target)
+

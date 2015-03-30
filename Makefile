@@ -157,6 +157,8 @@ BR_GRAPH_OUT := $(or $(BR2_GRAPH_OUT),pdf)
 
 BUILD_DIR := $(BASE_DIR)/build
 BINARIES_DIR := $(BASE_DIR)/images
+SDCARD_DIR := $(BASE_DIR)/sdcard
+BUNDLES_DIR := $(SDCARD_DIR)/bundles
 TARGET_DIR := $(BASE_DIR)/target
 PACKAGES_DIR := $(BASE_DIR)/packages
 # initial definition so that 'make clean' works for most users, even without
@@ -358,6 +360,8 @@ export STAGING_DIR
 export HOST_DIR
 export BINARIES_DIR
 export BASE_DIR
+export BUNDLES_DIR
+export SDCARD_DIR
 
 ################################################################################
 #
@@ -425,7 +429,8 @@ TARGETS_LEGAL_INFO := $(patsubst %,%-legal-info,\
 		$(TARGETS) $(TARGETS_HOST_DEPS) $(HOST_DEPS))
 
 dirs: $(BUILD_DIR) $(STAGING_DIR) $(TARGET_DIR) \
-	$(HOST_DIR) $(BINARIES_DIR) $(PACKAGES_DIR)
+	$(HOST_DIR) $(BINARIES_DIR) $(PACKAGES_DIR) \
+	$(SDCARD_DIR) $(BUNDLES_DIR)
 
 $(BUILD_DIR)/buildroot-config/auto.conf: $(BR2_CONFIG)
 	$(MAKE1) $(EXTRAMAKEARGS) HOSTCC="$(HOSTCC_NOCCACHE)" HOSTCXX="$(HOSTCXX_NOCCACHE)" silentoldconfig
@@ -448,7 +453,7 @@ world: target-post-image
 # dependencies anywhere else
 #
 ################################################################################
-$(BUILD_DIR) $(HOST_DIR) $(BINARIES_DIR) $(LEGAL_INFO_DIR) $(REDIST_SOURCES_DIR_TARGET) $(REDIST_SOURCES_DIR_HOST):
+$(BUILD_DIR) $(HOST_DIR) $(BINARIES_DIR) $(SDCARD_DIR) $(BUNDLES_DIR) $(LEGAL_INFO_DIR) $(REDIST_SOURCES_DIR_TARGET) $(REDIST_SOURCES_DIR_HOST):
 	@mkdir -p $@
 
 # We make a symlink lib32->lib or lib64->lib as appropriate

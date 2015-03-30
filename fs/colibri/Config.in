@@ -1,0 +1,33 @@
+config BR2_TARGET_ROOTFS_COLIBRI
+	bool "colibri root filesystem"
+	help
+	  Build a colibri root filesystem
+	select BR2_TARGET_ROOTFS_TAR
+	select BR2_TARGET_ROOTFS_TAR_NONE
+
+if BR2_TARGET_ROOTFS_COLIBRI
+
+choice
+	prompt "Compression algorithm"
+	default BR2_TARGET_ROOTFS_COLIBRI_GZIP
+	help
+	  Select the squashfs compression algorithm to use when
+	  generating the filesystem.
+
+config BR2_TARGET_ROOTFS_COLIBRI_GZIP
+	bool "gzip"
+
+config BR2_TARGET_ROOTFS_COLIBRI_LZ4
+	bool "lz4"
+
+config BR2_TARGET_ROOTFS_COLIBRI_LZMA
+	bool "lzma"
+
+config BR2_TARGET_ROOTFS_COLIBRI_LZO
+	bool "lzo"
+
+config BR2_TARGET_ROOTFS_COLIBRI_XZ
+	bool "xz"
+
+endchoice
+endif
