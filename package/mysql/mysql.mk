@@ -132,7 +132,7 @@ define HOST_MYSQL_INSTALL_CMDS
 endef
 
 define MYSQL_USERS
-	mysql -1 nogroup -1 * /var/mysql - - MySQL daemon
+	mysql 40 mysql 40 * /var/mysql - - MySQL daemon 
 endef
 
 define MYSQL_ADD_FOLDER

@@ -30,4 +30,11 @@ config BR2_TARGET_ROOTFS_COLIBRI_XZ
 	bool "xz"
 
 endchoice
+
+config BR2_ROOTFS_REMOVE_DOCUMENTATION
+	bool "Remove documentation files"
+
+config BR2_ROOTFS_REMOVE_DEVELOPMENT
+	bool "Remove development files"
+
 endif

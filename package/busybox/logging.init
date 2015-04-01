@@ -1,0 +1,49 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     :
+# 
+# Version     : 00.00
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+source /etc/default/logging
+
+case "$1" in
+  start)
+	boot_msg "Starting syslogd."
+	start-stop-daemon -b -S -q -m -p $SYSLOGD_PIDFILE --exec /sbin/syslogd -- -n
+	evaluate_retval
+	
+	boot_msg "Starting klogd."
+	start-stop-daemon -b -S -q -m -p $KLOGD_PIDFILE --exec /sbin/klogd -- -n
+	evaluate_retval
+	;;
+  stop)
+	boot_msg "Stopping syslogd."
+	start-stop-daemon -K -q -p $SYSLOGD_PIDFILE
+	evaluate_retval
+	
+	boot_msg "Stopping klogd"
+	start-stop-daemon -K -q -p $KLOGD_PIDFILE
+	evaluate_retval
+	;;
+  restart|reload)
+	${0} stop
+	sleep 1
+	${0} start
+	;;
+  *)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+esac
+
+exit $?

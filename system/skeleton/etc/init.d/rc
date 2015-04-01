@@ -1,0 +1,33 @@
+#!/bin/sh
+
+. /etc/default/rc
+. ${rc_functions}
+
+# This sets a few default terminal options.
+stty sane
+
+# These 3 signals will not cause our script to exit.
+trap "" INT QUIT TSTP
+
+[ "${1}" != "" ] && runlevel=${1}
+
+if [ "${runlevel}" == "" ]; then
+	echo "Usage: ${0} <runlevel>" >&2
+	exit 1
+fi
+
+if [ ! -d "${rc_base}/rc.${runlevel}.d" ]; then
+	warning_msg "${rc_base}/rc.${runlevel}.d does not exist."
+	exit 1
+fi
+
+for i in $(ls -v ${rc_base}/rc.${runlevel}.d/S* 2> /dev/null ); do
+	case ${runlevel} in
+		0|6|shutdown)
+			${i} stop
+			;;
+		*)
+			${i} start
+			;;
+	esac
+done

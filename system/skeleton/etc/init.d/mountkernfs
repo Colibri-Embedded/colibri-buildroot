@@ -1,0 +1,36 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     :
+# 
+# Version     : 00.00
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+case "$1" in
+  start)
+ 	boot_msg "Mounting /proc and /sys."
+
+	mount -n /proc || failed=1
+	mount -n /sys || failed=1
+	
+	(exit ${failed})
+	evaluate_retval
+	;;
+  stop)
+	;;
+  *)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+esac
+
+exit $?
+

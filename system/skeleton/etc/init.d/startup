@@ -1,0 +1,39 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     : Daniel Kesler <kesler.daniel@gmail.com>
+# 
+# Version     : 00.10
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+FIRSTBOOT=no
+
+case "$1" in
+  start)
+	# Check if this is a fistboot.
+	if [ -e "/mnt/live/lib/firstboot" ]; then
+		echo "* debug: fistboot"
+		FIRSTBOOT=yes
+		rm -f /mnt/live/lib/firstboot
+	fi
+    
+	[ "$FIRSTBOOT" == "yes" ] && /etc/init.d/firstboot pre
+	/etc/init.d/rc startup 	
+	[ "$FIRSTBOOT" == "yes" ] && /etc/init.d/firstboot post
+    	;;
+  *)
+	echo "Usage: $0 {start}"
+	exit 1
+esac
+
+exit $?
+

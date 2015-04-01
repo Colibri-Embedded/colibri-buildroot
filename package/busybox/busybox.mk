@@ -208,6 +208,10 @@ define BUSYBOX_BUILD_CMDS
 	$(BUSYBOX_MAKE_ENV) $(MAKE) $(BUSYBOX_MAKE_OPTS) -C $(@D)
 endef
 
+define BUSYBOX_INSTALL_INIT_LINK
+	ln -s sbin/init $(BUSYBOX_TARGET_DIR)/init
+endef
+
 define BUSYBOX_INSTALL_TARGET_CMDS
 	$(BUSYBOX_MAKE_ENV) $(MAKE) $(BUSYBOX_MAKE_OPTS) -C $(@D) install
 	$(INSTALL) -m 0755 -D package/busybox/udhcpc.script \
@@ -215,6 +219,7 @@ define BUSYBOX_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -d \
 		$(BUSYBOX_TARGET_DIR)/usr/share/udhcpc/default.script.d
 	$(BUSYBOX_INSTALL_MDEV_CONF)
+	$(BUSYBOX_INSTALL_INIT_LINK)
 endef
 
 define BUSYBOX_INSTALL_INIT_SYSV

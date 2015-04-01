@@ -14,7 +14,24 @@
 ################################################################################
 
 define bundle-install-package
-	$(CORE_BUNDLE_FAKEROOT) $(CORE_BUNDLE_FAKEROOT_ENV) tar -C $(3) -xf $$($(2)_TARGET_ARCHIVE);
+	$$($(2)_FAKEROOT) $$($(2)_FAKEROOT_ENV) $(TAR) --overwrite -C $(3) -xf $$($(2)_TARGET_ARCHIVE);
+	@echo "Importing $(2)";
+endef
+
+define bundle-remove-documentation
+	rm -rf $(1)/usr/share/{doc,man,info,gtk-doc,aclocal}/*
+endef
+
+define bundle-remove-development
+    rm -rf $(1)/usr/include/*
+    rm -rf $(1)/usr/lib/pkgconfig/*
+    find $(1)/usr/lib -name "*.a" -delete
+    find $(1)/usr/lib -name "*.la" -delete
+    find $(1)/usr/lib -name "*.sh" -delete
+    find $(1)/usr/lib -name "*.py" -delete
+    rm -f $(1)/lib/*.{a,la,sh,py}
+    rm -f $(1)/usr/bin/*-config
+    rm -f $(1)/usr/bin/*_config
 endef
 
 ifeq ($(BR2_TARGET_ROOTFS_COLIBRI_LZ4),y)
@@ -96,6 +113,10 @@ $(2)_BUNDLE_IMAGE = $(1)-$$($(2)_VERSION).cb
 # Add dependency against the provider
 $(2)_DEPENDENCIES += $$(call qstrip,$$($(2)_PACKAGES)) host-squashfs
 
+#~ ifeq ($(2)_ADD_ROOTFS,YES)
+#~ 	$(2)_DEPENDENCIES += rootfs-tar
+#~ endif
+
 #
 # Target installation step. Only define it if not already defined by
 # the package .mk file.
@@ -103,15 +124,22 @@ $(2)_DEPENDENCIES += $$(call qstrip,$$($(2)_PACKAGES)) host-squashfs
 ifndef $(2)_INSTALL_TARGET_CMDS
 define $(2)_INSTALL_TARGET_CMDS
 	mkdir -p $$($(2)_TARGET_DIR)
-	$(foreach pkgname,$(CORE_BUNDLE_PACKAGES),$(call bundle-install-package,$(pkgname),$(call UPPERCASE,$(pkgname)), $$($(2)_TARGET_DIR)))
-	$$($(2)_MKSQUASHFS) $$($(2)_TARGET_DIR) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) $(BUNDLE_SQUASHFS_ARGS) 
-#	rm -rf $$($(2)_TARGET_DIR)
+	if [ "x$($(2)_ADD_ROOTFS)" == "xYES" ] ; then \
+		$$($(2)_FAKEROOT) $$($(2)_FAKEROOT_ENV) $(TAR) --overwrite -C $$($(2)_TARGET_DIR) -xf $(BINARIES_DIR)/rootfs.tar; \
+	fi
+	$(foreach pkgname,$($(2)_PACKAGES),$(call bundle-install-package,$(pkgname),$(call UPPERCASE,$(pkgname)), $$($(2)_TARGET_DIR)))
+	
+	$(call bundle-remove-documentation,$$($(2)_TARGET_DIR))
+	$(call bundle-remove-development,$$($(2)_TARGET_DIR))
+	
+	$$($(2)_FAKEROOT) $$($(2)_FAKEROOT_ENV) $$($(2)_MKSQUASHFS) $$($(2)_TARGET_DIR) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) $(BUNDLE_SQUASHFS_ARGS) 
+	rm -rf $$($(2)_TARGET_DIR)
 endef
 endif
 
 # Call the generic package infrastructure to generate the necessary
 # make targets
-$(call inner-generic-package,$(1),$(2),$(3),$(4))
+$(call inner-generic2-package,$(1),$(2),$(3),$(4))
 
 endef
 

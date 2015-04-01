@@ -1,0 +1,33 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     : Daniel Kesler <kesler.daniel@gmail.com>
+# 
+# Version     : 00.01
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+SERVICE_NAME=earlyboot
+
+case "$1" in
+  stop)
+	boot_msg "Stopping system and switching to ${SERVICE_NAME}."
+	cd /mnt/live
+	pivot_root . mnt/union
+	exec chroot . /bin/kill -QUIT 1 &
+	;;
+  *)
+	echo "Usage: $0 {stop}"
+	exit 1
+esac
+
+exit $?
+

@@ -1,0 +1,42 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     :
+# 
+# Version     : 00.00
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+SERVICE_NAME=template
+
+case "$1" in
+  start)
+ 	boot_msg "Starting ${SERVICE_NAME}."
+	
+	evaluate_retval
+	;;
+  stop)
+	boot_msg "Stopping ${SERVICE_NAME}."
+	
+	evaluate_retval
+	;;
+  restart|reload)
+	${0} stop
+	sleep 1
+	${0} start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
+

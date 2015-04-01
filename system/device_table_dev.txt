@@ -66,10 +66,10 @@
 #/dev/ubda	b	640	0	0	98	1	1	1	15
 
 # IDE Devices
-/dev/hda	b	640	0	0	3	0	0	0	-
-/dev/hda	b	640	0	0	3	1	1	1	15
-/dev/hdb	b	640	0	0	3	64	0	0	-
-/dev/hdb	b	640	0	0	3	65	1	1	15
+#/dev/hda	b	640	0	0	3	0	0	0	-
+#/dev/hda	b	640	0	0	3	1	1	1	15
+#/dev/hdb	b	640	0	0	3	64	0	0	-
+#/dev/hdb	b	640	0	0	3	65	1	1	15
 #/dev/hdc	b	640	0	0	22	0	0	0	-
 #/dev/hdc	b	640	0	0	22	1	1	1	15
 #/dev/hdd	b	640	0	0	22	64	0	0	-
@@ -84,10 +84,10 @@
 #/dev/hdh	b	640	0	0	34	65	1	1	15
 
 # SCSI Devices
-/dev/sda	b	640	0	0	8	0	0	0	-
-/dev/sda	b	640	0	0	8	1	1	1	15
-/dev/sdb	b	640	0	0	8	16	0	0	-
-/dev/sdb	b	640	0	0	8	17	1	1	15
+#/dev/sda	b	640	0	0	8	0	0	0	-
+#/dev/sda	b	640	0	0	8	1	1	1	15
+#/dev/sdb	b	640	0	0	8	16	0	0	-
+#/dev/sdb	b	640	0	0	8	17	1	1	15
 #/dev/sdc	b	640	0	0	8	32	0	0	-
 #/dev/sdc	b	640	0	0	8	33	1	1	15
 #/dev/sdd	b	640	0	0	8	48	0	0	-

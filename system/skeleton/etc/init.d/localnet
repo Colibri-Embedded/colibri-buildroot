@@ -1,0 +1,36 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     : Daniel Kesler <kesler.daniel@gmail.com>
+# 
+# Version     : 00.01
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+if [ -e /etc/hostname ]; then
+HOSTNAME=$(cat /etc/hostname)
+else
+HOSTNAME="default"
+fi
+
+case "$1" in
+  start)
+ 	boot_msg "Setting hostname to ${HOSTNAME}."
+	hostname ${HOSTNAME}
+	evaluate_retval
+	;;
+  *)
+	echo "Usage: $0 {start}"
+	exit 1
+esac
+
+exit $?
+
