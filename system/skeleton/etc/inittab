@@ -2,4 +2,5 @@
 ::shutdown:/etc/init.d/rc shutdown
 
 ::restart:/sbin/init
-::respawn:/sbin/getty 115200 tty1
+# Put a getty on the serial port
+#ttyS0::respawn:/sbin/getty -L ttyS0 115200 vt100 # GENERIC_SERIAL

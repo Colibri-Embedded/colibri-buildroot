@@ -56,12 +56,17 @@ endef
 
 # If mdev will be used for device creation enable it and copy S10mdev to /etc/init.d
 ifeq ($(BR2_ROOTFS_DEVICE_CREATION_DYNAMIC_MDEV),y)
-define BUSYBOX_INSTALL_MDEV_SCRIPT
-	$(INSTALL) -D -m 0755 package/busybox/S10mdev \
-		$(BUSYBOX_TARGET_DIR)/etc/init.d/S10mdev
+define BUSYBOX_INSTALL_MDEV_SCRIPT		
+	$(BUSYBOX_FAKEROOT) $(BUSYBOX_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/busybox/mdev.init \
+		$(BUSYBOX_TARGET_DIR)/etc/init.d/mdev
+		
+	$(BUSYBOX_FAKEROOT) $(BUSYBOX_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.sysinit.d	
+	
+	$(BUSYBOX_FAKEROOT) $(BUSYBOX_FAKEROOT_ENV) ln -fs ../../init.d/mdev \
+		$(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.sysinit.d/S85mdev
 endef
 define BUSYBOX_INSTALL_MDEV_CONF
-	$(INSTALL) -D -m 0644 package/busybox/mdev.conf \
+	$(BUSYBOX_FAKEROOT) $(BUSYBOX_FAKEROOT_ENV) $(INSTALL) -D -m 0644 package/busybox/mdev.conf \
 		$(BUSYBOX_TARGET_DIR)/etc/mdev.conf
 endef
 define BUSYBOX_SET_MDEV

@@ -20,3 +20,4 @@ endef
 READLINE_POST_INSTALL_TARGET_HOOKS += READLINE_PURGE_EXAMPLES
 
 $(eval $(autotools-package))
+$(eval $(host-autotools-package))

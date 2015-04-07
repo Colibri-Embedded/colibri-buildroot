@@ -58,7 +58,6 @@ OPENCV_CONF_OPTS += \
 	-DBUILD_opencv_objdetect=$(if $(BR2_PACKAGE_OPENCV_LIB_OBJDETECT),ON,OFF) \
 	-DBUILD_opencv_ocl=OFF                                                  \
 	-DBUILD_opencv_photo=$(if $(BR2_PACKAGE_OPENCV_LIB_PHOTO),ON,OFF)       \
-	-DBUILD_opencv_python=OFF                                               \
 	-DBUILD_opencv_stitching=$(if $(BR2_PACKAGE_OPENCV_LIB_STITCHING),ON,OFF) \
 	-DBUILD_opencv_superres=$(if $(BR2_PACKAGE_OPENCV_LIB_SUPERRES),ON,OFF) \
 	-DBUILD_opencv_ts=$(if $(BR2_PACKAGE_OPENCV_LIB_TS),ON,OFF)             \
@@ -140,11 +139,24 @@ OPENCV_CONF_OPTS += \
 	-DBUILD_PNG=OFF	    \
 	-DBUILD_TIFF=OFF    \
 	-DBUILD_ZLIB=OFF    \
-	-DBUILD_NEW_PYTHON_SUPPORT=OFF \
 	-DINSTALL_C_EXAMPLES=OFF       \
 	-DINSTALL_PYTHON_EXAMPLES=OFF  \
 	-DINSTALL_TO_MANGLED_PATHS=OFF
 
+# Python support
+OPENCV_CONF_OPTS += \
+	-DBUILD_NEW_PYTHON_SUPPORT=ON \
+	-DPYTHON_LIBRARIES="$(STAGING_DIR)/usr/lib" \
+	-DPYTHONLIBS_VERSION_STRING="$(PYTHON_VERSION)" \
+	-DPYTHON_EXECUTABLE="$(HOST_DIR)/usr/bin/python" \
+	-DPYTHON_INCLUDE_DIR="$(STAGING_DIR)/usr/include/python$(PYTHON_VERSION_MAJOR)" \
+	-DPYTHON_INCLUDE_DIRS="-I$(STAGING_DIR)/usr/include" \
+	-DPYTHON_LIBRARY="$(STAGING_DIR)/usr/lib/libpython$(PYTHON_VERSION_MAJOR).so" \
+	-DPYTHON_NUMPY_INCLUDE_DIR="$(STAGING_DIR)/usr/lib/python2.7/site-packages/numpy/core/include" \
+	-DBUILD_opencv_python=OFF
+	
+OPENCV_DEPENDENCIES += python python-numpy
+	
 # Disabled features (mostly because they are not available in Buildroot), but
 # - eigen: OpenCV does not use it, not take any benefit from it.
 OPENCV_CONF_OPTS += \

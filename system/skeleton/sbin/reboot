@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "reboot" > /mnt/live/run/rc.shutdown
+/etc/init.d/rc shutdown
+

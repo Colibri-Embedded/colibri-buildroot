@@ -18,21 +18,23 @@ define bundle-install-package
 	@echo "Importing $(2)";
 endef
 
+ifeq ($(BR2_BR2_ROOTFS_REMOVE_DOCUMENTATION),y)
 define bundle-remove-documentation
 	rm -rf $(1)/usr/share/{doc,man,info,gtk-doc,aclocal}/*
 endef
+endif
 
+ifeq ($(BR2_ROOTFS_REMOVE_DEVELOPMENT),y)
 define bundle-remove-development
+	rm -rf $(1)/usr/lib/cmake
     rm -rf $(1)/usr/include/*
     rm -rf $(1)/usr/lib/pkgconfig/*
-    find $(1)/usr/lib -name "*.a" -delete
-    find $(1)/usr/lib -name "*.la" -delete
-    find $(1)/usr/lib -name "*.sh" -delete
-    find $(1)/usr/lib -name "*.py" -delete
+	rm -f $(1)/usr/lib/*.{a,la,sh,py}
     rm -f $(1)/lib/*.{a,la,sh,py}
     rm -f $(1)/usr/bin/*-config
     rm -f $(1)/usr/bin/*_config
 endef
+endif
 
 ifeq ($(BR2_TARGET_ROOTFS_COLIBRI_LZ4),y)
 BUNDLE_SQUASHFS_ARGS += -comp lz4
@@ -121,6 +123,9 @@ $(2)_DEPENDENCIES += $$(call qstrip,$$($(2)_PACKAGES)) host-squashfs
 # Target installation step. Only define it if not already defined by
 # the package .mk file.
 #
+
+
+
 ifndef $(2)_INSTALL_TARGET_CMDS
 define $(2)_INSTALL_TARGET_CMDS
 	mkdir -p $$($(2)_TARGET_DIR)

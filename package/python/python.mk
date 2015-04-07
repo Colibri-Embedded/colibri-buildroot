@@ -212,7 +212,8 @@ HOST_PYTHON_POST_INSTALL_HOOKS += HOST_PYTHON_INSTALL_PYTHON_SYMLINK
 endif
 
 # Provided to other packages
-PYTHON_PATH = $(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/sysconfigdata/:$(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/
+PYTHON_PATH = $(HOST_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/sysconfigdata/:$(HOST_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/:$(STAGING_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/sysconfigdata/:$(STAGING_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/
+#HOST_PYTHON_PATH = $(HOST_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/sysconfigdata/:$(HOST_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/
 
 $(eval $(autotools-package))
 $(eval $(host-autotools-package))
