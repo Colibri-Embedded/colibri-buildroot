@@ -36,7 +36,7 @@ PKG_PYTHON_DISTUTILS_ENV = \
 	_python_exec_prefix=/usr
 
 PKG_PYTHON_DISTUTILS_BUILD_OPTS = \
-	--executable=/usr/bin/python
+	--executable=$(HOST_DIR)/usr/bin/python
 
 #PKG_PYTHON_DISTUTILS_INSTALL_TARGET_OPTS = \
 #	--prefix=$$(PACKAGES_DIR)/$(pkgname)/usr
@@ -67,7 +67,7 @@ PKG_PYTHON_SETUPTOOLS_ENV = \
 
 PKG_PYTHON_SETUPTOOLS_INSTALL_STAGING_OPTS = \
 	--prefix=$(STAGING_DIR)/usr \
-	--executable=/usr/bin/python \
+	--executable=$(HOST_DIR)/usr/bin/python \
 	--single-version-externally-managed \
 	--root=/
 

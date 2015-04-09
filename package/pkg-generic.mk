@@ -244,6 +244,10 @@ $(BUILD_DIR)/%/.stamp_target_installed:
 	fi
 	$(Q)if [ "x$($(PKG)_ARCHIVE_TARGET)" == "xYES" ] ; then \
 		$($(PKG)_FAKEROOT) $($(PKG)_FAKEROOT_ENV) -- $(TAR) -cf $($(PKG)_TARGET_ARCHIVE) -C $($(PKG)_TARGET_DIR) . ; \
+		retr=$$?; \
+		if [ "$$retr" != "0" ]; then \
+			exit $$retr; \
+		fi; \
 		$(RM) -rf $($(PKG)_TARGET_DIR) ; \
 		$(RM) $(@D)/.fakeroot_env ; \
 	fi
