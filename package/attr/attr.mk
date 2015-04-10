@@ -25,5 +25,12 @@ ATTR_INSTALL_TARGET_OPTS = 			\
 	prefix=$(ATTR_TARGET_DIR)/usr 		\
 	exec_prefix=$(ATTR_TARGET_DIR)/usr 		\
 	install install-lib
+	
+HOST_ATTR_INSTALL_OPTS = 	\
+	prefix=$(HOST_DIR)/usr 		\
+	exec_prefix=$(HOST_DIR)/usr		\
+	PKG_DEVLIB_DIR=$(HOST_DIR)/usr/lib 	\
+	install-dev install-lib
 
 $(eval $(autotools-package))
+$(eval $(host-autotools-package))

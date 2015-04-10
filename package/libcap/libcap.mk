@@ -10,7 +10,7 @@ LIBCAP_SOURCE = libcap-$(LIBCAP_VERSION).tar.xz
 LIBCAP_LICENSE = GPLv2 or BSD-3c
 LIBCAP_LICENSE_FILES = License
 
-LIBCAP_DEPENDENCIES = host-libcap
+#LIBCAP_DEPENDENCIES = host-libcap
 LIBCAP_INSTALL_STAGING = YES
 
 ifeq ($(BR2_PACKAGE_ATTR),y)
@@ -21,7 +21,7 @@ else
 endif
 
 # we don't have host-attr
-HOST_LIBCAP_DEPENDENCIES =
+HOST_LIBCAP_DEPENDENCIES = host-attr
 
 ifeq ($(BR2_STATIC_LIBS),y)
 LIBCAP_MAKE_TARGET = libcap.a
@@ -67,11 +67,12 @@ define LIBCAP_INSTALL_TARGET_CMDS
 endef
 
 define HOST_LIBCAP_BUILD_CMDS
-	$(HOST_MAKE_ENV) $(HOST_CONFIGURE_OPTS) $(MAKE) -C $(@D) LIBATTR=no
+	$(HOST_MAKE_ENV) $(HOST_CONFIGURE_OPTS) $(MAKE) -C $(@D) LIBATTR=yes
 endef
 
 define HOST_LIBCAP_INSTALL_CMDS
-	$(HOST_MAKE_ENV) $(MAKE) -C $(@D) LIBATTR=no DESTDIR=$(HOST_DIR) \
+	$(HOST_MAKE_ENV) $(MAKE) -C $(@D) LIBATTR=yes DESTDIR=$(HOST_DIR) \
+		RAISE_SETFCAP=no prefix=/usr \
 		prefix=/usr lib=lib install
 endef
 

@@ -184,8 +184,11 @@ endef
 PYTHON_POST_INSTALL_TARGET_HOOKS += PYTHON_ENSURE_LIBPYTHON_STRIPPED
 
 # Always install the python symlink in the target tree
+# workaround for fakeroot link problem
 define PYTHON_INSTALL_TARGET_PYTHON_SYMLINK
-	$(PYTHON_FAKEROOT) $(PYTHON_FAKEROOT_ENV) ln -sf python2 $(PYTHON_TARGET_DIR)/usr/bin/python
+	ln -sfv python2 $(PYTHON_TARGET_DIR)/usr/bin/python
+	$(PYTHON_FAKEROOT) $(PYTHON_FAKEROOT_ENV) rm -f $(PYTHON_TARGET_DIR)/usr/bin/python
+	$(PYTHON_FAKEROOT) $(PYTHON_FAKEROOT_ENV) ln -sv python2 $(PYTHON_TARGET_DIR)/usr/bin/python
 endef
 
 PYTHON_POST_INSTALL_TARGET_HOOKS += PYTHON_INSTALL_TARGET_PYTHON_SYMLINK
