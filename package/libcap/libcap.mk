@@ -21,7 +21,7 @@ else
 endif
 
 # we don't have host-attr
-HOST_LIBCAP_DEPENDENCIES = host-attr
+HOST_LIBCAP_DEPENDENCIES = host-acl host-attr
 
 ifeq ($(BR2_STATIC_LIBS),y)
 LIBCAP_MAKE_TARGET = libcap.a
