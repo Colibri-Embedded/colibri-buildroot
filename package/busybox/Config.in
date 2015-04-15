@@ -45,6 +45,11 @@ config BR2_PACKAGE_BUSYBOX_WATCHDOG_PERIOD
 
 endif
 
+config BR2_PACKAGE_BUSYBOX_CRON
+	bool "Install the cron daemon startup script"
+	help
+	  Install the cron daemon startup script.
+
 endif
 
 if !BR2_PACKAGE_BUSYBOX # kconfig doesn't support else

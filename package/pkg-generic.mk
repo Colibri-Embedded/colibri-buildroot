@@ -332,13 +332,13 @@ $(2)_TARGET_ARCHIVE	=  $$(PACKAGES_DIR)/$(1).tar
 
 ifndef $(2)_FAKEROOT
  ifdef $(3)_FAKEROOT
-  $(2)_FAKEROOT = $$($(3)_FAKEROOT)
+  $(2)_FAKEROOT = $$($(3)_FAKEROOT) -s $$(@D)/.fakeroot_env -i $$(@D)/.fakeroot_env
  else
-  $(2)_FAKEROOT ?= $$(FAKEROOT)
+  $(2)_FAKEROOT ?= $$(FAKEROOT) -s $$(@D)/.fakeroot_env -i $$(@D)/.fakeroot_env
  endif
 endif
 
-$(2)_FAKEROOT_ENV	= -s $$(@D)/.fakeroot_env -i $$(@D)/.fakeroot_env
+#$(2)_FAKEROOT_ENV	= -s $$(@D)/.fakeroot_env -i $$(@D)/.fakeroot_env
 
 # Keep the package version that may contain forward slashes in the _DL_VERSION
 # variable, then replace all forward slashes ('/') by underscores ('_') to

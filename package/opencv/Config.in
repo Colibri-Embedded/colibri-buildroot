@@ -127,6 +127,15 @@ config BR2_PACKAGE_OPENCV_BUILD_PERF_TESTS
 
 comment "3rd party support"
 
+config BR2_PACKAGE_OPENCV_WITH_PYTHON
+	bool "python support"
+	depends on BR2_PACKAGE_PYTHON_NUMPY
+	help
+	  Build python support from the target system.
+
+comment "python support needs numpy"
+	depends on !(BR2_PACKAGE_PYTHON_NUMPY)
+
 config BR2_PACKAGE_OPENCV_WITH_FFMPEG
 	bool "ffmpeg support"
 	depends on BR2_LARGEFILE

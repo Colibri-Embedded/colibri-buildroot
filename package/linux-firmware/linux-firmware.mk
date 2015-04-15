@@ -45,6 +45,14 @@ LINUX_FIRMWARE_FILES += \
 LINUX_FIRMWARE_ALL_LICENSE_FILES += LICENCE.rtlwifi_firmware.txt
 endif
 
+# rtl8188
+ifeq ($(BR2_PACKAGE_LINUX_FIRMWARE_RTL_8188),y)
+LINUX_FIRMWARE_FILES += \
+	rtlwifi/rtl8188efw.bin \
+	rtlwifi/rtl8188eufw.bin
+LINUX_FIRMWARE_ALL_LICENSE_FILES += LICENCE.rtlwifi_firmware.txt
+endif
+
 # rtl87xx
 ifeq ($(BR2_PACKAGE_LINUX_FIRMWARE_RTL_87XX),y)
 LINUX_FIRMWARE_FILES += \

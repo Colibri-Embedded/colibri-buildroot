@@ -49,24 +49,24 @@ BUSYBOX_KCONFIG_FILE = $(BUSYBOX_CONFIG_FILE)
 BUSYBOX_KCONFIG_EDITORS = menuconfig xconfig gconfig
 BUSYBOX_KCONFIG_OPTS = $(BUSYBOX_MAKE_OPTS)
 
-define BUSYBOX_PERMISSIONS
-	/bin/busybox                     f 4755 0  0 - - - - -
-	/usr/share/udhcpc/default.script f 755  0  0 - - - - -
-endef
+#~ define BUSYBOX_PERMISSIONS
+#~ 	/bin/busybox                     f 4755 0  0 - - - - -
+#~ 	/usr/share/udhcpc/default.script f 755  0  0 - - - - -
+#~ endef
 
 # If mdev will be used for device creation enable it and copy S10mdev to /etc/init.d
 ifeq ($(BR2_ROOTFS_DEVICE_CREATION_DYNAMIC_MDEV),y)
 define BUSYBOX_INSTALL_MDEV_SCRIPT		
-	$(BUSYBOX_FAKEROOT) $(BUSYBOX_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/busybox/mdev.init \
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/mdev.init \
 		$(BUSYBOX_TARGET_DIR)/etc/init.d/mdev
 		
-	$(BUSYBOX_FAKEROOT) $(BUSYBOX_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.sysinit.d	
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.sysinit.d	
 	
-	$(BUSYBOX_FAKEROOT) $(BUSYBOX_FAKEROOT_ENV) ln -fs ../../init.d/mdev \
+	$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/mdev \
 		$(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.sysinit.d/S85mdev
 endef
 define BUSYBOX_INSTALL_MDEV_CONF
-	$(BUSYBOX_FAKEROOT) $(BUSYBOX_FAKEROOT_ENV) $(INSTALL) -D -m 0644 package/busybox/mdev.conf \
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0644 package/busybox/mdev.conf \
 		$(BUSYBOX_TARGET_DIR)/etc/mdev.conf
 endef
 define BUSYBOX_SET_MDEV
@@ -185,6 +185,29 @@ define BUSYBOX_INSTALL_WATCHDOG_SCRIPT
 endef
 endif
 
+ifeq ($(BR2_PACKAGE_BUSYBOX_CROND),y)
+define BUSYBOX_SET_CROND
+	$(call KCONFIG_ENABLE_OPT,CONFIG_CROND,$(BUSYBOX_BUILD_CONFIG))
+endef
+define BUSYBOX_INSTALL_CROND_SCRIPT
+	$(BUSYBOX_FAKEROOT) mkdir -p $(BUSYBOX_TARGET_DIR)/etc/cron.{d,daily,hourly,monthly}
+
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0644 package/busybox/crontab \
+		$(BUSYBOX_TARGET_DIR)/etc/crontab
+
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/crond.init \
+		$(BUSYBOX_TARGET_DIR)/etc/init.d/crond
+		
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/crond.default \
+		$(BUSYBOX_TARGET_DIR)/etc/default/crond
+		
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.startup.d
+	
+	$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/crond \
+		$(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.startup.d/S50crond
+endef
+endif
+
 # Enable "noclobber" in install.sh, to prevent BusyBox from overwriting any
 # full-blown versions of apps installed by other packages with sym/hard links.
 define BUSYBOX_NOCLOBBER_INSTALL
@@ -203,6 +226,7 @@ define BUSYBOX_KCONFIG_FIXUP_CMDS
 	$(BUSYBOX_INTERNAL_SHADOW_PASSWORDS)
 	$(BUSYBOX_SET_INIT)
 	$(BUSYBOX_SET_WATCHDOG)
+	$(BUSYBOX_SET_CROND)
 endef
 
 define BUSYBOX_CONFIGURE_CMDS
@@ -214,14 +238,18 @@ define BUSYBOX_BUILD_CMDS
 endef
 
 define BUSYBOX_INSTALL_INIT_LINK
-	ln -s sbin/init $(BUSYBOX_TARGET_DIR)/init
+	$(BUSYBOX_FAKEROOT) ln -s sbin/init $(BUSYBOX_TARGET_DIR)/init
+endef
+
+define BUSYBOX_FIX_SUID_PERMISSION
+	$(BUSYBOX_FAKEROOT) chmod 4755 $(BUSYBOX_TARGET_DIR)/bin/busybox
 endef
 
 define BUSYBOX_INSTALL_TARGET_CMDS
-	$(BUSYBOX_MAKE_ENV) $(MAKE) $(BUSYBOX_MAKE_OPTS) -C $(@D) install
-	$(INSTALL) -m 0755 -D package/busybox/udhcpc.script \
+	$(BUSYBOX_FAKEROOT) -- $(MAKE) $(BUSYBOX_MAKE_OPTS) -C $(@D) install
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -m 0755 -D package/busybox/udhcpc.script \
 		$(BUSYBOX_TARGET_DIR)/usr/share/udhcpc/default.script
-	$(INSTALL) -m 0755 -d \
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -m 0755 -d \
 		$(BUSYBOX_TARGET_DIR)/usr/share/udhcpc/default.script.d
 	$(BUSYBOX_INSTALL_MDEV_CONF)
 	$(BUSYBOX_INSTALL_INIT_LINK)
@@ -231,6 +259,7 @@ define BUSYBOX_INSTALL_INIT_SYSV
 	$(BUSYBOX_INSTALL_MDEV_SCRIPT)
 	$(BUSYBOX_INSTALL_LOGGING_SCRIPT)
 	$(BUSYBOX_INSTALL_WATCHDOG_SCRIPT)
+	$(BUSYBOX_INSTALL_CROND_SCRIPT)
 endef
 
 $(eval $(kconfig-package))

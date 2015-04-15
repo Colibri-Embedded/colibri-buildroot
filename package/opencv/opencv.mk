@@ -144,6 +144,7 @@ OPENCV_CONF_OPTS += \
 	-DINSTALL_TO_MANGLED_PATHS=OFF
 
 # Python support
+ifeq ($(BR2_PACKAGE_PYTHON_NUMPY),y)
 OPENCV_CONF_OPTS += \
 	-DBUILD_NEW_PYTHON_SUPPORT=ON \
 	-DPYTHON_LIBRARIES="$(STAGING_DIR)/usr/lib" \
@@ -152,10 +153,14 @@ OPENCV_CONF_OPTS += \
 	-DPYTHON_INCLUDE_DIR="$(STAGING_DIR)/usr/include/python$(PYTHON_VERSION_MAJOR)" \
 	-DPYTHON_INCLUDE_DIRS="-I$(STAGING_DIR)/usr/include" \
 	-DPYTHON_LIBRARY="$(STAGING_DIR)/usr/lib/libpython$(PYTHON_VERSION_MAJOR).so" \
-	-DPYTHON_NUMPY_INCLUDE_DIR="$(STAGING_DIR)/usr/lib/python2.7/site-packages/numpy/core/include" \
+	-DPYTHON_NUMPY_INCLUDE_DIR="$(STAGING_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/numpy/core/include" \
 	-DBUILD_opencv_python=OFF
-	
 OPENCV_DEPENDENCIES += python python-numpy
+else
+OPENCV_CONF_OPTS += \
+	-DBUILD_NEW_PYTHON_SUPPORT=OFF
+	-DBUILD_opencv_python=OFF
+endif
 	
 # Disabled features (mostly because they are not available in Buildroot), but
 # - eigen: OpenCV does not use it, not take any benefit from it.
