@@ -240,7 +240,7 @@ PHP_POST_INSTALL_TARGET_HOOKS += PHP_EXTENSIONS_FIXUP
 define PHP_INSTALL_FIXUP
 	rm -rf $(PHP_TARGET_DIR)/usr/lib/php
 	rm -f $(PHP_TARGET_DIR)/usr/bin/phpize
-	$(INSTALL) -D -m 0755 $(PHP_DIR)/php.ini-production \
+	$(PHP_FAKEROOT) -- $(INSTALL) -D -m 0755 $(@D)/php.ini-production \
 		$(PHP_TARGET_DIR)/etc/php.ini
 endef
 
