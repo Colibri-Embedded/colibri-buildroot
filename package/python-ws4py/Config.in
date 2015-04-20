@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_WS4PY
+	bool "python-ws4py"
+	depends on BR2_PACKAGE_PYTHON
+	help
+	  WebSocket client and server library for Python 2 and 3 as well as PyPy.
+
+	  https://pypi.python.org/pypi/ws4py

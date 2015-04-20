@@ -1,0 +1,4 @@
+CROND_PIDFILE=/run/crond.pid
+CROND_LOGFILE=/var/log/crond.log
+CROND_OPTIONS="-L $CROND_LOGFILE"
+

@@ -258,6 +258,8 @@ $(BUILD_DIR)/%/.stamp_target_installed:
 # Remove package sources
 $(BUILD_DIR)/%/.stamp_dircleaned:
 	rm -Rf $(@D)
+	rm -Rf $($(PKG)_TARGET_DIR)
+	rm -Rf $($(PKG)_TARGET_ARCHIVE)
 
 ################################################################################
 # virt-provides-single -- check that provider-pkg is the declared provider for

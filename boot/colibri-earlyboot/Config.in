@@ -1,0 +1,16 @@
+config BR2_TARGET_COLIBRI_EARLYBOOT
+	bool "Colibri-EarlyBoot"
+	select BR2_PACKAGE_UTIL_LINUX
+	select BR2_PACKAGE_UTIL_LINUX_LIBBLKID
+	select BR2_PACKAGE_UTIL_LINUX_LIBSMARTCOLS
+	select BR2_PACKAGE_UTIL_LINUX_LIBUUID
+	select BR2_PACKAGE_UTIL_LINUX_BINARIES
+	select BR2_PACKAGE_PARTED
+	select BR2_PACKAGE_FATRESIZE
+	select BR2_PACKAGE_NCURSES
+	select BR2_PACKAGE_READLINE
+	
+	help
+	  Colibri EarlyBoot.
+
+	  https://github.com/Colibri-Embedded/colibri-earlyboot

@@ -14,7 +14,7 @@
 ################################################################################
 
 define bundle-install-package
-	$$($(2)_FAKEROOT) $$($(2)_FAKEROOT_ENV) $(TAR) --overwrite -C $(3) -xf $$($(2)_TARGET_ARCHIVE);
+	$$($(1)_FAKEROOT) $(TAR) --overwrite -C $(3) -xf $$($(2)_TARGET_ARCHIVE);
 	@echo "Importing $(2)";
 endef
 
@@ -132,7 +132,7 @@ define $(2)_INSTALL_TARGET_CMDS
 	if [ "x$($(2)_ADD_ROOTFS)" == "xYES" ] ; then \
 		$$($(2)_FAKEROOT) $$($(2)_FAKEROOT_ENV) $(TAR) --overwrite -C $$($(2)_TARGET_DIR) -xf $(BINARIES_DIR)/rootfs.tar; \
 	fi
-	$(foreach pkgname,$($(2)_PACKAGES),$(call bundle-install-package,$(pkgname),$(call UPPERCASE,$(pkgname)), $$($(2)_TARGET_DIR)))
+	$(foreach pkgname,$($(2)_PACKAGES),$(call bundle-install-package,$(2),$(call UPPERCASE,$(pkgname)), $$($(2)_TARGET_DIR)))
 	
 	$(call bundle-remove-documentation,$$($(2)_TARGET_DIR))
 	$(call bundle-remove-development,$$($(2)_TARGET_DIR))

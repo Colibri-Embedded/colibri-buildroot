@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_PATHTOOLS
+	bool "python-pathtools"
+	depends on BR2_PACKAGE_PYTHON
+	help
+	  Pattern matching and various utilities for file systems paths.
+
+	  https://pypi.python.org/pypi/pathtools
