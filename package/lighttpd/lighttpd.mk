@@ -90,32 +90,32 @@ LIGHTTPD_CONF_OPTS += --disable-ipv6
 endif
 
 define LIGHTTPD_INSTALL_CONFIG
-	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(LIGHTTPD_TARGET_DIR)/etc/lighttpd/conf-available
-	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(LIGHTTPD_TARGET_DIR)/etc/lighttpd/conf-enabled
-	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -d -o 33 -g 33 -m 0755 $(LIGHTTPD_TARGET_DIR)/var/www
-	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -d -o 33 -g 33 -m 0755 $(LIGHTTPD_TARGET_DIR)/var/cache/lighttpd
+	$(LIGHTTPD_FAKEROOT) $(INSTALL) -d -m 0755 $(LIGHTTPD_TARGET_DIR)/etc/lighttpd/conf-available
+	$(LIGHTTPD_FAKEROOT) $(INSTALL) -d -m 0755 $(LIGHTTPD_TARGET_DIR)/etc/lighttpd/conf-enabled
+	$(LIGHTTPD_FAKEROOT) $(INSTALL) -d -o 33 -g 33 -m 0755 $(LIGHTTPD_TARGET_DIR)/var/www
+	$(LIGHTTPD_FAKEROOT) $(INSTALL) -d -o 33 -g 33 -m 0755 $(LIGHTTPD_TARGET_DIR)/var/cache/lighttpd
 
-	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) chown 33.33 $(LIGHTTPD_TARGET_DIR)/var/www
-	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) chown 33.33 $(LIGHTTPD_TARGET_DIR)/var/cache/lighttpd
+	$(LIGHTTPD_FAKEROOT) chown 33.33 $(LIGHTTPD_TARGET_DIR)/var/www
+	$(LIGHTTPD_FAKEROOT) chown 33.33 $(LIGHTTPD_TARGET_DIR)/var/cache/lighttpd
 
-	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -D -m 0644 package/lighttpd/lighttpd.conf \
+	$(LIGHTTPD_FAKEROOT) $(INSTALL) -D -m 0644 package/lighttpd/lighttpd.conf \
 		$(LIGHTTPD_TARGET_DIR)/etc/lighttpd/lighttpd.conf
 		
-	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/lighttpd/include-conf-enabled.sh \
+	$(LIGHTTPD_FAKEROOT) $(INSTALL) -D -m 0755 package/lighttpd/include-conf-enabled.sh \
 		$(LIGHTTPD_TARGET_DIR)/usr/share/lighttpd/include-conf-enabled.sh
 		
-	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/lighttpd/lighttpd-enable-mod \
+	$(LIGHTTPD_FAKEROOT) $(INSTALL) -D -m 0755 package/lighttpd/lighttpd-enable-mod \
 		$(LIGHTTPD_TARGET_DIR)/usr/sbin/lighttpd-enable-mod
 
-	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) ln -fs lighttpd-enable-mod \
+	$(LIGHTTPD_FAKEROOT) ln -fs lighttpd-enable-mod \
 		$(LIGHTTPD_TARGET_DIR)/usr/sbin/lighttpd-disable-mod
 		
 for conf in $(LIGHTTPD_CONF_AVAILABLE_FILES); do \
-	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -D -m 0644 package/lighttpd/conf-available/$$conf \
+	$(LIGHTTPD_FAKEROOT) $(INSTALL) -D -m 0644 package/lighttpd/conf-available/$$conf \
 		$(LIGHTTPD_TARGET_DIR)/etc/lighttpd/conf-available/$$conf; \
 done
 
-	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) ln -fs ../conf-available/01-mime.conf \
+	$(LIGHTTPD_FAKEROOT) ln -fs ../conf-available/01-mime.conf \
 		$(LIGHTTPD_TARGET_DIR)/etc/lighttpd/conf-enabled/01-mime.conf
 
 endef

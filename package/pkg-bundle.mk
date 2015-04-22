@@ -130,14 +130,14 @@ ifndef $(2)_INSTALL_TARGET_CMDS
 define $(2)_INSTALL_TARGET_CMDS
 	mkdir -p $$($(2)_TARGET_DIR)
 	if [ "x$($(2)_ADD_ROOTFS)" == "xYES" ] ; then \
-		$$($(2)_FAKEROOT) $$($(2)_FAKEROOT_ENV) $(TAR) --overwrite -C $$($(2)_TARGET_DIR) -xf $(BINARIES_DIR)/rootfs.tar; \
+		$$($(2)_FAKEROOT) $(TAR) --overwrite -C $$($(2)_TARGET_DIR) -xf $(BINARIES_DIR)/rootfs.tar; \
 	fi
 	$(foreach pkgname,$($(2)_PACKAGES),$(call bundle-install-package,$(2),$(call UPPERCASE,$(pkgname)), $$($(2)_TARGET_DIR)))
 	
 	$(call bundle-remove-documentation,$$($(2)_TARGET_DIR))
 	$(call bundle-remove-development,$$($(2)_TARGET_DIR))
 	
-	$$($(2)_FAKEROOT) $$($(2)_FAKEROOT_ENV) $$($(2)_MKSQUASHFS) $$($(2)_TARGET_DIR) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) $(BUNDLE_SQUASHFS_ARGS) 
+	$$($(2)_FAKEROOT) $$($(2)_MKSQUASHFS) $$($(2)_TARGET_DIR) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) $(BUNDLE_SQUASHFS_ARGS) 
 	rm -rf $$($(2)_TARGET_DIR)
 endef
 endif

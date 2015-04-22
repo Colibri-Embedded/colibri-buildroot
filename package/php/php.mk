@@ -238,11 +238,11 @@ endef
 PHP_POST_INSTALL_TARGET_HOOKS += PHP_EXTENSIONS_FIXUP
 
 define PHP_INSTALL_FIXUP
-	$(PHP_FAKEROOT) -- $(INSTALL) -d -m 0755 $(PHP_TARGET_DIR)/etc
-	$(PHP_FAKEROOT) -- cp $(@D)/php.ini-production \
+	$(PHP_FAKEROOT) $(INSTALL) -d -m 0755 $(PHP_TARGET_DIR)/etc
+	$(PHP_FAKEROOT) cp $(@D)/php.ini-production \
 		$(PHP_TARGET_DIR)/etc/php.ini
-	$(PHP_FAKEROOT) -- rm -rf $(PHP_TARGET_DIR)/usr/lib/php
-	$(PHP_FAKEROOT) -- rm -f $(PHP_TARGET_DIR)/usr/bin/phpize
+	$(PHP_FAKEROOT) rm -rf $(PHP_TARGET_DIR)/usr/lib/php
+	$(PHP_FAKEROOT) rm -f $(PHP_TARGET_DIR)/usr/bin/phpize
 endef
 
 PHP_POST_INSTALL_TARGET_HOOKS += PHP_INSTALL_FIXUP

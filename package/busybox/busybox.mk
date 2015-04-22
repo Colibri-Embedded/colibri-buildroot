@@ -246,7 +246,7 @@ define BUSYBOX_FIX_SUID_PERMISSION
 endef
 
 define BUSYBOX_INSTALL_TARGET_CMDS
-	$(BUSYBOX_FAKEROOT) -- $(MAKE) $(BUSYBOX_MAKE_OPTS) -C $(@D) install
+	$(BUSYBOX_FAKEROOT) $(MAKE) $(BUSYBOX_MAKE_OPTS) -C $(@D) install
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -m 0755 -D package/busybox/udhcpc.script \
 		$(BUSYBOX_TARGET_DIR)/usr/share/udhcpc/default.script
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -m 0755 -d \
