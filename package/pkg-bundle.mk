@@ -86,6 +86,14 @@ ifndef $(2)_MKSQUASHFS
  endif
 endif
 
+ifndef $(2)_MD5SUM
+ ifdef $(3)_MD5SUM
+	$(2)_MD5SUM = $$($(3)_MD5SUM)
+ else
+	$(2)_MD5SUM ?= md5sum
+ endif
+endif
+
 # Ensure the virtual package has an implementation defined.
 #~ ifeq ($$(BR2_PACKAGE_HAS_$(2)),y)
 #~ ifeq ($$(call qstrip,$$(BR2_PACKAGE_PROVIDES_$(2))),)
@@ -101,6 +109,7 @@ $(2)_ARCHIVE_TARGET = NO
 $(2)_SOURCE =
 
 $(2)_BUNDLE_IMAGE = $(1)-$$($(2)_VERSION).cb
+$(2)_BUNDLE_IMAGE_HASH = $(1)-$$($(2)_VERSION).cb.md5sum
 
 # Fake a version string, so it looks nicer in the build log
 #$(2)_VERSION = virtual
@@ -138,6 +147,7 @@ define $(2)_INSTALL_TARGET_CMDS
 	$(call bundle-remove-development,$$($(2)_TARGET_DIR))
 	
 	$$($(2)_FAKEROOT) $$($(2)_MKSQUASHFS) $$($(2)_TARGET_DIR) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) $(BUNDLE_SQUASHFS_ARGS) 
+	$$($(2)_MD5SUM) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) > $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE_HASH)
 	rm -rf $$($(2)_TARGET_DIR)
 endef
 endif
