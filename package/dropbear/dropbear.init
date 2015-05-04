@@ -20,14 +20,14 @@ test -r /etc/default/dropbear && source /etc/default/dropbear
 [ -z $DROPBEAR_ARGS ] && DROPBEAR_ARGS=-B
 [ -z $DROPBEAR_PIDFILE ] && DROPBEAR_PIDFILE=/run/dropbear.pid
 
-DROPBEAR_ARGS="$DROPBEAR_ARGS -R"
+DROPBEAR_ARGS="$DROPBEAR_ARGS -R -P $DROPBEAR_PIDFILE"
 
 DAEMON=/usr/sbin/dropbear
 
 case "$1" in
 	start)
 		boot_msg "Starting dropbear sshd."
-		start-stop-daemon -S -q -p $DROPBEAR_PIDFILE --exec /usr/sbin/dropbear -- $DROPBEAR_ARGS
+		start-stop-daemon -S -q --exec $DAEMON -- $DROPBEAR_ARGS
 		evaluate_retval
 		;;
 	stop)

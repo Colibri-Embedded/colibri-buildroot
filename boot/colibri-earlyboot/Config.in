@@ -14,3 +14,17 @@ config BR2_TARGET_COLIBRI_EARLYBOOT
 	  Colibri EarlyBoot.
 
 	  https://github.com/Colibri-Embedded/colibri-earlyboot
+	  
+if BR2_TARGET_COLIBRI_EARLYBOOT
+
+config BR2_TARGET_COLIBRI_EARLYBOOT_SUPPORT_EXT4
+	bool "Support EXT4 filesystem"
+	help
+	  Add tools to handle EXT4 filesystem.
+
+config BR2_TARGET_COLIBRI_EARLYBOOT_SUPPORT_BTRFS
+	bool "Support BTRFS filesystem"
+	help
+	  Add tools to handle BTRFS filesystem.	  
+
+endif

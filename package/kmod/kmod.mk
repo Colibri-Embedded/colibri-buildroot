@@ -34,9 +34,11 @@ KMOD_DEPENDENCIES += xz
 KMOD_CONF_OPTS += --with-xz
 endif
 
+ifeq ($(BR2_PACKAGE_KMOD_PYTHON),y)
 ifeq ($(BR2_PACKAGE_PYTHON)$(BR2_PACKAGE_PYTHON3),y)
 KMOD_DEPENDENCIES += $(if $(BR2_PACKAGE_PYTHON),python,python3)
 KMOD_CONF_OPTS += --enable-python
+endif
 endif
 
 # --gc-sections triggers a bug in the current Xtensa binutils
@@ -54,8 +56,9 @@ KMOD_LICENSE_FILES += COPYING
 KMOD_DEPENDENCIES += $(if $(BR2_PACKAGE_BUSYBOX),busybox)
 
 define KMOD_INSTALL_TOOLS
+	$(KMOD_FAKEROOT) mkdir -p $(KMOD_TARGET_DIR)/sbin
 	for i in depmod insmod lsmod modinfo modprobe rmmod; do \
-		ln -sf ../usr/bin/kmod $(KMOD_TARGET_DIR)/sbin/$$i; \
+		$(KMOD_FAKEROOT) ln -sfv ../usr/bin/kmod $(KMOD_TARGET_DIR)/sbin/$$i; \
 	done
 endef
 

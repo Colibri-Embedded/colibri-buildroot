@@ -14,5 +14,11 @@ config BR2_PACKAGE_KMOD_TOOLS
 	help
 	  Install kmod module utilities (depmod, insmod, lsmod,
 	  modinfo, modprobe, rmmod).
+	  
+config BR2_PACKAGE_KMOD_PYTHON
+	bool "kmod python binding"
+	depends on BR2_PACKAGE_PYTHON
+	help
+	  Install kmod python bindings.
 
 endif

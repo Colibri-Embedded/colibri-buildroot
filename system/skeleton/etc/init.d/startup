@@ -21,7 +21,6 @@ case "$1" in
   start)
 	# Check if this is a fistboot.
 	if [ -e "/mnt/live/lib/firstboot" ]; then
-		echo "* debug: fistboot"
 		FIRSTBOOT=yes
 		rm -f /mnt/live/lib/firstboot
 	fi

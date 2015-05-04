@@ -17,11 +17,20 @@ COLIBRI_EARLYBOOT_LICENSE = GPLv3
 COLIBRI_EARLYBOOT_LICENSE_FILES = LICENCE
 
 #COLIBRI_EARLYBOOT_DEPENDENCIES = busybox-initramfs libc libuuid libblkid libsmartcols libacl libattr zlib liblzo ncurses readline parted fatresize fdisk btrfs-progs
-COLIBRI_EARLYBOOT_DEPENDENCIES = util-linux acl attr zlib lzo ncurses readline parted fatresize busybox-initramfs
+COLIBRI_EARLYBOOT_DEPENDENCIES = util-linux zlib lzo ncurses readline parted fatresize busybox-initramfs
 
-COLIBRI_EARLYBOOT_IMPORT = util-linux acl attr zlib lzo ncurses readline parted fatresize
+COLIBRI_EARLYBOOT_IMPORT = util-linux zlib lzo ncurses readline parted fatresize
 
 COLIBRI_EARLYBOOT_TEMP_DIR = $(@D)/colibri-earlyboot-temp
+
+ifeq ($(BR2_TARGET_COLIBRI_EARLYBOOT_SUPPORT_EXT4),y)
+COLIBRI_EARLYBOOT_DEPENDENCIES += e2fsprogs
+endif
+
+ifeq ($(BR2_TARGET_COLIBRI_EARLYBOOT_SUPPORT_BTRFS),y)
+COLIBRI_EARLYBOOT_DEPENDENCIES += btrfs-progs
+COLIBRI_EARLYBOOT_IMPORT += acl attr
+endif
 
 define COLIBRI_EARLYBOOT_BUILD_CMDS
 	mkdir -p $(COLIBRI_EARLYBOOT_TEMP_DIR)
@@ -57,10 +66,26 @@ define COLIBRI_EARLYBOOT_POST_INSTALL
 	$(COLIBRI_EARLYBOOT_FAKEROOT) -- rm -rf $(COLIBRI_EARLYBOOT_TARGET_DIR)/usr/lib/pkgconfig
 	$(COLIBRI_EARLYBOOT_FAKEROOT) -- rm -rf $(COLIBRI_EARLYBOOT_TARGET_DIR)/lib/*.{a,la}
 	$(COLIBRI_EARLYBOOT_FAKEROOT) -- rm -rf $(COLIBRI_EARLYBOOT_TARGET_DIR)/usr/lib/*.{a,la}
+endef
+
+COLIBRI_EARLYBOOT_POST_INSTALL_TARGET_HOOKS += COLIBRI_EARLYBOOT_POST_INSTALL
+
+define COLIBRI_EARLYBOOT_CREATE_INITRAMFS_IMG
+	echo "#!/bin/bash" > $(@D)/create_initramfs.sh
+	echo "cd $(COLIBRI_EARLYBOOT_TEMP_DIR)" >> $(@D)/create_initramfs.sh
+	echo "find . -print | cpio -o -H newc 2>/dev/null | $(XZ) -f --extreme --check=crc32  > $(SDCARD_DIR)/initramfs.img" >> $(@D)/create_initramfs.sh
+	chmod +x $(@D)/create_initramfs.sh
+	$(COLIBRI_EARLYBOOT_FAKEROOT) -- $(@D)/create_initramfs.sh
+	#rm $(@D)/create_initramfs.sh
+endef
+
+COLIBRI_EARLYBOOT_POST_INSTALL_TARGET_HOOKS += COLIBRI_EARLYBOOT_CREATE_INITRAMFS_IMG
+
+define COLIBRI_EARLYBOOT_POST_INSTALL_CLENUP
 #	Remove temporary directory
 	rm -rf $(COLIBRI_EARLYBOOT_TEMP_DIR)
 endef
 
-COLIBRI_EARLYBOOT_POST_INSTALL_TARGET_HOOKS += COLIBRI_EARLYBOOT_POST_INSTALL
+COLIBRI_EARLYBOOT_POST_INSTALL_TARGET_HOOKS += COLIBRI_EARLYBOOT_POST_INSTALL_CLENUP
 
 $(eval $(generic-package))
