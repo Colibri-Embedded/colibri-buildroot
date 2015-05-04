@@ -43,7 +43,7 @@ endef
 define COLIBRI_EARLYBOOT_INSTALL_TARGET_CMDS
 #	Install ealyboot files
 	$(COLIBRI_EARLYBOOT_FAKEROOT) -- $(MAKE1) -C $(@D) DESTDIR=$(COLIBRI_EARLYBOOT_TARGET_DIR) install
-	$(INSTALL) -D -m 0755 $(@D)/earlyboot.conf $(SDCARD_DIR)/earlyboot/earlyboot.conf
+	$(INSTALL) -D -m 0644 $(@D)/earlyboot.conf $(SDCARD_DIR)/earlyboot/earlyboot.conf
 endef
 
 define COLIBRI_EARLYBOOT_POST_INSTALL
@@ -76,7 +76,7 @@ define COLIBRI_EARLYBOOT_CREATE_INITRAMFS_IMG
 	echo "find . -print | cpio -o -H newc 2>/dev/null | $(XZ) -f --extreme --check=crc32  > $(SDCARD_DIR)/initramfs.img" >> $(@D)/create_initramfs.sh
 	chmod +x $(@D)/create_initramfs.sh
 	$(COLIBRI_EARLYBOOT_FAKEROOT) -- $(@D)/create_initramfs.sh
-	#rm $(@D)/create_initramfs.sh
+	rm $(@D)/create_initramfs.sh
 endef
 
 COLIBRI_EARLYBOOT_POST_INSTALL_TARGET_HOOKS += COLIBRI_EARLYBOOT_CREATE_INITRAMFS_IMG
