@@ -9,9 +9,9 @@ define initramfs-import-package
 	$($(1)_FAKEROOT) $(TAR) --overwrite -C $(3) -xf $($(2)_TARGET_ARCHIVE);
 endef
 
-#COLIBRI_EARLYBOOT_SITE = $(call github,Colibri-Embedded,colibri-earlyboot,$(COLIBRI_EARLYBOOT_VERSION))
-COLIBRI_EARLYBOOT_SITE=$(BR2_EXTERNAL)/../colibri-earlyboot
-COLIBRI_EARLYBOOT_SITE_METHOD = local
+COLIBRI_EARLYBOOT_SITE = $(call github,Colibri-Embedded,colibri-earlyboot,$(COLIBRI_EARLYBOOT_VERSION))
+#COLIBRI_EARLYBOOT_SITE=$(BR2_EXTERNAL)/../colibri-earlyboot
+#COLIBRI_EARLYBOOT_SITE_METHOD = local
 
 COLIBRI_EARLYBOOT_LICENSE = GPLv3
 COLIBRI_EARLYBOOT_LICENSE_FILES = LICENCE
