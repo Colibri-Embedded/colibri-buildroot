@@ -94,9 +94,11 @@ define LIGHTTPD_INSTALL_CONFIG
 	$(LIGHTTPD_FAKEROOT) $(INSTALL) -d -m 0755 $(LIGHTTPD_TARGET_DIR)/etc/lighttpd/conf-enabled
 	$(LIGHTTPD_FAKEROOT) $(INSTALL) -d -o 33 -g 33 -m 0755 $(LIGHTTPD_TARGET_DIR)/var/www
 	$(LIGHTTPD_FAKEROOT) $(INSTALL) -d -o 33 -g 33 -m 0755 $(LIGHTTPD_TARGET_DIR)/var/cache/lighttpd
+	$(LIGHTTPD_FAKEROOT) $(INSTALL) -d -o 33 -g 33 -m 0755 $(LIGHTTPD_TARGET_DIR)/var/log/lighttpd
 
 	$(LIGHTTPD_FAKEROOT) chown 33.33 $(LIGHTTPD_TARGET_DIR)/var/www
 	$(LIGHTTPD_FAKEROOT) chown 33.33 $(LIGHTTPD_TARGET_DIR)/var/cache/lighttpd
+	$(LIGHTTPD_FAKEROOT) chown 33.33 $(LIGHTTPD_TARGET_DIR)/var/log/lighttpd
 
 	$(LIGHTTPD_FAKEROOT) $(INSTALL) -D -m 0644 package/lighttpd/lighttpd.conf \
 		$(LIGHTTPD_TARGET_DIR)/etc/lighttpd/lighttpd.conf
