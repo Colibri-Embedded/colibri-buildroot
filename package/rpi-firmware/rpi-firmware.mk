@@ -10,6 +10,7 @@ RPI_FIRMWARE_LICENSE = BSD-3c
 RPI_FIRMWARE_LICENSE_FILES = boot/LICENCE.broadcom
 RPI_FIRMWARE_INSTALL_TARGET = NO
 RPI_FIRMWARE_INSTALL_IMAGES = YES
+RPI_FIRMWARE_INSTALL_SDCARD = YES
 
 ifeq ($(BR2_PACKAGE_RPI_FIRMWARE_INSTALL_DTBS),y)
 RPI_FIRMWARE_DEPENDENCIES += host-rpi-firmware
@@ -24,6 +25,13 @@ define RPI_FIRMWARE_INSTALL_DTB
 		$(INSTALL) -D -m 0644 $${ovldtb} $(BINARIES_DIR)/rpi-firmware/overlays/$${ovldtb##*/} || exit 1; \
 	done
 endef
+define RPI_FIRMWARE_INSTALL_DTB_SDCARD
+	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2708-rpi-b.dtb $(SDCARD_DIR)/bcm2708-rpi-b.dtb
+	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2708-rpi-b-plus.dtb $(SDCARD_DIR)/bcm2708-rpi-b-plus.dtb
+	for ovldtb in  $(@D)/boot/overlays/*.dtb; do \
+		$(INSTALL) -D -m 0644 $${ovldtb} $(SDCARD_DIR)/overlays/$${ovldtb##*/} || exit 1; \
+	done
+endef
 endif
 
 define RPI_FIRMWARE_INSTALL_IMAGES_CMDS
@@ -33,6 +41,15 @@ define RPI_FIRMWARE_INSTALL_IMAGES_CMDS
 	$(INSTALL) -D -m 0644 package/rpi-firmware/config.txt $(BINARIES_DIR)/rpi-firmware/config.txt
 	$(INSTALL) -D -m 0644 package/rpi-firmware/cmdline.txt $(BINARIES_DIR)/rpi-firmware/cmdline.txt
 	$(RPI_FIRMWARE_INSTALL_DTB)
+endef
+
+define RPI_FIRMWARE_INSTALL_SDCARD_CMDS
+	$(INSTALL) -D -m 0644 $(@D)/boot/bootcode.bin $(SDCARD_DIR)/bootcode.bin
+	$(INSTALL) -D -m 0644 $(@D)/boot/start$(BR2_PACKAGE_RPI_FIRMWARE_BOOT).elf $(SDCARD_DIR)/start.elf
+	$(INSTALL) -D -m 0644 $(@D)/boot/fixup$(BR2_PACKAGE_RPI_FIRMWARE_BOOT).dat $(SDCARD_DIR)/fixup.dat
+	$(INSTALL) -D -m 0644 package/rpi-firmware/config.txt $(SDCARD_DIR)/config.txt
+	$(INSTALL) -D -m 0644 package/rpi-firmware/cmdline.txt $(SDCARD_DIR)/cmdline.txt
+	$(RPI_FIRMWARE_INSTALL_DTB_SDCARD)
 endef
 
 # We have no host sources to get, since we already

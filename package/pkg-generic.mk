@@ -227,6 +227,16 @@ $(BUILD_DIR)/%/.stamp_images_installed:
 	$(foreach hook,$($(PKG)_POST_INSTALL_IMAGES_HOOKS),$(call $(hook))$(sep))
 	$(Q)touch $@
 	@$(call step_end,install-image)
+	
+# Install to sdcard dir
+$(BUILD_DIR)/%/.stamp_sdcard_installed:
+	@$(call step_start,install-sdcards)
+	$(foreach hook,$($(PKG)_PRE_INSTALL_SDCARD_HOOKS),$(call $(hook))$(sep))
+	@$(call MESSAGE,"Installing to sdcard directory")
+	+$($(PKG)_INSTALL_SDCARD_CMDS)
+	$(foreach hook,$($(PKG)_POST_INSTALL_SDCARD_HOOKS),$(call $(hook))$(sep))
+	$(Q)touch $@
+	@$(call step_end,install-sdcards)
 
 # Install to target dir
 $(BUILD_DIR)/%/.stamp_target_installed:
@@ -460,6 +470,7 @@ $(2)_FINAL_DEPENDENCIES = $$(sort $$($(2)_DEPENDENCIES))
 
 $(2)_INSTALL_STAGING		?= NO
 $(2)_INSTALL_IMAGES		?= NO
+$(2)_INSTALL_SDCARD		?= NO
 $(2)_INSTALL_TARGET		?= YES
 $(2)_ARCHIVE_TARGET		?= YES
 
@@ -467,6 +478,7 @@ $(2)_ARCHIVE_TARGET		?= YES
 $(2)_TARGET_INSTALL_TARGET =	$$($(2)_DIR)/.stamp_target_installed
 $(2)_TARGET_INSTALL_STAGING =	$$($(2)_DIR)/.stamp_staging_installed
 $(2)_TARGET_INSTALL_IMAGES =	$$($(2)_DIR)/.stamp_images_installed
+$(2)_TARGET_INSTALL_SDCARD =	$$($(2)_DIR)/.stamp_sdcard_installed
 $(2)_TARGET_INSTALL_HOST =      $$($(2)_DIR)/.stamp_host_installed
 $(2)_TARGET_ARCHIVE_TARGET =	$$($(2)_DIR)/.stamp_target_archived
 $(2)_TARGET_BUILD =		$$($(2)_DIR)/.stamp_built
@@ -504,6 +516,8 @@ $(2)_PRE_INSTALL_TARGET_HOOKS   ?=
 $(2)_POST_INSTALL_TARGET_HOOKS  ?=
 $(2)_PRE_INSTALL_IMAGES_HOOKS   ?=
 $(2)_POST_INSTALL_IMAGES_HOOKS  ?=
+$(2)_PRE_INSTALL_SDCARD_HOOKS   ?=
+$(2)_POST_INSTALL_SDCARD_HOOKS  ?=
 $(2)_PRE_LEGAL_INFO_HOOKS       ?=
 $(2)_POST_LEGAL_INFO_HOOKS      ?=
 
@@ -513,7 +527,7 @@ $(1):			$(1)-install
 ifeq ($$($(2)_TYPE),host)
 $(1)-install:	        $(1)-install-host
 else
-$(1)-install:		$(1)-install-staging $(1)-install-target $(1)-install-images
+$(1)-install:		$(1)-install-staging $(1)-install-target $(1)-install-images $(1)-install-sdcard
 endif
 
 ifeq ($$($(2)_INSTALL_TARGET),YES)
@@ -537,6 +551,13 @@ $(1)-install-images:		$$($(2)_TARGET_INSTALL_IMAGES)
 $$($(2)_TARGET_INSTALL_IMAGES):	$$($(2)_TARGET_BUILD)
 else
 $(1)-install-images:
+endif
+
+ifeq ($$($(2)_INSTALL_SDCARD),YES)
+$(1)-install-sdcard:		$$($(2)_TARGET_INSTALL_SDCARD)
+$$($(2)_TARGET_INSTALL_SDCARD):	$$($(2)_TARGET_BUILD)
+else
+$(1)-install-sdcard:
 endif
 
 $(1)-install-host:      	$$($(2)_TARGET_INSTALL_HOST)
@@ -635,6 +656,7 @@ $(1)-reconfigure:	$(1)-clean-for-reconfigure $(1)
 $$($(2)_TARGET_INSTALL_TARGET):		PKG=$(2)
 $$($(2)_TARGET_INSTALL_STAGING):	PKG=$(2)
 $$($(2)_TARGET_INSTALL_IMAGES):		PKG=$(2)
+$$($(2)_TARGET_INSTALL_SDCARD):		PKG=$(2)
 $$($(2)_TARGET_INSTALL_HOST):           PKG=$(2)
 $$($(2)_TARGET_BUILD):			PKG=$(2)
 $$($(2)_TARGET_CONFIGURE):		PKG=$(2)
