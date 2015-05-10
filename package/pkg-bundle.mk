@@ -686,11 +686,10 @@ $(2)_BUNDLE_IMAGE_HASH = $$($(2)_BUNDLE_IMAGE).md5sum
 # Add dependency against the provider
 $(2)_DEPENDENCIES += $$(call qstrip,$$($(2)_PACKAGES)) host-squashfs
 
-#~ ifeq ($(2)_ADD_ROOTFS,YES)
-#~ 	$(2)_DEPENDENCIES += rootfs-tar
-#~ endif
+ifeq ($($(2)_ADD_ROOTFS),YES)
+	$(2)_DEPENDENCIES += rootfs-tar
+endif
 
-#
 # Target installation step. Only define it if not already defined by
 # the package .mk file.
 #
