@@ -37,7 +37,7 @@ COLIBRI_EARLYBOOT_TEMP_IMPORT += util-linux
 COLIBRI_EARLYBOOT_FULL_IMPORT += busybox-initramfs zlib lzo ncurses readline parted fatresize
 
 # Combine all used packages and remove duplicates
-COLIBRI_EARLYBOOT_DEPENDENCIES = $(sort $(COLIBRI_EARLYBOOT_TEMP_IMPORT) $(COLIBRI_EARLYBOOT_FULL_IMPORT) rootfs-tar) 
+COLIBRI_EARLYBOOT_DEPENDENCIES = $(sort $(COLIBRI_EARLYBOOT_TEMP_IMPORT) $(COLIBRI_EARLYBOOT_FULL_IMPORT) colibri-earlyboot-rootfs) 
 
 # Temp folder used for partialy used packages
 COLIBRI_EARLYBOOT_TEMP_DIR = $(@D)/colibri-earlyboot-temp

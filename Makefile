@@ -636,10 +636,12 @@ target-post-image: $(TARGETS_ROOTFS) target-finalize
 	@$(foreach s, $(call qstrip,$(BR2_ROOTFS_POST_IMAGE_SCRIPT)), \
 		$(call MESSAGE,"Executing post-image script $(s)"); \
 		$(EXTRA_ENV) $(s) $(BINARIES_DIR) $(call qstrip,$(BR2_ROOTFS_POST_SCRIPT_ARGS))$(sep))
-		
-colibri-rootfs: target-post-image
 
-colibri-bundles: colibri-rootfs $(BUNDLES)
+colibri-earlyboot-rootfs: target-post-image
+
+colibri-finalize: target-finalize rootfs-tar
+
+colibri-bundles: colibri-finalize $(BUNDLES)
 
 source: $(TARGETS_SOURCE) $(HOST_SOURCE)
 
