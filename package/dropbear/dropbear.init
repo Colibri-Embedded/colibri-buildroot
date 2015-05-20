@@ -26,6 +26,12 @@ DAEMON=/usr/sbin/dropbear
 
 case "$1" in
 	start)
+		if [ ! -e /etc/dropbear/dropbear_dss_host_key ] ; then
+			boot_msg "Creating Dropbear host keys."
+			dropbearkey -t dss -f /etc/dropbear/dropbear_dss_host_key &> /dev/null
+			dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key &> /dev/null
+			evaluate_retval
+		fi
 		boot_msg "Starting dropbear sshd."
 		start-stop-daemon -S -q --exec $DAEMON -- $DROPBEAR_ARGS
 		evaluate_retval

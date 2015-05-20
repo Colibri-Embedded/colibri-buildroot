@@ -1,6 +1,31 @@
 # /etc/profile
+
 PATH=/bin:/sbin:/usr/bin:/usr/sbin
 LD_LIBRARY_PATH=/lib:/usr/lib
-PS1="[\u@\h \W]"
-export PATH LD_LIBRARY_PATH PS1
 
+if [ "$PS1" ]; then
+  if [ "$BASH" ] && [ "$BASH" != "/bin/sh" ]; then
+    # The file bashrc already sets the default PS1.
+    # PS1='\h:\w\$ '
+    if [ -f /etc/bashrc ]; then
+      . /etc/bashrc
+    fi
+  else
+    if [ "`id -u`" -eq 0 ]; then
+      PS1='# '
+    else
+      PS1='$ '
+    fi
+  fi
+fi
+
+if [ -d /etc/profile.d ]; then
+  for i in /etc/profile.d/*.sh; do
+    if [ -r $i ]; then
+      . $i
+    fi
+  done
+  unset i
+fi
+
+export PATH LD_LIBRARY_PATH PS1

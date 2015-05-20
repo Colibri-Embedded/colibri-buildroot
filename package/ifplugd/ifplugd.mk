@@ -21,19 +21,19 @@ ifeq ($(BR2_PACKAGE_BUSYBOX),y)
 endif
 
 define IFPLUGD_INSTALL_FIXUP
-	$(INSTALL) -D -m 0644 $(@D)/conf/ifplugd.conf $(IFPLUGD_TARGET_DIR)/etc/ifplugd/ifplugd.conf; \
-	$(SED) 's^\(ARGS=.*\)w^\1^' $(IFPLUGD_TARGET_DIR)/etc/ifplugd/ifplugd.conf; \
-	$(INSTALL) -D -m 0755 $(@D)/conf/ifplugd.action \
+	$(IFPLUGD_FAKEROOT) $(INSTALL) -D -m 0644 $(@D)/conf/ifplugd.conf $(IFPLUGD_TARGET_DIR)/etc/ifplugd/ifplugd.conf
+	$(IFPLUGD_FAKEROOT) $(SED) 's^\(ARGS=.*\)w^\1^' $(IFPLUGD_TARGET_DIR)/etc/ifplugd/ifplugd.conf
+	$(IFPLUGD_FAKEROOT) $(INSTALL) -D -m 0755 $(@D)/conf/ifplugd.action \
 		$(IFPLUGD_TARGET_DIR)/etc/ifplugd/ifplugd.action
 endef
 
 IFPLUGD_POST_INSTALL_TARGET_HOOKS += IFPLUGD_INSTALL_FIXUP
 
 define IFPLUGD_INSTALL_INIT_SYSV
-	$(INSTALL) -D -m 0755 $(@D)/conf/ifplugd.init \
+	$(IFPLUGD_FAKEROOT) $(INSTALL) -D -m 0755 $(@D)/conf/ifplugd.init \
 		$(IFPLUGD_TARGET_DIR)/etc/init.d/S45ifplugd
 	# don't use bash for init script
-	$(SED) 's^/bin/bash^/bin/sh^g' $(IFPLUGD_TARGET_DIR)/etc/init.d/S45ifplugd
+	$(IFPLUGD_FAKEROOT) $(SED) 's^/bin/bash^/bin/sh^g' $(IFPLUGD_TARGET_DIR)/etc/init.d/S45ifplugd
 endef
 
 $(eval $(autotools-package))
