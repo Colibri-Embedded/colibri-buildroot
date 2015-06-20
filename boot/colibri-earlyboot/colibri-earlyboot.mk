@@ -9,9 +9,9 @@ define initramfs-import-package
 	$($(1)_FAKEROOT) $(TAR) --overwrite -C $(3) -xf $($(2)_TARGET_ARCHIVE);
 endef
 
-COLIBRI_EARLYBOOT_SITE = $(call github,Colibri-Embedded,colibri-earlyboot,$(COLIBRI_EARLYBOOT_VERSION))
-#COLIBRI_EARLYBOOT_SITE=$(BR2_EXTERNAL)/../colibri-earlyboot
-#COLIBRI_EARLYBOOT_SITE_METHOD = local
+#COLIBRI_EARLYBOOT_SITE = $(call github,Colibri-Embedded,colibri-earlyboot,$(COLIBRI_EARLYBOOT_VERSION))
+COLIBRI_EARLYBOOT_SITE=$(BR2_EXTERNAL)/../colibri-earlyboot
+COLIBRI_EARLYBOOT_SITE_METHOD = local
 
 COLIBRI_EARLYBOOT_LICENSE = GPLv3
 COLIBRI_EARLYBOOT_LICENSE_FILES = LICENCE
@@ -37,7 +37,7 @@ COLIBRI_EARLYBOOT_TEMP_IMPORT += util-linux
 COLIBRI_EARLYBOOT_FULL_IMPORT += busybox-initramfs zlib lzo ncurses readline parted fatresize
 
 # Combine all used packages and remove duplicates
-COLIBRI_EARLYBOOT_DEPENDENCIES = $(sort $(COLIBRI_EARLYBOOT_TEMP_IMPORT) $(COLIBRI_EARLYBOOT_FULL_IMPORT) colibri-earlyboot-rootfs) 
+COLIBRI_EARLYBOOT_DEPENDENCIES = $(sort $(COLIBRI_EARLYBOOT_TEMP_IMPORT) $(COLIBRI_EARLYBOOT_FULL_IMPORT) rootfs-tar ) 
 
 # Temp folder used for partialy used packages
 COLIBRI_EARLYBOOT_TEMP_DIR = $(@D)/colibri-earlyboot-temp
@@ -46,6 +46,7 @@ define COLIBRI_EARLYBOOT_BUILD_CMDS
 	mkdir -p $(COLIBRI_EARLYBOOT_TEMP_DIR)
 #	Extract rootfs content to get libc libraries
 	$(COLIBRI_EARLYBOOT_FAKEROOT) $(TAR) --overwrite -C $(COLIBRI_EARLYBOOT_TEMP_DIR) -xf $(BINARIES_DIR)/rootfs.tar
+	rm $(BINARIES_DIR)/rootfs.tar
 # 	Extract content of other packages
 	$(foreach impkg,$(COLIBRI_EARLYBOOT_TEMP_IMPORT),$(call initramfs-import-package,COLIBRI_EARLYBOOT,$(call UPPERCASE,$(impkg)), $(COLIBRI_EARLYBOOT_TEMP_DIR)))
 endef
@@ -54,6 +55,7 @@ define COLIBRI_EARLYBOOT_INSTALL_TARGET_CMDS
 #	Install ealyboot files
 	$(COLIBRI_EARLYBOOT_FAKEROOT) -- $(MAKE1) -C $(@D) DESTDIR=$(COLIBRI_EARLYBOOT_TARGET_DIR) install
 	$(INSTALL) -D -m 0644 $(@D)/earlyboot.conf $(SDCARD_DIR)/earlyboot/earlyboot.conf
+	$(INSTALL) -D -m 0644 $(@D)/product.sh $(SDCARD_DIR)/earlyboot/product.sh
 endef
 
 define COLIBRI_EARLYBOOT_POST_INSTALL

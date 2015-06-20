@@ -7,5 +7,7 @@
 alias l.='ls -d .* --color=auto'
 alias ll='ls -lsh'
 alias ls='ls --color=auto'
+alias la='ll -a'
+alias back='cd $OLDPWD'
 
 PS1='[\u@\h \W] '

@@ -90,7 +90,24 @@ warning_msg()
 
 boot_msg()
 {
-    echo -e "${EMPTY_PREFIX} ${@}"
+	ECHOPARAM=""
+	while true
+	do
+		case "${1}" in
+			-n)
+				ECHOPARAM=" -n "
+				shift 1
+				;;
+			-*)
+				echo "Unknown Option: ${1}"
+				return 1
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+    echo ${ECHOPARAM} -e "${EMPTY_PREFIX} ${@}"
 }
 
 is_success()

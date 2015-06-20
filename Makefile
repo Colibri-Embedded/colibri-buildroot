@@ -571,29 +571,27 @@ endef
 TARGET_FINALIZE_HOOKS += PURGE_LOCALES
 endif
 
-$(TARGETS_ROOTFS): target-finalize
-
 target-finalize: $(TARGETS)
 	@$(call MESSAGE,"Finalizing target directory")
 	$(foreach hook,$(TARGET_FINALIZE_HOOKS),$($(hook))$(sep))
-	rm -rf $(TARGET_DIR)/usr/include $(TARGET_DIR)/usr/share/aclocal \
-		$(TARGET_DIR)/usr/lib/pkgconfig $(TARGET_DIR)/usr/share/pkgconfig \
-		$(TARGET_DIR)/usr/lib/cmake $(TARGET_DIR)/usr/share/cmake
-	find $(TARGET_DIR)/usr/{lib,share}/ -name '*.cmake' -print0 | xargs -0 rm -f
-	find $(TARGET_DIR)/lib \( -name '*.a' -o -name '*.la' \) -print0 | xargs -0 rm -f
-	find $(TARGET_DIR)/usr/lib \( -name '*.a' -o -name '*.la' \) -print0 | xargs -0 rm -f
-ifneq ($(BR2_PACKAGE_GDB),y)
-	rm -rf $(TARGET_DIR)/usr/share/gdb
-endif
-	rm -rf $(TARGET_DIR)/usr/man $(TARGET_DIR)/usr/share/man
-	rm -rf $(TARGET_DIR)/usr/info $(TARGET_DIR)/usr/share/info
-	rm -rf $(TARGET_DIR)/usr/doc $(TARGET_DIR)/usr/share/doc
-	rm -rf $(TARGET_DIR)/usr/share/gtk-doc
-	-rmdir $(TARGET_DIR)/usr/share 2>/dev/null
-	$(STRIP_FIND_CMD) | xargs $(STRIPCMD) 2>/dev/null || true
-	if test -d $(TARGET_DIR)/lib/modules; then \
-		find $(TARGET_DIR)/lib/modules -type f -name '*.ko' | \
-		xargs -r $(KSTRIPCMD); fi
+#~ 	rm -rf $(TARGET_DIR)/usr/include $(TARGET_DIR)/usr/share/aclocal \
+#~ 		$(TARGET_DIR)/usr/lib/pkgconfig $(TARGET_DIR)/usr/share/pkgconfig \
+#~ 		$(TARGET_DIR)/usr/lib/cmake $(TARGET_DIR)/usr/share/cmake
+#~ 	find $(TARGET_DIR)/usr/{lib,share}/ -name '*.cmake' -print0 | xargs -0 rm -f
+#~ 	find $(TARGET_DIR)/lib \( -name '*.a' -o -name '*.la' \) -print0 | xargs -0 rm -f
+#~ 	find $(TARGET_DIR)/usr/lib \( -name '*.a' -o -name '*.la' \) -print0 | xargs -0 rm -f
+#~ ifneq ($(BR2_PACKAGE_GDB),y)
+#~ 	rm -rf $(TARGET_DIR)/usr/share/gdb
+#~ endif
+#~ 	rm -rf $(TARGET_DIR)/usr/man $(TARGET_DIR)/usr/share/man
+#~ 	rm -rf $(TARGET_DIR)/usr/info $(TARGET_DIR)/usr/share/info
+#~ 	rm -rf $(TARGET_DIR)/usr/doc $(TARGET_DIR)/usr/share/doc
+#~ 	rm -rf $(TARGET_DIR)/usr/share/gtk-doc
+#~ 	-rmdir $(TARGET_DIR)/usr/share 2>/dev/null
+#~ 	$(STRIP_FIND_CMD) | xargs $(STRIPCMD) 2>/dev/null || true
+#~ 	if test -d $(TARGET_DIR)/lib/modules; then \
+#~ 		find $(TARGET_DIR)/lib/modules -type f -name '*.ko' | \
+#~ 		xargs -r $(KSTRIPCMD); fi
 
 # See http://sourceware.org/gdb/wiki/FAQ, "GDB does not see any threads
 # besides the one in which crash occurred; or SIGTRAP kills my program when
@@ -632,14 +630,12 @@ endif
 		$(call MESSAGE,"Executing post-build script $(s)"); \
 		$(EXTRA_ENV) $(s) $(TARGET_DIR) $(call qstrip,$(BR2_ROOTFS_POST_SCRIPT_ARGS))$(sep))
 
-target-post-image: $(TARGETS_ROOTFS) target-finalize
+target-post-image: target-finalize $(TARGETS_ROOTFS)
 	@$(foreach s, $(call qstrip,$(BR2_ROOTFS_POST_IMAGE_SCRIPT)), \
 		$(call MESSAGE,"Executing post-image script $(s)"); \
 		$(EXTRA_ENV) $(s) $(BINARIES_DIR) $(call qstrip,$(BR2_ROOTFS_POST_SCRIPT_ARGS))$(sep))
 
-colibri-earlyboot-rootfs: target-post-image
-
-colibri-finalize: target-finalize rootfs-tar
+colibri-finalize: target-post-image
 
 colibri-bundles: colibri-finalize $(BUNDLES)
 

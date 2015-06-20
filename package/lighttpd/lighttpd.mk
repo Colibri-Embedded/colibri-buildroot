@@ -120,6 +120,9 @@ done
 	$(LIGHTTPD_FAKEROOT) ln -fs ../conf-available/01-mime.conf \
 		$(LIGHTTPD_TARGET_DIR)/etc/lighttpd/conf-enabled/01-mime.conf
 
+	$(LIGHTTPD_FAKEROOT) ln -fs ../conf-available/10-accesslog.conf \
+		$(LIGHTTPD_TARGET_DIR)/etc/lighttpd/conf-enabled/01-accesslog.conf
+		
 endef
 
 LIGHTTPD_POST_INSTALL_TARGET_HOOKS += LIGHTTPD_INSTALL_CONFIG

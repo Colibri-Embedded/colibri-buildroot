@@ -222,15 +222,19 @@ $(eval $(autotools-package))
 $(eval $(host-autotools-package))
 
 ifeq ($(BR2_PACKAGE_PYTHON_PYC_ONLY),y)
-define PYTHON_FINALIZE_TARGET
-	find $(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR) -name '*.py' -print0 | xargs -0 rm -f
+define PYTHON_FINALIZE_TARGET_REMOVE_PY
+	$(PYTHON_FAKEROOT) $(PYTHON_FAKEROOT_ENV) find $(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR) -name '*.py' -delete
 endef
+
+PYTHON_POST_INSTALL_TARGET_HOOKS += PYTHON_FINALIZE_TARGET_REMOVE_PY
+
 endif
 
 ifeq ($(BR2_PACKAGE_PYTHON_PY_ONLY),y)
-define PYTHON_FINALIZE_TARGET
-	find $(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR) -name '*.pyc' -print0 | xargs -0 rm -f
+define PYTHON_FINALIZE_TARGET_REMOVE_PYC
+	$(PYTHON_FAKEROOT) $(PYTHON_FAKEROOT_ENV) find $(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR) -name '*.pyc' -delete
 endef
-endif
 
-TARGET_FINALIZE_HOOKS += PYTHON_FINALIZE_TARGET
+PYTHON_POST_INSTALL_TARGET_HOOKS += PYTHON_FINALIZE_TARGET_REMOVE_PYC
+
+endif

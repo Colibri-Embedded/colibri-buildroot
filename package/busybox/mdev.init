@@ -4,9 +4,9 @@
 #
 # Description : 
 # 
-# Authors     :
+# Authors     : Daniel Kesler
 # 
-# Version     : 00.00
+# Version     : 1.00
 #
 # Notes       :
 #
@@ -19,8 +19,29 @@ case "$1" in
   start)
     boot_msg "Starting mdev."
 	echo /sbin/mdev >/proc/sys/kernel/hotplug
+	### Hotplug ###
 	/sbin/mdev -s
 	evaluate_retval
+	
+	### Coldplug ###
+	# Handle devices that were present on system boot
+	
+	boot_msg "Updating network and usb devices."
+	
+	# Populate network interfaces
+	for i in /sys/class/net*/uevent; do printf 'add' > "$i"; done 2>/dev/null; unset i
+
+	# Populate usb devices
+	for i in /sys/bus/usb/devices/*; do
+	  case "${i##*/}" in
+		[0-9]*-[0-9]*)
+		  printf 'add' > "$i/uevent"
+	  esac
+	done; unset i
+	
+	true
+	evaluate_retval
+	
 	;;
   *)
 	echo "Usage: $0 {start}"

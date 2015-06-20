@@ -582,21 +582,46 @@ endef
 
 ifeq ($(BR2_BR2_ROOTFS_REMOVE_DOCUMENTATION),y)
 define bundle-remove-documentation
-	rm -rf $(1)/usr/share/{doc,man,info,gtk-doc,aclocal}/*
+	$$($(2)_FAKEROOT) rm -rf $(1)/usr/share/{doc,man,info,gtk-doc,aclocal}/*
 endef
 endif
 
 ifeq ($(BR2_ROOTFS_REMOVE_DEVELOPMENT),y)
 define bundle-remove-development
-	rm -rf $(1)/usr/lib/cmake
-    rm -rf $(1)/usr/include/*
-    rm -rf $(1)/usr/lib/pkgconfig/*
-	rm -f $(1)/usr/lib/*.{a,la,sh,py}
-    rm -f $(1)/lib/*.{a,la,sh,py}
-    rm -f $(1)/usr/bin/*-config
-    rm -f $(1)/usr/bin/*_config
+	$$($(2)_FAKEROOT) rm -rf $(1)/usr/lib/cmake
+    $$($(2)_FAKEROOT) rm -rf $(1)/usr/include/*
+    $$($(2)_FAKEROOT) rm -rf $(1)/usr/lib/pkgconfig/*
+	$$($(2)_FAKEROOT) rm -f $(1)/usr/lib/*.{a,la,sh,py}
+    $$($(2)_FAKEROOT) rm -f $(1)/lib/*.{a,la,sh,py}
+    $$($(2)_FAKEROOT) rm -f $(1)/usr/bin/*-config
+    $$($(2)_FAKEROOT) rm -f $(1)/usr/bin/*_config
 endef
 endif
+
+#~ 	echo "#!/bin/bash" > $(@D)/create_initramfs.sh
+#~ 	echo "cd $(COLIBRI_EARLYBOOT_TARGET_DIR)" >> $(@D)/create_initramfs.sh
+#~ 	echo "find . -print | cpio -o -H newc 2>/dev/null | $(XZ) -f --extreme --check=crc32  > $(SDCARD_DIR)/initramfs.img" >> $(@D)/create_initramfs.sh
+#~ 	chmod +x $(@D)/create_initramfs.sh
+#~ 	$(COLIBRI_EARLYBOOT_FAKEROOT) -- $(@D)/create_initramfs.sh
+#~ 	rm $(@D)/create_initramfs.sh
+
+define bundle-strip-executables
+# Executables and libraries
+	echo "#!/bin/bash" > $$(@D)/strip_files.sh
+	echo "cd $(1)" >> $$(@D)/strip_files.sh
+#	echo "find . -print | cpio -o -H newc 2>/dev/null | $(XZ) -f --extreme --check=crc32  > $(SDCARD_DIR)/initramfs.img" >> $(@D)/create_initramfs.sh
+	echo "find $(1) -type f \( -name '*.so*' \) -not \( $(call findfileclauses,libpthread*.so* *.ko $(call qstrip,$(BR2_STRIP_EXCLUDE_FILES))) \) -print | xargs $(TARGET_STRIP) --strip-unneeded &> /dev/null  || true" >> $$(@D)/strip_files.sh
+	chmod +x $$(@D)/strip_files.sh
+	$$($(2)_FAKEROOT) -- $$(@D)/strip_files.sh
+	rm $$(@D)/strip_files.sh
+
+#	find $(1) -type f \( -name '*.so*' \) -not \( $(call findfileclauses,libpthread*.so* *.ko $(call qstrip,$(BR2_STRIP_EXCLUDE_FILES))) \) -print | xargs $(TARGET_STRIP) --strip-unneeded &> /dev/null  || true
+#	find $(1) -type f \( -name '*.so*' \) -not \( $(call findfileclauses,libpthread*.so* *.ko $(call qstrip,$(BR2_STRIP_EXCLUDE_FILES))) \) -print | xargs stat
+# Kernel modules	
+#~ 	if test -d $(TARGET_DIR)/lib/modules; then \
+#~ 		find $(1)/lib/modules -type f -name '*.ko' | \
+#~ 		xargs -r $(KSTRIPCMD); fi
+endef
 
 ifeq ($(BR2_TARGET_ROOTFS_COLIBRI_LZ4),y)
 BUNDLE_SQUASHFS_ARGS += -comp lz4
@@ -704,8 +729,9 @@ define $(2)_INSTALL_TARGET_CMDS
 	fi
 	$(foreach pkgname,$($(2)_PACKAGES),$(call bundle-install-package,$(2),$(call UPPERCASE,$(pkgname)), $$($(2)_TARGET_DIR)))
 	
-	$(call bundle-remove-documentation,$$($(2)_TARGET_DIR))
-	$(call bundle-remove-development,$$($(2)_TARGET_DIR))
+	$(call bundle-remove-documentation,$$($(2)_TARGET_DIR),$(2))
+	$(call bundle-remove-development,$$($(2)_TARGET_DIR),$(2))
+	$(call bundle-strip-executables,$$($(2)_TARGET_DIR),$(2))
 	
 	$$($(2)_FAKEROOT) $$($(2)_MKSQUASHFS) $$($(2)_TARGET_DIR) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) $(BUNDLE_SQUASHFS_ARGS) 
 	$$($(2)_MD5SUM) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) > $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE_HASH)

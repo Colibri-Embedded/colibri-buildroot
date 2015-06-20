@@ -2,6 +2,7 @@
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin
 LD_LIBRARY_PATH=/lib:/usr/lib
+BASH=/bin/bash
 
 if [ "$PS1" ]; then
   if [ "$BASH" ] && [ "$BASH" != "/bin/sh" ]; then

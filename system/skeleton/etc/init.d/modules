@@ -4,9 +4,10 @@
 #
 # Description : 
 # 
-# Authors     :
+# Authors     :	Daniel Kesler
+#               Zack Winkles (LFS-bootscripts)
 # 
-# Version     : 00.00
+# Version     : 1.00
 #
 # Notes       :
 #
@@ -14,20 +15,58 @@
 
 . /etc/default/rc
 . ${rc_functions}
+. /etc/default/modules
 
 # Assure that the kernel has module support.
 [ -e /proc/ksyms -o -e /proc/modules ] || exit 0
 
 case "$1" in
-  start)
- 	#boot_msg "Loading modules."
-	#
-	#evaluate_retval
-	;;
-  *)
-	echo "Usage: $0 {start}"
-	exit 1
+	start)
+		# If proc is mounted, find the current kernel message level
+		if [ -f /proc/sys/kernel/printk ]; then
+			prev_msg=$(cat /proc/sys/kernel/printk | awk '{print $1}')
+		else
+			prev_msg="6"
+		fi
+		
+		# Now set the message level to 1 to not make too much noise
+		dmesg -n 1
+		
+		boot_msg -n "Loading modules:"
+		for conf in $(find ${MODULES_LOAD_DIR} -name *.conf); do
+			exec 9>&0 < $conf
+			while read module args
+			do
+				# Ignore comments and blank lines
+				case ${module} in
+					""|\#*) continue ;;
+				esac
+				
+				# Attempt to load the module and pass
+				# any provided arguments.
+				modprobe ${module} ${args} &> /dev/null
+				
+				if [ ${?} -eq 0 ]; then
+					echo -n " ${module}"
+				else
+					failedmod="${failedmod} ${module}"
+				fi
+			done
+		done
+		echo
+		is_success
+		
+		if [ "${failedmod}" ]; then
+			boot_msg "Failed to load modules:${failedmod}"
+			is_failure
+		fi
+		
+		# Set the kernel message level back to it's previous value.
+		dmesg -n "${prev_msg}"
+		;;
+	*)
+		echo "Usage: $0 {start}"
+		exit 1
 esac
 
 exit $?
-
