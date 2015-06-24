@@ -1,0 +1,6 @@
+config BR2_PACKAGE_EARLYBOOT_UTILS
+	bool "earlyboot-utils"
+	help
+	  Bundle of utils used in the colibri-earlyboot.
+
+	  https://github.com/Colibri-Embedded/earlyboot-utils

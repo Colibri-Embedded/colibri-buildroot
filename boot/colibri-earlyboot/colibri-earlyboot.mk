@@ -34,19 +34,19 @@ endif
 # Packages where only some files are used in initramfs image
 COLIBRI_EARLYBOOT_TEMP_IMPORT += util-linux
 # Packages which full content is used in the initramfs image
-COLIBRI_EARLYBOOT_FULL_IMPORT += busybox-initramfs zlib lzo ncurses readline parted fatresize
+COLIBRI_EARLYBOOT_FULL_IMPORT += busybox-initramfs zlib lzo ncurses readline parted fatresize earlyboot-utils
 
 # Combine all used packages and remove duplicates
-COLIBRI_EARLYBOOT_DEPENDENCIES = $(sort $(COLIBRI_EARLYBOOT_TEMP_IMPORT) $(COLIBRI_EARLYBOOT_FULL_IMPORT) rootfs-tar ) 
+COLIBRI_EARLYBOOT_DEPENDENCIES = $(sort $(COLIBRI_EARLYBOOT_TEMP_IMPORT) $(COLIBRI_EARLYBOOT_FULL_IMPORT) ) 
 
 # Temp folder used for partialy used packages
 COLIBRI_EARLYBOOT_TEMP_DIR = $(@D)/colibri-earlyboot-temp
 
 define COLIBRI_EARLYBOOT_BUILD_CMDS
 	mkdir -p $(COLIBRI_EARLYBOOT_TEMP_DIR)
-#	Extract rootfs content to get libc libraries
-	$(COLIBRI_EARLYBOOT_FAKEROOT) $(TAR) --overwrite -C $(COLIBRI_EARLYBOOT_TEMP_DIR) -xf $(BINARIES_DIR)/rootfs.tar
-	rm $(BINARIES_DIR)/rootfs.tar
+#	Copy libc from TARGET_DIR
+	$(COLIBRI_EARLYBOOT_FAKEROOT) -- mkdir -p $(COLIBRI_EARLYBOOT_TEMP_DIR)/lib
+	$(COLIBRI_EARLYBOOT_FAKEROOT) -- cp $(TARGET_DIR)/lib/* $(COLIBRI_EARLYBOOT_TEMP_DIR)/lib
 # 	Extract content of other packages
 	$(foreach impkg,$(COLIBRI_EARLYBOOT_TEMP_IMPORT),$(call initramfs-import-package,COLIBRI_EARLYBOOT,$(call UPPERCASE,$(impkg)), $(COLIBRI_EARLYBOOT_TEMP_DIR)))
 endef
@@ -65,13 +65,6 @@ define COLIBRI_EARLYBOOT_POST_INSTALL
 	$(COLIBRI_EARLYBOOT_FAKEROOT) -- cp $(COLIBRI_EARLYBOOT_TEMP_DIR)/sbin/fdisk $(COLIBRI_EARLYBOOT_TARGET_DIR)/sbin
 #	Copy full packages
 	$(foreach impkg,$(COLIBRI_EARLYBOOT_FULL_IMPORT),$(call initramfs-import-package,COLIBRI_EARLYBOOT,$(call UPPERCASE,$(impkg)), $(COLIBRI_EARLYBOOT_TARGET_DIR)))
-#~ 	$(call initramfs-import-package,COLIBRI_EARLYBOOT,BUSYBOX_INITRAMFS, $(COLIBRI_EARLYBOOT_TARGET_DIR))
-#~ 	$(call initramfs-import-package,COLIBRI_EARLYBOOT,NCURSES, $(COLIBRI_EARLYBOOT_TARGET_DIR))
-#~ 	$(call initramfs-import-package,COLIBRI_EARLYBOOT,READLINE, $(COLIBRI_EARLYBOOT_TARGET_DIR))
-#~ 	$(call initramfs-import-package,COLIBRI_EARLYBOOT,ZLIB, $(COLIBRI_EARLYBOOT_TARGET_DIR))
-#~ 	$(call initramfs-import-package,COLIBRI_EARLYBOOT,LZO, $(COLIBRI_EARLYBOOT_TARGET_DIR))
-#~ 	$(call initramfs-import-package,COLIBRI_EARLYBOOT,PARTED, $(COLIBRI_EARLYBOOT_TARGET_DIR))
-#~ 	$(call initramfs-import-package,COLIBRI_EARLYBOOT,FATRESIZE, $(COLIBRI_EARLYBOOT_TARGET_DIR))
 	$(COLIBRI_EARLYBOOT_BTRFS_CMDS)
 #	Remove unused programs	
 	$(COLIBRI_EARLYBOOT_FAKEROOT) -- rm -rf $(COLIBRI_EARLYBOOT_TARGET_DIR)/usr/sbin/{parted,partprobe}
