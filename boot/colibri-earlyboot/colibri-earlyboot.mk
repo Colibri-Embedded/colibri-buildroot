@@ -3,7 +3,7 @@
 # colibri-earlyboot make target use live bundles
 #
 ################################################################################
-COLIBRI_EARLYBOOT_VERSION = e8ae59f575119e5417f8c663d9a02ae47579f996
+COLIBRI_EARLYBOOT_VERSION = aada38c3f3f43165e284099592dd162f95e10741
 
 define initramfs-import-package
 	$($(1)_FAKEROOT) $(TAR) --overwrite -C $(3) -xf $($(2)_TARGET_ARCHIVE);
