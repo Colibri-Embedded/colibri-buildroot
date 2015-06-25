@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "update" > /mnt/live/run/rc.earlyboot
+/etc/init.d/rc shutdown
+

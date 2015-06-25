@@ -25,20 +25,28 @@ case "$1" in
 	
 	boot_msg "Recording existing mounts in /etc/mtab."
 	> /etc/mtab
-	mount -f / || failed=1
+	mount -n -f / || failed=1
 	mount -f /proc || failed=1
 	mount -f /sys || failed=1
 	(exit ${failed})
 	evaluate_retval
 	
 	boot_msg "Mounting remaining file systems."
-	mount -a -O no_netdev &> /dev/null
+	if [ -x /etc/init.d/earlyboot.mount ]; then
+		/etc/init.d/earlyboot.mount
+	else
+		mount -a -O no_netdev &> /dev/null
+	fi
 	evaluate_retval
 	
 	;;
   stop)
 	boot_msg "Unmounting all other currently mounted file systems."
-	umount -a -d -r &> /dev/null	
+	if [ -x /etc/init.d/earlyboot.umount ]; then
+		/etc/init.d/earlyboot.umount
+	else
+		umount -a -d -r &> /dev/null
+	fi
 	evaluate_retval
 	;;
   *)

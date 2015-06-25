@@ -1,5 +1,5 @@
 #!/bin/sh
 
-echo "poweroff" > /mnt/live/run/rc.shutdown
+echo "poweroff" > /mnt/live/run/rc.earlyboot
 /etc/init.d/rc shutdown
 

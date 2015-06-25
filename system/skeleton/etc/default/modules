@@ -1,2 +1,2 @@
 MODULES_LOAD_DIR=/etc/modules-load.d
-
+MODULES_PRINTK_LEVEL=1

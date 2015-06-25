@@ -61,8 +61,12 @@ case "$1" in
 			is_failure
 		fi
 		
-		# Set the kernel message level back to it's previous value.
-		dmesg -n "${prev_msg}"
+		if [ "x$MODULES_PRINTK_LEVEL" != "x" ]; then
+			dmesg -n "${MODULES_PRINTK_LEVEL}" 
+		else
+			# Set the kernel message level back to it's previous value.
+			dmesg -n "${prev_msg}"
+		fi
 		;;
 	*)
 		echo "Usage: $0 {start}"
