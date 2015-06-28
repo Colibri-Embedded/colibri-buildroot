@@ -130,7 +130,7 @@ LIGHTTPD_POST_INSTALL_TARGET_HOOKS += LIGHTTPD_INSTALL_CONFIG
 define LIGHTTPD_INSTALL_INIT_SYSV
 	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/lighttpd/lighttpd.init \
 		$(LIGHTTPD_TARGET_DIR)/etc/init.d/lighttpd
-	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/lighttpd/lighttpd.default \
+	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -D -m 0644 package/lighttpd/lighttpd.default \
 		$(LIGHTTPD_TARGET_DIR)/etc/default/lighttpd
 		
 	$(LIGHTTPD_FAKEROOT) $(LIGHTTPD_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(LIGHTTPD_TARGET_DIR)/etc/rc.d/rc.startup.d	
