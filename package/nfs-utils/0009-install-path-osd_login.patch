@@ -1,0 +1,11 @@
+diff -rupN nfs-utils-1.2.6.orig/utils/osd_login/Makefile.am nfs-utils-1.2.6/utils/osd_login/Makefile.am
+--- nfs-utils-1.2.6.orig/utils/osd_login/Makefile.am	2012-05-14 16:40:52.000000000 +0200
++++ nfs-utils-1.2.6/utils/osd_login/Makefile.am	2015-06-27 21:21:39.228392474 +0200
+@@ -7,6 +7,6 @@ EXTRA_DIST= $(OSD_LOGIN_FILES)
+ all-local: $(OSD_LOGIN_FILES)
+ 
+ install-data-hook:
+-	$(INSTALL) --mode 755 osd_login $(DESTDIR)/sbin/osd_login
++	$(INSTALL) -D -m 0755 osd_login $(DESTDIR)/sbin/osd_login
+ 
+ MAINTAINERCLEANFILES = Makefile.in

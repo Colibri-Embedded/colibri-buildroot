@@ -1,0 +1,81 @@
+#!/bin/bash
+########################################################################
+#
+# mdev automounte helper.
+#
+# Copyright (C) 2015 Daniel Kesler <kesler.daniel@gmail.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#    
+########################################################################
+## @file 002-automount
+## @author Daniel Kesler <kesler.daniel@gmail.com>
+## @copyright GPLv2
+## @version 0.1
+########################################################################
+
+export MDEV=$1
+export ACTION=$2
+
+[ "${MDEV}" ] || exit 2
+
+mount_device() {
+	local UUID LABEL TYPE PPTYPE PARTLABEL PARTUUID
+	if command -v blkid >/dev/null 2>&1; then
+		local field name value
+		local blkid_output="$(blkid "/dev/${MDEV}")"
+		eval "${blkid_output#*: }"
+
+		if [ "x${LABEL}" == "x" ]; then
+			# if device LABEL is not available try to use UUID
+			if [ "x${UUID}" != "x" ]; then
+				LABEL="${UUID}"
+			else
+				LABEL="usb0"
+			fi
+		fi
+	fi
+
+	# If device has a filesystem TYPE it can be mounted
+	if [ -n "$TYPE" ]; then
+		M=$(mount | grep /dev/${MDEV})
+		# mount the device only if it is not mounted already
+		if [ -z "$M" ]; then
+			mkdir -p /media/${LABEL}
+			echo "/media/${LABEL}" > /run/.${MDEV}_mount_dir
+			mount /dev/${MDEV} /media/${LABEL}
+		fi
+	fi
+}
+
+umount_device() {
+	# Check whether this device was automounted
+	if [ -e /run/.${MDEV}_mount_dir ]; then
+		DIR=$(cat /run/.${MDEV}_mount_dir)
+		umount /dev/${MDEV}
+		rm -rf ${DIR}
+		rm /run/.${MDEV}_mount_dir
+	fi
+}
+
+case "${ACTION}" in
+        'add'|'')
+                mount_device
+        ;;
+        'remove')
+                umount_device
+        ;;
+esac
+

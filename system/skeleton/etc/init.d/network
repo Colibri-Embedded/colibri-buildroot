@@ -18,6 +18,7 @@
 case "$1" in
   start)
  	boot_msg "Starting network."
+ 	mkdir -p /run/network &> /dev/null
 	/sbin/ifup -a > /dev/null 2>&1
 	evaluate_retval
 	

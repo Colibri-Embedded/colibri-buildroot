@@ -1,0 +1,3 @@
+#!/bin/bash
+
+run-parts -a "${MDEV}" -a "${ACTION}" /lib/mdev/storage-device.d/

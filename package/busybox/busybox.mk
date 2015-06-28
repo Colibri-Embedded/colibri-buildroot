@@ -69,6 +69,15 @@ define BUSYBOX_INSTALL_MDEV_CONF
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0644 package/busybox/mdev.conf \
 		$(BUSYBOX_TARGET_DIR)/etc/mdev.conf
 endef
+define BUSYBOX_INSTALL_MDEV_HELPERS
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/lib/mdev/storage-device.d
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/mdev/storage-device \
+		$(BUSYBOX_TARGET_DIR)/lib/mdev/storage-device
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/mdev/storage-device.d/001-symlinks \
+		$(BUSYBOX_TARGET_DIR)/lib/mdev/storage-device.d/001-symlinks
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/mdev/storage-device.d/002-automount \
+		$(BUSYBOX_TARGET_DIR)/lib/mdev/storage-device.d/002-automount
+endef
 define BUSYBOX_SET_MDEV
 	$(call KCONFIG_ENABLE_OPT,CONFIG_MDEV,$(BUSYBOX_BUILD_CONFIG))
 	$(call KCONFIG_ENABLE_OPT,CONFIG_FEATURE_MDEV_CONF,$(BUSYBOX_BUILD_CONFIG))
@@ -265,6 +274,7 @@ define BUSYBOX_INSTALL_TARGET_CMDS
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -m 0755 -d \
 		$(BUSYBOX_TARGET_DIR)/usr/share/udhcpc/default.script.d
 	$(BUSYBOX_INSTALL_MDEV_CONF)
+	$(BUSYBOX_INSTALL_MDEV_HELPERS)
 	$(BUSYBOX_INSTALL_INIT_LINK)
 endef
 

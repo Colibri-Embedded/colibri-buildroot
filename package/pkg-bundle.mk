@@ -580,7 +580,7 @@ define bundle-install-package
 	@echo "Importing $(2)";
 endef
 
-ifeq ($(BR2_BR2_ROOTFS_REMOVE_DOCUMENTATION),y)
+ifeq ($(BR2_ROOTFS_REMOVE_DOCUMENTATION),y)
 define bundle-remove-documentation
 	$$($(2)_FAKEROOT) rm -rf $(1)/usr/share/{doc,man,info,gtk-doc,aclocal}/*
 endef
