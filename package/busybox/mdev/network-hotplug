@@ -1,0 +1,11 @@
+#!/bin/bash
+
+case "${ACTION}" in
+	'add'|'')
+		ifup ${INTERFACE} --allow hotplug &
+		;;
+	'remove')
+		ifdown ${INTERFACE} &
+		;;
+esac
+

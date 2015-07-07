@@ -73,6 +73,8 @@ define BUSYBOX_INSTALL_MDEV_HELPERS
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/lib/mdev/storage-device.d
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/mdev/storage-device \
 		$(BUSYBOX_TARGET_DIR)/lib/mdev/storage-device
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/mdev/network-hotplug \
+		$(BUSYBOX_TARGET_DIR)/lib/mdev/network-hotplug
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/mdev/storage-device.d/001-symlinks \
 		$(BUSYBOX_TARGET_DIR)/lib/mdev/storage-device.d/001-symlinks
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/mdev/storage-device.d/002-automount \
@@ -249,6 +251,7 @@ define BUSYBOX_KCONFIG_FIXUP_CMDS
 	$(BUSYBOX_SET_WATCHDOG)
 	$(BUSYBOX_SET_CROND)
 	$(BUSYBOX_DISABLE_MOD_UTILS)
+	$(BUSYBOX_DISABLE_UDHCPC)
 endef
 
 define BUSYBOX_CONFIGURE_CMDS
@@ -267,12 +270,22 @@ define BUSYBOX_FIX_SUID_PERMISSION
 	$(BUSYBOX_FAKEROOT) chmod 4755 $(BUSYBOX_TARGET_DIR)/bin/busybox
 endef
 
-define BUSYBOX_INSTALL_TARGET_CMDS
-	$(BUSYBOX_FAKEROOT) $(MAKE) $(BUSYBOX_MAKE_OPTS) -C $(@D) install
+ifeq ($(BR2_PACKAGE_DHCP_CLIENT),y)
+define BUSYBOX_DISABLE_UDHCPC
+	$(call KCONFIG_DISABLE_OPT,CONFIG_UDHCPC,$(BUSYBOX_BUILD_CONFIG))
+endef
+else
+define BUXYBIX_INSTALL_UDHCPC_SCRIPTS
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -m 0755 -D package/busybox/udhcpc.script \
 		$(BUSYBOX_TARGET_DIR)/usr/share/udhcpc/default.script
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -m 0755 -d \
 		$(BUSYBOX_TARGET_DIR)/usr/share/udhcpc/default.script.d
+endef
+endif
+
+define BUSYBOX_INSTALL_TARGET_CMDS
+	$(BUSYBOX_FAKEROOT) $(MAKE) $(BUSYBOX_MAKE_OPTS) -C $(@D) install
+	$(BUXYBIX_INSTALL_UDHCPC_SCRIPTS)
 	$(BUSYBOX_INSTALL_MDEV_CONF)
 	$(BUSYBOX_INSTALL_MDEV_HELPERS)
 	$(BUSYBOX_INSTALL_INIT_LINK)

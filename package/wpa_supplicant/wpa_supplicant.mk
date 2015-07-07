@@ -159,6 +159,24 @@ define WPA_SUPPLICANT_INSTALL_TARGET_CMDS
 		$(WPA_SUPPLICANT_TARGET_DIR)/usr/sbin/wpa_supplicant
 	$(WPA_SUPPLICANT_FAKEROOT) $(INSTALL) -m 644 -D package/wpa_supplicant/wpa_supplicant.conf \
 		$(WPA_SUPPLICANT_TARGET_DIR)/etc/wpa_supplicant.conf
+	$(WPA_SUPPLICANT_FAKEROOT) $(INSTALL) -m 0755 -D package/wpa_supplicant/functions.sh \
+		$(WPA_SUPPLICANT_TARGET_DIR)/etc/wpa_supplicant/functions.sh
+		
+	$(WPA_SUPPLICANT_FAKEROOT) $(INSTALL) -d -m 0755 $(WPA_SUPPLICANT_TARGET_DIR)/etc/network/if-up.d
+	$(WPA_SUPPLICANT_FAKEROOT) $(INSTALL) -d -m 0755 $(WPA_SUPPLICANT_TARGET_DIR)/etc/network/if-pre-up.d
+	$(WPA_SUPPLICANT_FAKEROOT) $(INSTALL) -d -m 0755 $(WPA_SUPPLICANT_TARGET_DIR)/etc/network/if-down.d
+	$(WPA_SUPPLICANT_FAKEROOT) $(INSTALL) -d -m 0755 $(WPA_SUPPLICANT_TARGET_DIR)/etc/network/if-post-down.d
+		
+	$(WPA_SUPPLICANT_FAKEROOT) $(INSTALL) -m 0755 -D package/wpa_supplicant/ifupdown.sh \
+		$(WPA_SUPPLICANT_TARGET_DIR)/etc/wpa_supplicant/ifupdown.sh
+	$(WPA_SUPPLICANT_FAKEROOT) ln -fs ../../wpa_supplicant/ifupdown.sh \
+		$(WPA_SUPPLICANT_TARGET_DIR)/etc/network/if-up.d/wpa_supplicant
+	$(WPA_SUPPLICANT_FAKEROOT) ln -fs ../../wpa_supplicant/ifupdown.sh \
+		$(WPA_SUPPLICANT_TARGET_DIR)/etc/network/if-pre-up.d/wpa_supplicant
+	$(WPA_SUPPLICANT_FAKEROOT) ln -fs ../../wpa_supplicant/ifupdown.sh \
+		$(WPA_SUPPLICANT_TARGET_DIR)/etc/network/if-down.d/wpa_supplicant
+	$(WPA_SUPPLICANT_FAKEROOT) ln -fs ../../wpa_supplicant/ifupdown.sh \
+		$(WPA_SUPPLICANT_TARGET_DIR)/etc/network/if-post-down.d/wpa_supplicant
 	$(WPA_SUPPLICANT_INSTALL_CLI)
 	$(WPA_SUPPLICANT_INSTALL_PASSPHRASE)
 	$(WPA_SUPPLICANT_INSTALL_DBUS)
