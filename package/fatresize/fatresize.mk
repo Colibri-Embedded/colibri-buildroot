@@ -5,8 +5,9 @@
 ################################################################################
 
 FATRESIZE_VERSION = 1.0.2
-FATRESIZE_SOURCE = fatresize-$(FATRESIZE_VERSION).tar.bz2
-FATRESIZE_SITE = http://sunet.dl.sourceforge.net/project/fatresize/fatresize/$(FATRESIZE_VERSION)
+FATRESIZE_SOURCE = fatresize_$(FATRESIZE_VERSION).orig.tar.gz
+#FATRESIZE_SITE = http://sunet.dl.sourceforge.net/project/fatresize/fatresize/$(FATRESIZE_VERSION)
+FATRESIZE_SITE = http://http.debian.net/debian/pool/main/f/fatresize/
 FATRESIZE_DEPENDENCIES = parted util-linux
 
 # For patches
