@@ -293,6 +293,13 @@ config BR2_DEPRECATED
 	help
 	  This option shows outdated/obsolete versions of packages and
 	  options that are otherwise hidden.
+	  
+config COLIBRI_LOCAL_DEVELOPMENT
+	bool "Switch to local source code repository"
+	help
+	  This options switches the source code for colibri related packages
+	  to local. The package sources should be located the same level as
+	  colibri-buildroot directory.
 
 if BR2_DEPRECATED
 

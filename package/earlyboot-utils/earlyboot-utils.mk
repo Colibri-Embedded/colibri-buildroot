@@ -4,11 +4,14 @@
 #
 ################################################################################
 
-EARLYBOOT_UTILS_VERSION = c45be9a00f1daa330fd4ec914853ed4eb291e19d
+EARLYBOOT_UTILS_VERSION = d63101264767b7fbf3f28c57310cbe08d816c4c2
 
+ifeq ($(COLIBRI_LOCAL_DEVELOPMENT),y)
 EARLYBOOT_UTILS_SITE = $(call github,Colibri-Embedded,earlyboot-utils,$(EARLYBOOT_UTILS_VERSION))
-#EARLYBOOT_UTILS_SITE=$(BR2_EXTERNAL)/../earlyboot-utils
-#EARLYBOOT_UTILS_SITE_METHOD = local
+else
+EARLYBOOT_UTILS_SITE=$(BR2_EXTERNAL)/../earlyboot-utils
+EARLYBOOT_UTILS_SITE_METHOD = local
+endif
 
 EARLYBOOT_UTILS_LICENSE = GPLv2
 EARLYBOOT_UTILS_LICENSE_FILES = LICENSE

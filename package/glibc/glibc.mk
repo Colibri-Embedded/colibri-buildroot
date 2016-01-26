@@ -103,7 +103,7 @@ endef
 
 
 #
-# We also override the install to target commands since we only want
+# We also override the install to target commandcopy_toolchain_lib_roots since we only want
 # to install the libraries, and nothing more.
 #
 
@@ -120,6 +120,7 @@ define GLIBC_INSTALL_TARGET_CMDS
 	for libs in $(GLIBC_LIBS_LIB); do \
 		$(call copy_toolchain_lib_root,$(STAGING_DIR)/,,lib,$$libs,/lib) ; \
 	done
+	
 endef
 
 $(eval $(autotools-package))

@@ -343,6 +343,7 @@ $(2)_TYPE           =  $(4)
 $(2)_NAME			=  $(1)
 $(2)_RAWNAME		=  $$(patsubst host-%,%,$(1))
 $(2)_TARGET_DIR		=  $$(PACKAGES_DIR)/$(1)
+#~ $(2)_TARGET_ARCHIVE	=  $$(PACKAGES_DIR)/$(1)_$$($(2)_VERSION).tar
 $(2)_TARGET_ARCHIVE	=  $$(PACKAGES_DIR)/$(1).tar
 
 # Fakeroot 

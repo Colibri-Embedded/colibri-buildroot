@@ -22,6 +22,7 @@
 
 # Target distutils-based packages
 PKG_PYTHON_DISTUTILS_ENV = \
+	LD_LIBRARY_PATH=$(HOST_DIR)/usr/lib \
 	PATH=$(BR_PATH) \
 	CC="$(TARGET_CC)" \
 	CXX="$(TARGET_CXX)" \

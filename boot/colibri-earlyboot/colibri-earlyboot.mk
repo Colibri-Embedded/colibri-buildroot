@@ -3,15 +3,18 @@
 # colibri-earlyboot make target use live bundles
 #
 ################################################################################
-COLIBRI_EARLYBOOT_VERSION = aada38c3f3f43165e284099592dd162f95e10741
+COLIBRI_EARLYBOOT_VERSION = deed299380b12a11ba35d3a273ac9b643539efc1
 
 define initramfs-import-package
 	$($(1)_FAKEROOT) $(TAR) --overwrite -C $(3) -xf $($(2)_TARGET_ARCHIVE);
 endef
 
+ifeq ($(COLIBRI_LOCAL_DEVELOPMENT),y)
 COLIBRI_EARLYBOOT_SITE = $(call github,Colibri-Embedded,colibri-earlyboot,$(COLIBRI_EARLYBOOT_VERSION))
-#COLIBRI_EARLYBOOT_SITE=$(BR2_EXTERNAL)/../colibri-earlyboot
-#COLIBRI_EARLYBOOT_SITE_METHOD = local
+else
+COLIBRI_EARLYBOOT_SITE=$(BR2_EXTERNAL)/../colibri-earlyboot
+COLIBRI_EARLYBOOT_SITE_METHOD = local
+endif
 
 COLIBRI_EARLYBOOT_LICENSE = GPLv3
 COLIBRI_EARLYBOOT_LICENSE_FILES = LICENCE
