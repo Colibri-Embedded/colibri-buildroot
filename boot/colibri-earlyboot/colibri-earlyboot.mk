@@ -54,12 +54,20 @@ define COLIBRI_EARLYBOOT_BUILD_CMDS
 	$(foreach impkg,$(COLIBRI_EARLYBOOT_TEMP_IMPORT),$(call initramfs-import-package,COLIBRI_EARLYBOOT,$(call UPPERCASE,$(impkg)), $(COLIBRI_EARLYBOOT_TEMP_DIR)))
 endef
 
+ifeq ($(BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM),y)
 define COLIBRI_EARLYBOOT_INSTALL_TARGET_CMDS
-#	Install ealyboot files
+	$(COLIBRI_EARLYBOOT_FAKEROOT) -- $(MAKE1) -C $(@D) DESTDIR=$(COLIBRI_EARLYBOOT_TARGET_DIR) install
+	$(INSTALL) -D -m 0644 $(BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM_CONFIG) $(SDCARD_DIR)/earlyboot/earlyboot.conf
+	$(INSTALL) -D -m 0644 $(BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM_PRODUCT) $(SDCARD_DIR)/earlyboot/product.sh
+	$(TAR) -cf $(SDCARD_DIR)/earlyboot/webui.tar -C $(BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM_WEBUI) .
+endef
+else
+define COLIBRI_EARLYBOOT_INSTALL_TARGET_CMDS
 	$(COLIBRI_EARLYBOOT_FAKEROOT) -- $(MAKE1) -C $(@D) DESTDIR=$(COLIBRI_EARLYBOOT_TARGET_DIR) install
 	$(INSTALL) -D -m 0644 $(@D)/earlyboot.conf $(SDCARD_DIR)/earlyboot/earlyboot.conf
 	$(INSTALL) -D -m 0644 $(@D)/product.sh $(SDCARD_DIR)/earlyboot/product.sh
 endef
+endif
 
 define COLIBRI_EARLYBOOT_POST_INSTALL
 #	Copy libc

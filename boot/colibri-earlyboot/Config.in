@@ -18,6 +18,24 @@ config BR2_TARGET_COLIBRI_EARLYBOOT
 	  
 if BR2_TARGET_COLIBRI_EARLYBOOT
 
+config BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM
+	bool "Custom content"
+	help
+	  Use custom webui and config files.
+
+if BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM
+
+config BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM_WEBUI
+	string "Custom WebUI"
+	
+config BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM_CONFIG
+	string "Custom earlyboot.conf"
+	
+config BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM_PRODUCT
+	string "Custom product.sh"
+
+endif
+
 config BR2_TARGET_COLIBRI_EARLYBOOT_SUPPORT_EXT4
 	bool "Support EXT4 filesystem"
 	help
