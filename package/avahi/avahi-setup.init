@@ -1,0 +1,39 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     : Daniel Kesler <kesler.daniel@gmail.com>
+# 
+# Version     : 00.10
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+test -r /etc/default/avahi && source /etc/default/avahi
+
+case "$1" in
+  start)
+	boot_msg "Setting up avahi server."
+	
+	if [ ! -d /tmp/avahi-autoipd ]; then
+	    rm -rf /tmp/avahi-autoipd
+	    mkdir /tmp/avahi-autoipd
+	    chown avahi.avahi /tmp/avahi-autoipd
+	fi
+	
+	evaluate_retval
+	;;
+  stop)
+	;;
+  *)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+esac
+
+exit $?

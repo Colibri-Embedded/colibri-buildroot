@@ -1,0 +1,46 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     : Daniel Kesler <kesler.daniel@gmail.com>
+# 
+# Version     : 00.10
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+test -r /etc/default/avahi && source /etc/default/avahi
+
+[ -z $AVAHI_PIDFILE ] && AVAHI_PIDFILE=/run/avahi.pid
+[ -z $AVAHI_CONF ] && AVAHI_CONF=/etc/avahi/avahi-daemon.conf
+
+DAEMON=/usr/sbin/avahi-daemon
+
+case "$1" in
+  start)
+	boot_msg "Starting avahi server."
+	start-stop-daemon -S -q -p $AVAHI_PIDFILE --exec $DAEMON -- -f $AVAHI_CONF
+	evaluate_retval
+	;;
+  stop)
+	boot_msg "Stopping avahi server."
+	start-stop-daemon -K -q -p $AVAHI_PIDFILE
+	evaluate_retval
+	;;
+  restart|reload)
+	${0} stop
+	sleep 1
+	${0} start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?

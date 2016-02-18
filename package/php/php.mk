@@ -19,6 +19,7 @@ PHP_CONF_OPTS = \
 	--disable-all \
 	--without-pear \
 	--with-config-file-path=/etc \
+	--with-config-file-scan-dir=/etc/php/conf.d \
 	--disable-rpath
 PHP_CONF_ENV = EXTRA_LIBS="$(PHP_EXTRA_LIBS)"
 
