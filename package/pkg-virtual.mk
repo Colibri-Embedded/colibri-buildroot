@@ -47,6 +47,8 @@ $(2)_SOURCE =
 # Fake a version string, so it looks nicer in the build log
 $(2)_VERSION = virtual
 
+$(2)_ARCHIVE_TARGET = NO
+
 # This must be repeated from inner-generic-package, otherwise we get an empty
 # _DEPENDENCIES
 ifeq ($(4),host)
