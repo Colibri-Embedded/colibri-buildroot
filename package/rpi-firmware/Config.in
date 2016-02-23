@@ -45,6 +45,21 @@ config BR2_PACKAGE_RPI_FIRMWARE_BOOT
 	default "_x"    if BR2_PACKAGE_RPI_FIRMWARE_X
 	default "_cd"   if BR2_PACKAGE_RPI_FIRMWARE_CD
 
+config BR2_PACKAGE_RPI_FIRMWARE_CUSTOM_CONFIG
+	bool "Custom config files"
+	help
+	  Use custom config files.
+	  
+if BR2_PACKAGE_RPI_FIRMWARE_CUSTOM_CONFIG
+
+config BR2_PACKAGE_RPI_FIRMWARE_CMDLINE_TXT
+	string "cmdline.txt"
+	
+config BR2_PACKAGE_RPI_FIRMWARE_CONFIG_TXT
+	string "config.txt"
+
+endif
+
 config BR2_PACKAGE_RPI_FIRMWARE_INSTALL_DTBS
 	bool "Install Device Tree Blobs (DTBs)"
 	help
