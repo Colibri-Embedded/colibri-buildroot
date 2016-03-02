@@ -1,0 +1,8 @@
+config BR2_PACKAGE_GEOS
+	bool "geos"
+	help
+	  GEOS (Geometry Engine - Open Source) is a C++ port of the 
+	  ​Java Topology Suite (JTS). As such, it aims to contain the 
+	  complete functionality of JTS in C++. 
+
+	  http://trac.osgeo.org/geos/
