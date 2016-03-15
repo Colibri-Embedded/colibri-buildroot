@@ -696,6 +696,7 @@ $(2)_ARCHIVE_TARGET = NO
 $(2)_SOURCE =
 
 $(2)_BUNDLE_IMAGE = $$($(2)_ORDER)-$(1)-$$($(2)_VERSION).cb
+$(2)_BUNDLE_IMAGE_PATTERN = $$($(2)_ORDER)-$(1)-*.cb
 $(2)_BUNDLE_IMAGE_HASH = $$($(2)_BUNDLE_IMAGE).md5sum
 
 # Fake a version string, so it looks nicer in the build log
@@ -733,6 +734,8 @@ define $(2)_INSTALL_TARGET_CMDS
 	$(call bundle-remove-development,$$($(2)_TARGET_DIR),$(2))
 	$(call bundle-strip-executables,$$($(2)_TARGET_DIR),$(2))
 	
+	rm -rf $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE_PATTERN)
+	rm -rf $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE_PATTERN).md5sum
 	$$($(2)_FAKEROOT) $$($(2)_MKSQUASHFS) $$($(2)_TARGET_DIR) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) $(BUNDLE_SQUASHFS_ARGS) 
 	$$($(2)_MD5SUM) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) > $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE_HASH)
 	rm -rf $$($(2)_TARGET_DIR)
