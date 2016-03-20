@@ -50,6 +50,30 @@ mount_device() {
 
 	# If device has a filesystem TYPE it can be mounted
 	if [ -n "$TYPE" ]; then
+		# extract mount-point from fstab
+		# (I) try by ${MDEV}
+		ENTRY=$(cat /etc/fstab | grep "/dev/${MDEV}")
+		if [ "x${ENTRY}" == "x" ]; then
+			# (II.a) try by LABEL
+			ENTRY=$(cat /etc/fstab | grep "LABEL=${LABEL}")
+			if [ "x${ENTRY}" == "x" ]; then
+				# (II.b) try by LABEL
+				ENTRY=$(cat /etc/fstab | grep "LABEL=\"${LABEL}\"")
+				if [ "x${ENTRY}" == "x" ]; then
+					# (III) try by ${UUID}
+					ENTRY=$(cat /etc/fstab | grep "UUID=${UUID}")
+				fi
+			fi
+		fi
+		
+		MOUNT_POINT=$(echo $ENTRY | awk '{print $2}')
+		
+		if [ "x$MOUNT_POINT" != "x" ]; then
+			# try to mount wihout parameters (fstab)
+			mkdir -p ${MOUNT_POINT}
+			mount /dev/${MDEV} &> /dev/null
+		fi
+		# If unsuccessful, try mounting @ /media
 		M=$(mount | grep /dev/${MDEV})
 		# mount the device only if it is not mounted already
 		if [ -z "$M" ]; then
