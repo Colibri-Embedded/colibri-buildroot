@@ -1,0 +1,43 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     : Daniel Kesler <kesler.daniel@gmail.com>
+# 
+# Version     : 00.10
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+test -r /etc/default/fake-hwclock && source /etc/default/fake-hwclock
+
+NAME=fake-hwclock
+
+case "$1" in
+	start)
+		boot_msg "Loading time from $NAME."
+		fake-hwclock load $FORCE &> /dev/null
+		evaluate_retval
+		;;
+	stop)
+		boot_msg "Saving time to $NAME."
+		fake-hwclock save &> /dev/null
+		evaluate_retval
+		;;
+	restart|reload)
+		${0} stop
+		sleep 1
+		${0} start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+esac
+
+exit $?

@@ -191,9 +191,11 @@ endif
 
 define BUSYBOX_INSTALL_LOGGING_SCRIPT
 	if grep -q CONFIG_SYSLOGD=y $(@D)/.config; then \
-		$(INSTALL) -m 0755 -D package/busybox/S01logging \
-			$(BUSYBOX_TARGET_DIR)/etc/init.d/S01logging; \
-	else rm -f $(BUSYBOX_TARGET_DIR)/etc/init.d/S01logging; fi
+		$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/logging.init $(BUSYBOX_TARGET_DIR)/etc/init.d/logging; \
+		$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0644 package/busybox/logging.default $(BUSYBOX_TARGET_DIR)/etc/default/logging; \
+		$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.sysinit.d; \
+		$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/logging $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.sysinit.d/S81logging; \
+	fi
 endef
 
 ifeq ($(BR2_PACKAGE_BUSYBOX_WATCHDOG),y)
@@ -214,6 +216,8 @@ define BUSYBOX_SET_CROND
 endef
 define BUSYBOX_INSTALL_CROND_SCRIPT
 	$(BUSYBOX_FAKEROOT) mkdir -p $(BUSYBOX_TARGET_DIR)/etc/cron.{d,daily,hourly,monthly}
+	$(BUSYBOX_FAKEROOT) mkdir -p -m=700 $(BUSYBOX_TARGET_DIR)/var/spool/cron
+	$(BUSYBOX_FAKEROOT) mkdir -p -m=700 $(BUSYBOX_TARGET_DIR)/var/spool/cron/crontabs
 
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0644 package/busybox/crontab \
 		$(BUSYBOX_TARGET_DIR)/etc/crontab
@@ -221,13 +225,36 @@ define BUSYBOX_INSTALL_CROND_SCRIPT
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/crond.init \
 		$(BUSYBOX_TARGET_DIR)/etc/init.d/crond
 		
-	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/crond.default \
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0644 package/busybox/crond.default \
 		$(BUSYBOX_TARGET_DIR)/etc/default/crond
 		
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.startup.d
 	
 	$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/crond \
 		$(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.startup.d/S50crond
+endef
+endif
+
+ifeq ($(BR2_PACKAGE_BUSYBOX_NTPD),y)
+define BUSYBOX_SET_NTPD
+	$(call KCONFIG_ENABLE_OPT,CONFIG_NTPD,$(BUSYBOX_BUILD_CONFIG))
+	$(call KCONFIG_ENABLE_OPT,CONFIG_FEATURE_NTPD_CONF,$(BUSYBOX_BUILD_CONFIG))
+endef
+define BUSYBOX_INSTALL_NTPD_SCRIPT
+
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0644 package/busybox/ntp.conf \
+		$(BUSYBOX_TARGET_DIR)/etc/ntp.conf
+
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/ntpd.init \
+		$(BUSYBOX_TARGET_DIR)/etc/init.d/ntpd
+		
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0644 package/busybox/ntpd.default \
+		$(BUSYBOX_TARGET_DIR)/etc/default/ntpd
+		
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.startup.d
+	
+	$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/ntpd \
+		$(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.startup.d/S49ntpd
 endef
 endif
 
@@ -239,6 +266,8 @@ endef
 
 define BUSYBOX_KCONFIG_FIXUP_CMDS
 	$(BUSYBOX_SET_MMU)
+	$(BUSYBOX_SET_CROND)
+	$(BUSYBOX_SET_NTPD)
 	$(BUSYBOX_SET_LARGEFILE)
 	$(BUSYBOX_SET_IPV6)
 	$(BUSYBOX_PREFER_STATIC)
@@ -296,6 +325,7 @@ define BUSYBOX_INSTALL_INIT_SYSV
 	$(BUSYBOX_INSTALL_LOGGING_SCRIPT)
 	$(BUSYBOX_INSTALL_WATCHDOG_SCRIPT)
 	$(BUSYBOX_INSTALL_CROND_SCRIPT)
+	$(BUSYBOX_INSTALL_NTPD_SCRIPT)
 endef
 
 $(eval $(kconfig-package))

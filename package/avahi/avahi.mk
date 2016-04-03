@@ -185,15 +185,15 @@ endif
 ifeq ($(BR2_PACKAGE_AVAHI_DAEMON),y)
 
 define AVAHI_INSTALL_INIT_SYSTEMD
-	mkdir -p $(AVAHI_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+	$(AVAHI_FAKEROOT) mkdir -p $(AVAHI_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
 
-	ln -fs /lib/systemd/system/avahi-daemon.service \
+	$(AVAHI_FAKEROOT) ln -fs /lib/systemd/system/avahi-daemon.service \
 		$(AVAHI_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/avahi-daemon.service
 
-	ln -fs /lib/systemd/system/avahi-dnsconfd.service \
+	$(AVAHI_FAKEROOT) ln -fs /lib/systemd/system/avahi-dnsconfd.service \
 		$(AVAHI_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/avahi-dnsconfd.service
 
-	$(INSTALL) -D -m 644 package/avahi/avahi_tmpfiles.conf \
+	$(AVAHI_FAKEROOT) $(INSTALL) -D -m 644 package/avahi/avahi_tmpfiles.conf \
 		$(AVAHI_TARGET_DIR)/usr/lib/tmpfiles.d/avahi.conf
 endef
 

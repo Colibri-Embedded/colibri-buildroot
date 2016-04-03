@@ -45,10 +45,15 @@ config BR2_PACKAGE_BUSYBOX_WATCHDOG_PERIOD
 
 endif
 
-config BR2_PACKAGE_BUSYBOX_CRON
+config BR2_PACKAGE_BUSYBOX_CROND
 	bool "Install the cron daemon startup script"
 	help
 	  Install the cron daemon startup script.
+	  
+config BR2_PACKAGE_BUSYBOX_NTPD
+	bool "Install the ntp daemon startup script"
+	help
+	  Install the ntp daemon startup script.
 
 endif
 

@@ -27,11 +27,10 @@ TZDATA_LOCALTIME = $(call qstrip,$(BR2_TARGET_LOCALTIME))
 TZDATA_EXTRACT_CMDS =
 
 define TZDATA_INSTALL_TARGET_CMDS
-	$(INSTALL) -d -m 0755 $(TZDATA_TARGET_DIR)/usr/share/zoneinfo
-	cp -a $(HOST_DIR)/usr/share/zoneinfo/* $(TZDATA_TARGET_DIR)/usr/share/zoneinfo
-	cd $(TZDATA_TARGET_DIR)/usr/share/zoneinfo;    \
-	for zone in posix/*; do                 \
-	    ln -sfn "$${zone}" "$${zone##*/}";  \
+	$(TZDATA_FAKEROOT) $(INSTALL) -d -m 0755 $(TZDATA_TARGET_DIR)/usr/share/zoneinfo
+	$(TZDATA_FAKEROOT) cp -a $(HOST_DIR)/usr/share/zoneinfo/* $(TZDATA_TARGET_DIR)/usr/share/zoneinfo
+	for zone in $(TZDATA_TARGET_DIR)/usr/share/zoneinfo/posix/*; do                 \
+	    $(TZDATA_FAKEROOT) ln -sfn "/usr/share/zoneinfo/posix/$${zone##*/}" "$(TZDATA_TARGET_DIR)/usr/share/zoneinfo/$${zone##*/}";  \
 	done
 	if [ -n "$(TZDATA_LOCALTIME)" ]; then                           \
 	    if [ ! -f $(TZDATA_TARGET_DIR)/usr/share/zoneinfo/$(TZDATA_LOCALTIME) ]; then \
@@ -39,9 +38,9 @@ define TZDATA_INSTALL_TARGET_CMDS
 	               "$(TZDATA_LOCALTIME)";                           \
 	        exit 1;                                                 \
 	    fi;                                                         \
-	    cd $(TZDATA_TARGET_DIR)/etc;                                       \
-	    ln -sf ../usr/share/zoneinfo/$(TZDATA_LOCALTIME) localtime; \
-	    echo "$(TZDATA_LOCALTIME)" >timezone;                       \
+	    $(TZDATA_FAKEROOT)  mkdir -p $(TZDATA_TARGET_DIR)/etc; \
+	    $(TZDATA_FAKEROOT)  ln -sf ../usr/share/zoneinfo/$(TZDATA_LOCALTIME) $(TZDATA_TARGET_DIR)/etc/localtime; \
+	    $(TZDATA_FAKEROOT)  echo "$(TZDATA_LOCALTIME)" > $(TZDATA_TARGET_DIR)/etc/timezone;                      \
 	fi
 endef
 

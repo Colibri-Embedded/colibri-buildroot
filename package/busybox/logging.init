@@ -15,16 +15,19 @@
 . /etc/default/rc
 . ${rc_functions}
 
-source /etc/default/logging
+test -r /etc/default/logging && source /etc/default/logging
+
+[ -z $SYSLOGD_PIDFILE ] && SYSLOGD_PIDFILE=/run/syslogd.pid
+[ -z $KLOGD_PIDFILE ] && KLOGD_PIDFILE=/run/klogd.pid
 
 case "$1" in
   start)
 	boot_msg "Starting syslogd."
-	start-stop-daemon -b -S -q -m -p $SYSLOGD_PIDFILE --exec /sbin/syslogd -- -n
+	start-stop-daemon -b -S -q -m -p $SYSLOGD_PIDFILE --exec /sbin/syslogd -- -n $SYSLOGD_OPTIONS
 	evaluate_retval
 	
 	boot_msg "Starting klogd."
-	start-stop-daemon -b -S -q -m -p $KLOGD_PIDFILE --exec /sbin/klogd -- -n
+	start-stop-daemon -b -S -q -m -p $KLOGD_PIDFILE --exec /sbin/klogd -- -n $KLOGD_OPTIONS
 	evaluate_retval
 	;;
   stop)

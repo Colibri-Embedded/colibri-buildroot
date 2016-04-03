@@ -49,31 +49,60 @@ define NTP_PATCH_FIXUPS
 	$(SED) '/[[:space:](]rindex[[:space:]]*(/s/[[:space:]]*rindex[[:space:]]*(/ strrchr(/g' $(@D)/ntpd/*.c
 endef
 
-NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTP_KEYGEN) += util/ntp-keygen
-NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTP_WAIT) += scripts/ntp-wait/ntp-wait
-NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPDATE) += ntpdate/ntpdate
-NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPDC) += ntpdc/ntpdc
-NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPQ) += ntpq/ntpq
-NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPSNMPD) += ntpsnmpd/ntpsnmpd
-NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPTRACE) += scripts/ntptrace/ntptrace
-NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_SNTP) += sntp/sntp
-NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_TICKADJ) += util/tickadj
+#~ NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTP_KEYGEN) += util/ntp-keygen
+#~ NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTP_WAIT) += scripts/ntp-wait/ntp-wait
+#~ NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPDATE) += ntpdate/ntpdate
+#~ NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPDC) += ntpdc/ntpdc
+#~ NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPQ) += ntpq/ntpq
+#~ NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPSNMPD) += ntpsnmpd/ntpsnmpd
+#~ NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPTRACE) += scripts/ntptrace/ntptrace
+#~ NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_SNTP) += sntp/sntp
+#~ NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_TICKADJ) += util/tickadj
+
+NTP_INSTALL_FILES_								+= calc_tickadj
+NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTP_KEYGEN) += ntp-keygen
+NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTP_WAIT) += ntp-wait
+NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPDATE) += ntpdate
+NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPDC) += ntpdc
+NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPQ) += ntpq
+NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPSNMPD) += ntpsnmpd
+NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPTRACE) += ntptrace
+NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_SNTP) += sntp
+NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_TICKADJ) += tickadj
+
+define NTP_REMOVE_UNWANTED_FILES
+	for f in $(NTP_INSTALL_FILES_); do \
+		if [ -e $(NTP_TARGET_DIR)/usr/bin/$$f ]; then \
+			$(NTP_FAKEROOT) rm -f $(NTP_TARGET_DIR)/usr/bin/$$f; \
+		fi \
+	done
+	$(NTP_FAKEROOT) rm -rf $(NTP_TARGET_DIR)/usr/share/ntp \
+		$(TARGET_DIR)/usr/libexec \
+		$(TARGET_DIR)/usr/lib
+endef
+
+define NTP_NTPD_SBIN_FIX
+	$(NTP_FAKEROOT) mv $(NTP_TARGET_DIR)/usr/bin/ntpd $(NTP_TARGET_DIR)/usr/sbin
+endef
 
 define NTP_INSTALL_TARGET_CMDS
-	$(if $(BR2_PACKAGE_NTP_NTPD), install -m 755 $(@D)/ntpd/ntpd $(NTP_TARGET_DIR)/usr/sbin/ntpd)
-	test -z "$(NTP_INSTALL_FILES_y)" || install -m 755 $(addprefix $(@D)/,$(NTP_INSTALL_FILES_y)) $(NTP_TARGET_DIR)/usr/bin/
-	$(INSTALL) -m 644 package/ntp/ntpd.etc.conf $(NTP_TARGET_DIR)/etc/ntp.conf
+	$(NTP_FAKEROOT) $(MAKE) DESTDIR=$(NTP_TARGET_DIR) -C $(@D) install
+	$(NTP_FAKEROOT) $(INSTALL) -D -m 644 package/ntp/ntpd.etc.conf $(NTP_TARGET_DIR)/etc/ntp.conf
 endef
+
+NTP_POST_INSTALL_TARGET_HOOKS += NTP_NTPD_SBIN_FIX
+NTP_POST_INSTALL_TARGET_HOOKS += NTP_REMOVE_UNWANTED_FILES
 
 ifeq ($(BR2_PACKAGE_NTP_NTPD),y)
 define NTP_INSTALL_INIT_SYSV
-	$(INSTALL) -D -m 755 package/ntp/S49ntp $(NTP_TARGET_DIR)/etc/init.d/S49ntp
+	$(NTP_FAKEROOT) $(INSTALL) -D -m 755 package/ntp/ntpd.init $(NTP_TARGET_DIR)/etc/init.d/ntpd
+	$(NTP_FAKEROOT) $(INSTALL) -D -m 644 package/ntp/ntpd.default $(NTP_TARGET_DIR)/etc/default/ntpd
 endef
 
 define NTP_INSTALL_INIT_SYSTEMD
-	$(INSTALL) -D -m 644 package/ntp/ntpd.service $(NTP_TARGET_DIR)/etc/systemd/system/ntpd.service
-	mkdir -p $(NTP_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
-	ln -fs ../ntpd.service $(NTP_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/ntpd.service
+	$(NTP_FAKEROOT) $(INSTALL) -D -m 644 package/ntp/ntpd.service $(NTP_TARGET_DIR)/etc/systemd/system/ntpd.service
+	$(NTP_FAKEROOT) mkdir -p $(NTP_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+	$(NTP_FAKEROOT) ln -fs ../ntpd.service $(NTP_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/ntpd.service
 endef
 endif
 

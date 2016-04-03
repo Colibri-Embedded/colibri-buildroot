@@ -1,0 +1,46 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     : Daniel Kesler <kesler.daniel@gmail.com>
+# 
+# Version     : 00.10
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+test -r /etc/default/ntpd && source /etc/default/ntpd
+
+[ -z $NTPD_PIDFILE ] && NTPD_PIDFILE=/run/ntpd.pid
+
+NAME=ntpd
+DAEMON=/usr/sbin/ntpd
+
+case "$1" in
+	start)
+		boot_msg "Starting $NAME."
+		start-stop-daemon -S -q -m -p $NTPD_PIDFILE --exec $DAEMON -- -n $NTPD_ARGS
+		evaluate_retval
+		;;
+	stop)
+		boot_msg "Stopping $NAME."
+		start-stop-daemon -K -q -p $NTPD_PIDFILE
+		evaluate_retval
+		;;
+	restart|reload)
+		${0} stop
+		sleep 1
+		${0} start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+esac
+
+exit $?

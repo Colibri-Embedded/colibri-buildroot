@@ -1,3 +1,4 @@
+. /etc/default/global
 rc_base=/etc/rc.d
 rc_functions=/etc/init.d/rc.functions
 
