@@ -194,7 +194,9 @@ define BUSYBOX_INSTALL_LOGGING_SCRIPT
 		$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0755 package/busybox/logging.init $(BUSYBOX_TARGET_DIR)/etc/init.d/logging; \
 		$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0644 package/busybox/logging.default $(BUSYBOX_TARGET_DIR)/etc/default/logging; \
 		$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.sysinit.d; \
+		$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.shutdown.d; \
 		$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/logging $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.sysinit.d/S81logging; \
+		$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/logging $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S81logging; \
 	fi
 endef
 
@@ -229,9 +231,13 @@ define BUSYBOX_INSTALL_CROND_SCRIPT
 		$(BUSYBOX_TARGET_DIR)/etc/default/crond
 		
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.startup.d
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.shutdown.d
 	
 	$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/crond \
 		$(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.startup.d/S50crond
+	
+	$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/crond \
+		$(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S50crond
 endef
 endif
 
@@ -252,9 +258,13 @@ define BUSYBOX_INSTALL_NTPD_SCRIPT
 		$(BUSYBOX_TARGET_DIR)/etc/default/ntpd
 		
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.startup.d
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.shutdown.d
 	
 	$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/ntpd \
 		$(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.startup.d/S49ntpd
+		
+	$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/ntpd \
+		$(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S49ntpd
 endef
 endif
 

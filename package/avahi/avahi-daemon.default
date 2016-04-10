@@ -1,0 +1,3 @@
+AVAHI_PIDFILE=/run/avahi.pid
+AVAHI_LOGFILE=/var/log/avahi.log
+AVAHI_OPTIONS=

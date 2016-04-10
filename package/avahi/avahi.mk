@@ -78,6 +78,7 @@ AVAHI_CONF_OPTS = \
 	--disable-stack-protector \
 	--with-distro=none \
 	--disable-manpages \
+	--localstatedir=/ \
 	$(if $(BR2_PACKAGE_AVAHI_AUTOIPD),--enable,--disable)-autoipd \
 	--with-avahi-user=avahi \
 	--with-avahi-group=avahi \
@@ -177,6 +178,15 @@ define AVAHI_INSTALL_AUTOIPD_INIT_SYSV
 #	$(INSTALL) -D -m 0755 package/avahi/S05avahi-setup.sh $(AVAHI_TARGET_DIR)/etc/init.d/S05avahi-setup.sh
 	$(AVAHI_FAKEROOT) $(INSTALL) -D -m 0755 package/avahi/avahi-setup.init \
 		$(AVAHI_TARGET_DIR)/etc/init.d/avahi-setup
+		
+	$(AVAHI_FAKEROOT) $(INSTALL) -d -m 0755 $(AVAHI_TARGET_DIR)/etc/rc.d/rc.startup.d
+	$(AVAHI_FAKEROOT) $(INSTALL) -d -m 0755 $(AVAHI_TARGET_DIR)/etc/rc.d/rc.shutdown.d
+	
+	$(AVAHI_FAKEROOT) ln -fs ../../init.d/avahi-setup \
+		$(AVAHI_TARGET_DIR)/etc/rc.d/rc.startup.d/S50avahi-setup
+		
+	$(AVAHI_FAKEROOT) ln -fs ../../init.d/avahi-setup \
+		$(AVAHI_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S51avahi-setup
 endef
 
 AVAHI_POST_INSTALL_TARGET_HOOKS += AVAHI_INSTALL_AUTOIPD
@@ -201,6 +211,14 @@ define AVAHI_INSTALL_DAEMON_INIT_SYSV
 #	$(INSTALL) -D -m 0755 package/avahi/S50avahi-daemon $(AVAHI_TARGET_DIR)/etc/init.d/S50avahi-daemon	
 	$(AVAHI_FAKEROOT) $(INSTALL) -D -m 0755 package/avahi/avahi-daemon.init \
 		$(AVAHI_TARGET_DIR)/etc/init.d/avahi-daemon
+		
+	$(AVAHI_FAKEROOT) $(INSTALL) -d -m 0755 $(AVAHI_TARGET_DIR)/etc/rc.d/rc.startup.d
+	$(AVAHI_FAKEROOT) $(INSTALL) -d -m 0755 $(AVAHI_TARGET_DIR)/etc/rc.d/rc.shutdown.d
+	
+	$(AVAHI_FAKEROOT) ln -fs ../../init.d/avahi-daemon \
+		$(AVAHI_TARGET_DIR)/etc/rc.d/rc.startup.d/S51avahi-daemon
+	$(AVAHI_FAKEROOT) ln -fs ../../init.d/avahi-daemon \
+		$(AVAHI_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S50avahi-daemon
 endef
 
 endif

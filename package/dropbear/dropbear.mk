@@ -52,26 +52,26 @@ define DROPBEAR_DISABLE_STANDALONE
 endef
 
 define DROPBEAR_INSTALL_INIT_SYSTEMD
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -D -m 644 package/dropbear/dropbear.service \
+	$(DROPBEAR_FAKEROOT) $(INSTALL) -D -m 644 package/dropbear/dropbear.service \
 		$(DROPBEAR_TARGET_DIR)/etc/systemd/system/dropbear.service
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) mkdir -p $(DROPBEAR_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) ln -fs ../dropbear.service \
+	$(DROPBEAR_FAKEROOT) mkdir -p $(DROPBEAR_TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+	$(DROPBEAR_FAKEROOT) ln -fs ../dropbear.service \
 		$(DROPBEAR_TARGET_DIR)/etc/systemd/system/multi-user.target.wants/dropbear.service
 endef
 
 ifeq ($(BR2_USE_MMU),y)
 define DROPBEAR_INSTALL_INIT_SYSV
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/dropbear/dropbear.init \
+	$(DROPBEAR_FAKEROOT) $(INSTALL) -D -m 0755 package/dropbear/dropbear.init \
 		$(DROPBEAR_TARGET_DIR)/etc/init.d/dropbear
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -D -m 0644 package/dropbear/dropbear.default \
+	$(DROPBEAR_FAKEROOT) $(INSTALL) -D -m 0644 package/dropbear/dropbear.default \
 		$(DROPBEAR_TARGET_DIR)/etc/default/dropbear
 		
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(DROPBEAR_TARGET_DIR)/etc/rc.d/rc.startup.d	
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(DROPBEAR_TARGET_DIR)/etc/rc.d/rc.shutdown.d
+	$(DROPBEAR_FAKEROOT) $(INSTALL) -d -m 0755 $(DROPBEAR_TARGET_DIR)/etc/rc.d/rc.startup.d	
+	$(DROPBEAR_FAKEROOT) $(INSTALL) -d -m 0755 $(DROPBEAR_TARGET_DIR)/etc/rc.d/rc.shutdown.d
 	
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) ln -fs ../../init.d/dropbear \
+	$(DROPBEAR_FAKEROOT) ln -fs ../../init.d/dropbear \
 		$(DROPBEAR_TARGET_DIR)/etc/rc.d/rc.startup.d/S50dropbear
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) ln -fs ../../init.d/dropbear \
+	$(DROPBEAR_FAKEROOT) ln -fs ../../init.d/dropbear \
 		$(DROPBEAR_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S50dropbear
 endef
 else

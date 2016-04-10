@@ -18,22 +18,33 @@
 test -r /etc/default/avahi && source /etc/default/avahi
 
 [ -z $AVAHI_PIDFILE ] && AVAHI_PIDFILE=/run/avahi.pid
+[ -z $AVAHI_LOGFILE ] && AVAHI_LOGFILE=/var/log/avahi.log
 [ -z $AVAHI_CONF ] && AVAHI_CONF=/etc/avahi/avahi-daemon.conf
 
+AVAHI_ARGS="$AVAHI_OPTIONS -f $AVAHI_CONF -D"
+
+[ "$USE_SYSLOG"x == "yes"x ] && AVAHI_ARGS="$AVAHI_ARGS -s"
+
+NAME=avahi
 DAEMON=/usr/sbin/avahi-daemon
 
 case "$1" in
   start)
-	boot_msg "Starting avahi server."
-	start-stop-daemon -S -q -p $AVAHI_PIDFILE --exec $DAEMON -- -f $AVAHI_CONF
+	boot_msg "Starting ${NAME} server."
+	${DAEMON} $AVAHI_ARGS
 	evaluate_retval
 	;;
   stop)
-	boot_msg "Stopping avahi server."
-	start-stop-daemon -K -q -p $AVAHI_PIDFILE
+	boot_msg "Stopping ${NAME} server."
+	${DAEMON} -k
 	evaluate_retval
 	;;
-  restart|reload)
+  reload)
+	boot_msg "Reloading ${NAME} services."
+	${DAEMON} -r
+	evaluate_retval
+	;;
+  restart)
 	${0} stop
 	sleep 1
 	${0} start
