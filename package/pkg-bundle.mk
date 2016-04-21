@@ -577,6 +577,8 @@ host-generic-bundle-package = $(call inner-generic-bundle-package,host-$(pkgname
 
 define bundle-install-package
 	$$($(1)_FAKEROOT) $(TAR) --overwrite -C $(3) -xf $$($(2)_TARGET_ARCHIVE);
+	$$($(1)_FAKEROOT) mkdir -p $(3)/var/lib/colibri/bundle/$($(1)_NAME)
+	$$($(1)_FAKEROOT) echo "$($(2)_NAME): $($(2)_VERSION)" >> $(3)/var/lib/colibri/bundle/$($(1)_NAME)/packages
 	@echo "Importing $(2)";
 endef
 
@@ -598,12 +600,10 @@ define bundle-remove-development
 endef
 endif
 
-#~ 	echo "#!/bin/bash" > $(@D)/create_initramfs.sh
-#~ 	echo "cd $(COLIBRI_EARLYBOOT_TARGET_DIR)" >> $(@D)/create_initramfs.sh
-#~ 	echo "find . -print | cpio -o -H newc 2>/dev/null | $(XZ) -f --extreme --check=crc32  > $(SDCARD_DIR)/initramfs.img" >> $(@D)/create_initramfs.sh
-#~ 	chmod +x $(@D)/create_initramfs.sh
-#~ 	$(COLIBRI_EARLYBOOT_FAKEROOT) -- $(@D)/create_initramfs.sh
-#~ 	rm $(@D)/create_initramfs.sh
+ifeq ($(BR2_ROOTFS_INCLUDE_LEGAL_INFO),y)
+define bundle-include-legal-info
+endef
+endif
 
 define bundle-strip-executables
 # Executables and libraries
@@ -615,12 +615,18 @@ define bundle-strip-executables
 	$$($(2)_FAKEROOT) -- $$(@D)/strip_files.sh
 	rm $$(@D)/strip_files.sh
 
-#	find $(1) -type f \( -name '*.so*' \) -not \( $(call findfileclauses,libpthread*.so* *.ko $(call qstrip,$(BR2_STRIP_EXCLUDE_FILES))) \) -print | xargs $(TARGET_STRIP) --strip-unneeded &> /dev/null  || true
-#	find $(1) -type f \( -name '*.so*' \) -not \( $(call findfileclauses,libpthread*.so* *.ko $(call qstrip,$(BR2_STRIP_EXCLUDE_FILES))) \) -print | xargs stat
 # Kernel modules	
 #~ 	if test -d $(TARGET_DIR)/lib/modules; then \
 #~ 		find $(1)/lib/modules -type f -name '*.ko' | \
 #~ 		xargs -r $(KSTRIPCMD); fi
+endef
+
+# Add bundle specific metadata to it's filesystem
+define bundle-add-metadata
+	$$($(2)_FAKEROOT) mkdir -p $(3)/var/lib/colibri/bundle/$($(2)_NAME)
+	$$($(2)_FAKEROOT) echo "name: $($(2)_NAME)" > $(3)/var/lib/colibri/bundle/$($(2)_NAME)/info
+	$$($(2)_FAKEROOT) echo "version: $($(2)_VERSION)" >> $(3)/var/lib/colibri/bundle/$($(2)_NAME)/info
+	$$($(2)_FAKEROOT) echo "build-date: $(shell date +%Y-%m-%d)" >> $(3)/var/lib/colibri/bundle/$($(2)_NAME)/info
 endef
 
 ifeq ($(BR2_TARGET_ROOTFS_COLIBRI_LZ4),y)
@@ -695,9 +701,9 @@ $(2)_ARCHIVE_TARGET = NO
 # A virtual package does not have any source associated
 $(2)_SOURCE =
 
-$(2)_BUNDLE_IMAGE = $$($(2)_ORDER)-$(1)-$$($(2)_VERSION).cb
-$(2)_BUNDLE_IMAGE_PATTERN = $$($(2)_ORDER)-$(1)-*.cb
-$(2)_BUNDLE_IMAGE_HASH = $$($(2)_BUNDLE_IMAGE).md5sum
+$(2)_BUNDLE_IMAGE = $($(2)_ORDER)-$($(2)_NAME)-$($(2)_VERSION).cb
+$(2)_BUNDLE_IMAGE_PATTERN = $($(2)_ORDER)-$($(2)_NAME)-*.cb
+$(2)_BUNDLE_IMAGE_HASH = $($(2)_BUNDLE_IMAGE).md5sum
 
 # Fake a version string, so it looks nicer in the build log
 #$(2)_VERSION = virtual
@@ -719,12 +725,12 @@ endif
 # Target installation step. Only define it if not already defined by
 # the package .mk file.
 #
-
-
-
 ifndef $(2)_INSTALL_TARGET_CMDS
 define $(2)_INSTALL_TARGET_CMDS
 	mkdir -p $$($(2)_TARGET_DIR)
+	
+	$(call bundle-add-metadata,$(1),$(2),$$($(2)_TARGET_DIR))
+	
 	if [ "x$($(2)_ADD_ROOTFS)" == "xYES" ] ; then \
 		$$($(2)_FAKEROOT) $(TAR) --overwrite -C $$($(2)_TARGET_DIR) -xf $(BINARIES_DIR)/rootfs.tar; \
 	fi

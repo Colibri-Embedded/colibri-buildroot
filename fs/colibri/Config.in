@@ -36,5 +36,8 @@ config BR2_ROOTFS_REMOVE_DOCUMENTATION
 
 config BR2_ROOTFS_REMOVE_DEVELOPMENT
 	bool "Remove development files"
+	
+config BR2_ROOTFS_INCLUDE_LEGAL_INFO
+	bool "Include legal info including licence files"
 
 endif

@@ -17,7 +17,7 @@ COLIBRI_EARLYBOOT_SITE_METHOD = local
 endif
 
 COLIBRI_EARLYBOOT_LICENSE = GPLv3
-COLIBRI_EARLYBOOT_LICENSE_FILES = LICENCE
+COLIBRI_EARLYBOOT_LICENSE_FILES = LICENSE
 
 #COLIBRI_EARLYBOOT_DEPENDENCIES = busybox-initramfs libc libuuid libblkid libsmartcols libacl libattr zlib liblzo ncurses readline parted fatresize fdisk btrfs-progs
 
