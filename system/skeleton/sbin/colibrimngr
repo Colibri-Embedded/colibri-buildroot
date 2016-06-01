@@ -1,0 +1,550 @@
+#!/bin/bash
+########################################################################
+#
+#  This file is part of colibri-linux.
+#  
+#  Copyright (C) 2016	Daniel Kesler <kesler.daniel@gmail.com>
+#  
+#  colibri-linux is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#  
+#  colibri-linux is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+#
+########################################################################
+
+## Automatic command extraction and execution
+# Create a list of __cmd__ commands
+COMMANDS=$(cat $0 | grep -o -e "^__.*__")
+
+R_SUCCESS=0
+R_REBOOT_REQUIRED=1
+R_ABORTED=2
+
+# Load earlyboot configuration
+source /mnt/live/lib/.config
+
+# Commands: begin
+#default: __help__
+
+# Helper functions 
+######################
+
+dbg_msg() {
+	echo $@
+}
+
+check_root() {
+	if ! [ $(id -u) = 0 ]; then
+	   echo "You are not root. Please use sudo $1"
+	   exit 1
+	fi
+}
+
+remount_bundles_rw() {
+	mount -o remount,rw /mnt/live/${BUNDLES}
+}
+
+remount_bundles_ro() {
+	mount -o remount,ro /mnt/live/${BUNDLES}
+}
+
+remount_boot_rw() {
+	mount -o remount,rw /mnt/live/mnt/boot
+}
+
+remount_boot_ro() {
+	mount -o remount,ro /mnt/live/mnt/boot
+}
+
+is_version_format_valid() {
+	echo $1 | grep -Eq "^[0-9]+([.][0-9]+)?$"
+}
+
+filename_to_bundleinfo() {
+	bundle=$(basename $1)
+	B=${bundle%%.cb*}
+	PRI=${B%%-*}
+	N1=${B##[0-9][0-9][0-9]-}
+	NAME=${N1%%-v[0-9]*}
+	VER=${N1##*[a-z_0-9]-v}
+	case "$2" in
+		name)
+			echo $NAME
+			;;
+		version)
+			echo $VER
+			;;
+		priority)
+			echo $PRI
+			;;
+		file)
+			echo $bundle
+			;;
+		*)
+			;;
+	esac
+}
+
+copy_to_bundles() {
+	B_FILE=$(basename $1)
+	if [ -f /mnt/live/${BUNDLES}/${B_FILE}.remove ]
+		# Postpone the overwrite until reboot
+		cp $1 /mnt/live/${BUNDLES}/${B_FILE}.overwrite
+	else
+		cp $1 /mnt/live/${BUNDLES}/
+	fi
+}
+
+remove_bundle() {
+	POSTPONE="$2"
+	CAN_REMOVE="no"
+	
+	BUNDLE=$(is_bundle_active $1)
+	if [ "x$BUNDLE" == "x" ]; then
+		CAN_REMOVE="yes"
+	fi
+
+	if [ $CAN_REMOVE == "yes" ]; then
+		BUNDLE=$(is_bundle_installed $1)
+		if [ "x$BUNDLE" != "x" ]; then
+			echo -n "Removing $BUNDLE..."
+			rm -f /mnt/live/${BUNDLES}/${BUNDLE}*
+			echo "DONE"
+		fi
+	else
+		if [ $POSTPONE == "yes" ]; then
+			REBOOT_REQUIRED="yes"
+			echo "Bundle $BUNDLE removal is postponed."
+			touch /mnt/live/${BUNDLES}/${BUNDLE}.remove
+			return $R_REBOOT_REQUIRED
+		else
+			echo "Bundle must be inactive to be removed."
+			return $R_ABORTED
+		fi
+	fi
+	
+	return $R_SUCCESS
+}
+
+activate_bundle() {
+	CB=$(is_bundle_active $1)
+	if [ "x$CB" == "x" ]; then
+		# Bundle is not already active.
+		CB=$(is_bundle_installed $1)
+		if [ "x$CB" != "x" ]; then
+			# Bundle is installed so let's activate it.
+			echo -n "Activating..."
+			mkdir -p /mnt/live/${BDATA}/${CB}
+			mount -o loop -t squashfs "/mnt/live/${BUNDLES}/${CB}" "/mnt/live/${BDATA}/${CB}" 2>/dev/null
+			mount -o remount,add:1:"/mnt/live/${BDATA}/${CB}" aufs / 2>/dev/null
+			echo "DONE"
+		else
+			echo "Bundle not installed"
+		fi
+	fi
+}
+
+deactivate_bundle() {
+	### @TODO: implement forcefull deactivation
+	CB=$(is_bundle_active $1)
+	FORCE="$2"
+	
+	
+	if [ "x$CB" != "x" ]; then
+		echo -n "Deactivating..."
+		mount -t aufs -o remount,verbose,del:"/mnt/live${BDATA}/${CB}" aufs / 2>/dev/null
+		umount /mnt/live/${BDATA}/${CB} 2>/dev/null 
+		rm -rf /mnt/live/${BDATA}/${CB}
+		echo "DONE"
+	else
+		CB=$(is_bundle_installed $1)
+		if [ "x$CB" == "x" ]; then
+			echo "Bundle not installed"
+		else
+			echo "Bundle is already deactivated"
+		fi
+	fi
+}
+
+is_bundle_installed() {
+	NEEDLE=$1
+	for bundle in $(cd /mnt/live/${BUNDLES}/; ls -d *.${BEXT});do
+		B=${bundle%%.cb*}
+		#PRI=${B%%-*}
+		N1=${B##[0-9][0-9][0-9]-}
+		NAME=${N1%%-v[0-9]*}
+		VER=${N1##*[a-z_0-9]-v}
+		OPTS=""
+
+		if is_version_format_valid $VER; then
+			if [ "x$NAME" == "x$NEEDLE" ]; then
+				echo ${bundle}
+				return 0
+			fi
+		fi
+	done
+	return 1
+}
+
+is_bundle_active()
+{
+	NEEDLE=$1
+	for bundle in $(cd /mnt/live/${BDATA}/; ls -d *.${BEXT});do
+		B=${bundle%%.cb*}
+		#PRI=${B%%-*}
+		N1=${B##[0-9][0-9][0-9]-}
+		NAME=${N1%%-v[0-9]*}
+		VER=${N1##*[a-z_0-9]-v}
+		OPTS=""
+
+		if [ "x$NAME" == "x$NEEDLE" ]; then
+			echo ${bundle}
+			return 0
+		fi
+	done
+	return 1
+}
+
+######################
+
+#help: This help.
+__help__()
+{
+	echo "Usage: $0 <command> [arguments]"
+	echo "Commands:"
+	for cmd in ${COMMANDS}; do
+		__cmd_name=$(echo $cmd | sed 's/__//g;s/_/-/')
+		_tmp=$(cat $0 | grep $cmd)
+		_tmp="${_tmp#*\()}"
+		__cmd_attrs="${_tmp#*#}"
+		_tmp=$(cat $0 | grep -B 1 -e "$cmd()" | awk 'BEGIN{RS="";FS="\n";};{print $1}')
+		__help_string="${_tmp#*#help:}"
+		#~ echo -e "    $__cmd_name\t: $__cmd_attrs"
+		echo -e "    $__cmd_name\t: $__help_string"
+	done
+}
+
+#help: List available bundles and their status.
+__list__()
+{
+	echo "list"
+	for bundle in $(cd /mnt/live/${BUNDLES}/; ls *.${BEXT});do
+		B=${bundle%%.cb*}
+		PRI=${B%%-*}
+		N1=${B##[0-9][0-9][0-9]-}
+		NAME=${N1%%-v[0-9]*}
+		VER=${N1##*[a-z_0-9]-v}
+		OPTS=""
+		
+		[ -e "/mnt/live/${BDATA}/${bundle}" ] && OPTS="${OPTS}A" || OPTS="${OPTS}-"
+		[ -e "/mnt/live/${BUNDLES}/${bundle}.skip" ] && OPTS="${OPTS}D"
+		
+		if is_version_format_valid $VER; then
+			echo "[${OPTS}] ${PRI} : ${NAME} : ${VER}"
+		else
+			echo "[!${OPTS}] ${PRI} : ${NAME} : ${VER}"
+		fi
+	done
+}
+
+#help: Activate bundles.
+__activate__() #min-args:1
+{
+	check_root
+	echo "activate [$@]"
+	
+	while [ $# -gt 0 ]
+	do
+		activate_bundle $1
+		shift
+	done
+}
+
+#help: Deactivate bundles.
+__deactivate__() #min-args:1
+{
+	check_root
+	echo "deactivate [$@]"
+	
+	FORCE="no"
+	
+	while [ $# -gt 0 ]
+	do
+		if [ "$1" == "-force" ]; then
+			FORCE="yes"
+		else
+			deactivate_bundle $1 ${FORCE}
+		fi
+		
+		shift
+	done
+}
+
+#help: Disable bundles.
+__disable__() #min-args:1
+{
+	check_root
+	dbg_msg "disable [$@]"
+	
+	remount_bundles_rw
+	
+	while [ $# -gt 0 ]
+	do
+	
+		BUNDLE=$(is_bundle_installed $1)
+		if [ "x$BUNDLE" != "x" ]; then
+			if [ ! -f /mnt/live/${BUNDLES}/${BUNDLE}.skip ]; then
+				touch /mnt/live/${BUNDLES}/${BUNDLE}.skip
+			fi
+		else
+			echo "Does not exist"
+		fi
+		shift
+	done
+	
+	remount_bundles_ro
+	sync
+}
+
+#help: Enable bundles.
+__enable__() #min-args:1
+{
+	check_root
+	dbg_msg "enable [$@]"
+	
+	remount_bundles_rw
+	
+	while [ $# -gt 0 ]
+	do
+		BUNDLE=$(is_bundle_installed $1)
+		if [ "x$BUNDLE" != "x" ]; then
+			if [ -f /mnt/live/${BUNDLES}/${BUNDLE}.skip ]; then
+				rm -rf /mnt/live/${BUNDLES}/${BUNDLE}.skip
+			fi
+		else
+			echo "Does not exist"
+		fi
+		shift
+	done
+	
+	remount_bundles_ro
+	sync
+}
+
+#help: Install one or more bundles.
+__install__() #min-args:1
+{
+	check_root
+	dbg_msg "install"
+	
+	REBOOT_REQUIRED="no"
+	POSTPONE="no"
+	FORCE="no"
+	CAN_REMOVE="no"
+	CAN_INSTALL="no"
+	TO_ACTIVATE=""
+	
+	remount_bundles_rw
+	
+	while [ $# -gt 0 ]
+	do
+		case $1 in
+		-postpone)
+			POSTPONE="yes"
+			;;
+		-force)
+			FORCE="yes"
+			;;
+		*)
+			B_NAME=$(filename_to_bundleinfo $1 name)
+			B_FILE=$(filename_to_bundleinfo $1 file)
+			B_FULL_FILENAME=$1
+			B_DIR=$(dirname $1)
+			CAN_INSTALL="no"
+			IS_INACTIVE="no"
+			
+			echo "B_NAME $B_NAME"
+			echo "B_FILE $B_FILE"
+			
+			if [ -f $B_FULL_FILENAME ]; then
+				# Check that md5sum file exists
+				if [ -f "${B_FULL_FILENAME}.md5sum" ]; then
+					
+					# Verify bundle integrity
+					md5sum -s -c ${B_FULL_FILENAME}.md5sum
+					if [ "$?" == "0" ]; then
+					
+						dbg_msg "md5sum: OK"
+					
+						# Check whether the bundle already exists
+						BUNDLE_FILE=$(is_bundle_installed $B_NAME)
+						if [ x"$BUNDLE_FILE" != "x" ]; then
+							# Bundle is installed
+							
+							dbg_msg "Bundle is installed"
+							
+							# Check whether the bundle is active
+							IS_BUNDLE_ACTIVE=$(is_bundle_active $B_NAME)
+							if [ x"$IS_BUNDLE_ACTIVE" == "x" ]; then
+								# Bundle is installed but is not active,
+								dbg_msg "Bundle is inactive"
+								# we can remove the bundle safely
+								remove_bundle $B_NAME
+								CAN_INSTALL="yes"
+								IS_INACTIVE="yes"
+							else
+								# Bundle is installed and is still active
+								dbg_msg "Bundle is active"
+								
+								# Check whether FORCE is requested
+								if [ x"$FORCE" == x"yes" ]; then
+									# Forcefully deactive the bundle and remove it
+									deactivate_bundle $B_NAME "yes"
+									# Remove the bundle
+									remove_bundle $B_NAME
+									CAN_INSTALL="yes"
+									IS_INACTIVE="yes"
+								else
+									# Check whether the install should be postponed
+									if [ x"$POSTPONE" == x"yes" ]; then
+										remove_bundle $B_NAME "yes"
+										CAN_INSTALL="yes"
+										REBOOT_REQUIRED="yes"
+									else
+										# Cannot remove an active bundle
+										# Aborting...
+										echo "Cannot install $B_FILE. Aborting..."
+									fi
+								fi
+							fi
+						else
+							CAN_INSTALL="yes"
+							IS_INACTIVE="yes"
+						fi
+						
+						# Check whether everything was resolved
+						if [ x"$CAN_INSTALL" == x"yes" ]; then
+							copy_to_bundles $B_FULL_FILENAME
+							
+							if [ x"$IS_INACTIVE" == x"yes" ]; then
+								TO_ACTIVATE="$TO_ACTIVATE $B_NAME"
+							fi
+						fi
+						
+					# ... if [ "$?" == "0" ]; then
+					else
+						echo "Wrong MD5 checksum. Bundle file might be corrupted."
+					fi
+				# ... if [ ! -f $B_FULL_FILENAME.md5sum ]; then
+				else
+					echo "No md5sum file found."
+				fi
+			# ... if [ -f $B_FULL_FILENAME ];
+			else
+				echo "Cannot open $B_FULL_FILENAME"
+			fi 
+			
+			;;		
+		esac
+		
+		shift
+	done
+	
+	remount_bundles_ro
+	sync
+	
+	for B in ${TO_ACTIVATE}; do
+		activate_bundle $B
+	done
+	
+	[ $REBOOT_REQUIRED == "yes" ] && echo "Reboot required."
+}
+
+#help: Remove one or more bundles.
+__remove__() #min-args:1
+{
+	check_root
+	echo "remove"
+	
+	REBOOT_REQUIRED="no"
+	POSTPONE="no"
+	
+	remount_bundles_rw
+	
+	while [ $# -gt 0 ]
+	do
+		case $1 in
+		-postpone)
+			POSTPONE="yes"
+			;;
+		*)
+			if remove_bundle $1 $POSTPONE; then
+				REBOOT_REQUIRED="yes"
+			fi
+			;;		
+		esac
+		
+		shift
+	done
+	
+	remount_bundles_ro
+	sync
+	
+	[ $REBOOT_REQUIRED == "yes" ] && echo "Reboot required."
+}
+
+#help: Update kernel,initramfs or bootloader.
+__update__() #min-args:1
+{
+	check_root
+	echo "update"
+}
+
+__test1__() #min-args:1
+{
+	check_root
+	echo "test1"
+	
+	CB=$1
+	#~ MP="/mnt/live/${BDATA}/${CB}"
+	
+	#~ LSOF_OUT=$(lsof $MP | sed -e "s@\t@#@g" )
+	
+	#~ for line in $LSOF_OUT; do
+		#~ echo $line
+	#~ done
+	
+	echo $(filename_to_bundleinfo $CB name)
+	
+	echo "INSTALLED: " $(is_bundle_installed $CB)
+	echo "ACTIVE:" $(is_bundle_active $CB)
+	
+}
+
+# Commands: end
+
+if [ $# -gt 0 ]; then
+	for cmd in ${COMMANDS}; do
+		__cmd_name=$(echo $cmd | sed 's/__//g;s/_/-/')
+		if [ "$__cmd_name" == "$1" ]; then
+			#_tmp=$(cat $0 | grep $__cmd_name)
+			#__cmd_attrs="${_tmp#*\#}"
+			shift
+			$(echo $cmd $@)
+			exit $?
+		fi
+	done
+fi
+
+# Get the default/fallback command
+_tmp=$(cat $0 | grep -e "^#default:.*")
+DEFAULT="${_tmp#*:}"
+$(echo ${DEFAULT})

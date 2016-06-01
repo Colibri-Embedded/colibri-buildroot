@@ -703,7 +703,7 @@ $(2)_SOURCE =
 
 $(2)_BUNDLE_IMAGE = $($(2)_ORDER)-$($(2)_NAME)-$($(2)_VERSION).cb
 $(2)_BUNDLE_IMAGE_PATTERN = $($(2)_ORDER)-$($(2)_NAME)-*.cb
-$(2)_BUNDLE_IMAGE_HASH = $($(2)_BUNDLE_IMAGE).md5sum
+$(2)_BUNDLE_IMAGE_HASH = $$($(2)_BUNDLE_IMAGE).md5sum
 
 # Fake a version string, so it looks nicer in the build log
 #$(2)_VERSION = virtual
