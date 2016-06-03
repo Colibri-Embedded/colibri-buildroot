@@ -38,7 +38,12 @@ source /mnt/live/lib/.config
 ######################
 
 dbg_msg() {
-	echo $@
+	echo "dbg: $@"
+}
+
+signal_reboot()
+{
+	echo "<reboot required>"
 }
 
 check_root() {
@@ -95,12 +100,25 @@ filename_to_bundleinfo() {
 
 copy_to_bundles() {
 	B_FILE=$(basename $1)
-	if [ -f /mnt/live/${BUNDLES}/${B_FILE}.remove ]
+	if [ -f /mnt/live/${BUNDLES}/${B_FILE}.remove ]; then
 		# Postpone the overwrite until reboot
 		cp $1 /mnt/live/${BUNDLES}/${B_FILE}.overwrite
+		chmod 644 /mnt/live/${BUNDLES}/${B_FILE}.overwrite
 	else
 		cp $1 /mnt/live/${BUNDLES}/
+		chmod 644 /mnt/live/${BUNDLES}/${B_FILE}
 	fi
+}
+
+copy_to_boot() {
+	SRC_FILE=$1
+	DST_FILE=$2
+	
+	if [ -f /mnt/live/mnt/boot/${DST_FILE} ]; then
+		mv /mnt/live/mnt/boot/${DST_FILE} /mnt/live/mnt/boot/${DST_FILE}.backup
+	fi
+	
+	cp ${SRC_FILE} /mnt/live/mnt/boot/${DST_FILE}
 }
 
 remove_bundle() {
@@ -116,12 +134,12 @@ remove_bundle() {
 		BUNDLE=$(is_bundle_installed $1)
 		if [ "x$BUNDLE" != "x" ]; then
 			echo -n "Removing $BUNDLE..."
-			rm -f /mnt/live/${BUNDLES}/${BUNDLE}*
+			rm -f /mnt/live/${BUNDLES}/${BUNDLE}
+			rm -f /mnt/live/${BUNDLES}/${BUNDLE}.*
 			echo "DONE"
 		fi
 	else
 		if [ $POSTPONE == "yes" ]; then
-			REBOOT_REQUIRED="yes"
 			echo "Bundle $BUNDLE removal is postponed."
 			touch /mnt/live/${BUNDLES}/${BUNDLE}.remove
 			return $R_REBOOT_REQUIRED
@@ -154,6 +172,7 @@ activate_bundle() {
 
 deactivate_bundle() {
 	### @TODO: implement forcefull deactivation
+	### @TODO: implement 'abort' in case processes are still using the bundle's content
 	CB=$(is_bundle_active $1)
 	FORCE="$2"
 	
@@ -176,7 +195,12 @@ deactivate_bundle() {
 
 is_bundle_installed() {
 	NEEDLE=$1
-	for bundle in $(cd /mnt/live/${BUNDLES}/; ls -d *.${BEXT});do
+	B_DIR=/mnt/live/${BUNDLES}
+	if [ "x$2" != "x" ]; then
+		B_DIR=$2
+	fi
+	
+	for bundle in $(cd ${B_DIR}; ls -d *.${BEXT});do
 		B=${bundle%%.cb*}
 		#PRI=${B%%-*}
 		N1=${B##[0-9][0-9][0-9]-}
@@ -255,7 +279,7 @@ __list__()
 	done
 }
 
-#help: Activate bundles.
+#help: <bundle_name>, Activate bundles.
 __activate__() #min-args:1
 {
 	check_root
@@ -268,7 +292,7 @@ __activate__() #min-args:1
 	done
 }
 
-#help: Deactivate bundles.
+#help: <bundle_name>, Deactivate bundles.
 __deactivate__() #min-args:1
 {
 	check_root
@@ -288,7 +312,7 @@ __deactivate__() #min-args:1
 	done
 }
 
-#help: Disable bundles.
+#help: <bundle_name>, Disable bundles.
 __disable__() #min-args:1
 {
 	check_root
@@ -314,7 +338,7 @@ __disable__() #min-args:1
 	sync
 }
 
-#help: Enable bundles.
+#help: <bundle_name>, Enable bundles.
 __enable__() #min-args:1
 {
 	check_root
@@ -339,7 +363,7 @@ __enable__() #min-args:1
 	sync
 }
 
-#help: Install one or more bundles.
+#help: [-force] [-postpone] <bundle_file>, Install one or more bundles.
 __install__() #min-args:1
 {
 	check_root
@@ -379,8 +403,12 @@ __install__() #min-args:1
 				if [ -f "${B_FULL_FILENAME}.md5sum" ]; then
 					
 					# Verify bundle integrity
+					PUSHD=$PWD
+					cd ${B_DIR}
 					md5sum -s -c ${B_FULL_FILENAME}.md5sum
-					if [ "$?" == "0" ]; then
+					VALID=$?
+					cd ${PUSHD}
+					if [ "$VALID" == "0" ]; then
 					
 						dbg_msg "md5sum: OK"
 					
@@ -433,6 +461,7 @@ __install__() #min-args:1
 						# Check whether everything was resolved
 						if [ x"$CAN_INSTALL" == x"yes" ]; then
 							copy_to_bundles $B_FULL_FILENAME
+							copy_to_bundles ${B_FULL_FILENAME}.md5sum
 							
 							if [ x"$IS_INACTIVE" == x"yes" ]; then
 								TO_ACTIVATE="$TO_ACTIVATE $B_NAME"
@@ -465,14 +494,19 @@ __install__() #min-args:1
 		activate_bundle $B
 	done
 	
-	[ $REBOOT_REQUIRED == "yes" ] && echo "Reboot required."
+	if [ $REBOOT_REQUIRED == "yes" ]; then
+		signal_reboot
+		return $R_REBOOT_REQUIRED
+	fi
+	
+	return $R_SUCCESS
 }
 
-#help: Remove one or more bundles.
+#help: [-postpone] <bundle_name> Remove one or more bundles.
 __remove__() #min-args:1
 {
 	check_root
-	echo "remove"
+	dbg_msg "remove"
 	
 	REBOOT_REQUIRED="no"
 	POSTPONE="no"
@@ -486,7 +520,8 @@ __remove__() #min-args:1
 			POSTPONE="yes"
 			;;
 		*)
-			if remove_bundle $1 $POSTPONE; then
+			remove_bundle $1 $POSTPONE
+			if [ "$?" == "$R_REBOOT_REQUIRED" ]; then
 				REBOOT_REQUIRED="yes"
 			fi
 			;;		
@@ -498,14 +533,129 @@ __remove__() #min-args:1
 	remount_bundles_ro
 	sync
 	
-	[ $REBOOT_REQUIRED == "yes" ] && echo "Reboot required."
+	if [ $REBOOT_REQUIRED == "yes" ]; then
+		signal_reboot
+		return $R_REBOOT_REQUIRED
+	fi
+	
+	return $R_SUCCESS
 }
 
-#help: Update kernel,initramfs or bootloader.
-__update__() #min-args:1
+#help: [-postpone] <bundle_name> Restore one or more bundles.
+__restore__() #min-args:1
 {
 	check_root
-	echo "update"
+	dbg_msg "restore"
+	
+	REBOOT_REQUIRED="no"
+	POSTPONE="no"
+	B_LIST=""
+	
+	#remount_bundles_rw
+	
+	while [ $# -gt 0 ]
+	do
+		case $1 in
+		-postpone)
+			POSTPONE="yes"
+			;;
+		*)
+			B_FILE=$(is_bundle_installed $1 "/mnt/live/mnt/boot/bundles")
+			if [ x"$B_FILE" != "x" ]; then
+				B_FILE="/mnt/live/mnt/boot/bundles/${B_FILE}"
+				B_LIST="${B_LIST} $B_FILE"
+				IS_BUNDLE_ACTIVE=$(is_bundle_active $1)
+				if [ x"${IS_BUNDLE_ACTIVE}" != "x" ]; then
+					# Bundle is active
+					if [ x"${POSTPONE}" != x"yes" ]; then
+						echo "Bundle is active. Abroting..."
+						return $R_ABORT
+					fi
+				else
+					# Bundle is inactive
+					B_LIST="${B_LIST} $B_FILE"
+				fi
+			else
+				return $R_ABORT
+			fi
+			;;
+		esac
+		
+		shift
+	done
+	
+	#remount_bundles_ro
+	#sync
+	if [  x"${POSTPONE}" == x"yes" ]; then
+		B_LIST="-postpone ${B_LIST}"
+	fi
+	
+	echo "__install__ ${B_LIST}"
+	__install__ ${B_LIST}
+}
+
+#help: <kernel|initramfs|bootloader> <file>, Update kernel,initramfs or bootloader.
+__updateboot__() #min-args:1
+{
+	check_root
+	dbg_msg "updateboot"
+	
+	CMD=$1
+	B_FILE=$2
+	B_DIRECT=$3
+	REBOOT_REQUIRED="no"
+	
+	if [ ! -f  $B_FILE ]; then
+		echo "$B_FILE cannot be opened"
+		return $R_ABORTED
+	fi
+	
+	remount_boot_rw
+	
+	case $CMD in
+		kernel)
+			dbg_msg "kernel"
+			copy_to_boot ${B_FILE} "kernel.img"
+			REBOOT_REQUIRED="yes"
+			;;
+		initramfs)
+			dbg_msg "initramfs"
+			copy_to_boot ${B_FILE} "initramfs.img"
+			REBOOT_REQUIRED="yes"
+			;;
+		earlyboot-webui)
+			dbg_msg "earlyboot-webui"
+			copy_to_boot ${B_FILE} "earlyboot/webui.tar"
+			REBOOT_REQUIRED="no"
+			;;
+		earlyboot-product)
+			dbg_msg "earlyboot-product-sh"
+			copy_to_boot ${B_FILE} "earlyboot/product.sh"
+			REBOOT_REQUIRED="no"
+			;;
+		earlyboot-conf)
+			dbg_msg "earlyboot-conf"
+			copy_to_boot ${B_FILE} "earlyboot/earlyboot.conf"
+			REBOOT_REQUIRED="no"
+			;;
+		direct)
+			dbg_msg "direct"
+			copy_to_boot ${B_FILE} ${B_DIRECT}
+			REBOOT_REQUIRED="no"
+			;;			
+		*)
+			echo "'$CMD' is not supported."
+	esac
+	
+	remount_boot_ro
+	sync
+	
+	if [ $REBOOT_REQUIRED == "yes" ]; then
+		signal_reboot
+		return $R_REBOOT_REQUIRED
+	fi
+	
+	return $R_SUCCESS
 }
 
 __test1__() #min-args:1

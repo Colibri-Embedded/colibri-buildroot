@@ -99,13 +99,13 @@ DROPBEAR_CONF_OPTS += --disable-lastlog
 endif
 
 define DROPBEAR_INSTALL_TARGET_CMDS
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(DROPBEAR_TARGET_DIR)/usr/sbin
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(DROPBEAR_TARGET_DIR)/usr/bin
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) $(INSTALL) -m 755 $(@D)/dropbearmulti $(DROPBEAR_TARGET_DIR)/usr/sbin/dropbear
+	$(DROPBEAR_FAKEROOT) $(INSTALL) -d -m 0755 $(DROPBEAR_TARGET_DIR)/usr/sbin
+	$(DROPBEAR_FAKEROOT) $(INSTALL) -d -m 0755 $(DROPBEAR_TARGET_DIR)/usr/bin
+	$(DROPBEAR_FAKEROOT) $(INSTALL) -m 755 $(@D)/dropbearmulti $(DROPBEAR_TARGET_DIR)/usr/sbin/dropbear
 	for f in $(DROPBEAR_TARGET_BINS); do \
-		$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) ln -snf ../sbin/dropbear $(DROPBEAR_TARGET_DIR)/usr/bin/$$f ; \
+		$(DROPBEAR_FAKEROOT) ln -snf ../sbin/dropbear $(DROPBEAR_TARGET_DIR)/usr/bin/$$f ; \
 	done
-	$(DROPBEAR_FAKEROOT) $(DROPBEAR_FAKEROOT_ENV) mkdir -p $(DROPBEAR_TARGET_DIR)/etc/dropbear
+	$(DROPBEAR_FAKEROOT) mkdir -p $(DROPBEAR_TARGET_DIR)/etc/dropbear
 endef
 
 $(eval $(autotools-package))
