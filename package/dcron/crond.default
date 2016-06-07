@@ -1,0 +1,10 @@
+CROND_PIDFILE=/run/crond.pid
+
+# Decide whether to use log file or syslog
+if [ "x${USE_SYSLOG}" == "xyes" ]; then
+	CROND_OPTIONS="-S"
+else
+	CROND_LOGFILE=/var/log/crond.log
+	CROND_OPTIONS="-L $CROND_LOGFILE"
+fi
+

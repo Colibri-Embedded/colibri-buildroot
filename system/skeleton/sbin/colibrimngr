@@ -104,6 +104,8 @@ copy_to_bundles() {
 		# Postpone the overwrite until reboot
 		cp $1 /mnt/live/${BUNDLES}/${B_FILE}.overwrite
 		chmod 644 /mnt/live/${BUNDLES}/${B_FILE}.overwrite
+		cp ${1}.md5sum /mnt/live/${BUNDLES}/${B_FILE}.md5sum.overwrite
+		chmod 644 /mnt/live/${BUNDLES}/${B_FILE}.md5sum.overwrite
 	else
 		cp $1 /mnt/live/${BUNDLES}/
 		chmod 644 /mnt/live/${BUNDLES}/${B_FILE}
