@@ -19,9 +19,24 @@ case "$1" in
   start)
  	boot_msg "Mounting /proc and /sys."
 
+	mount -n /dev || failed=1
 	mount -n /proc || failed=1
 	mount -n /sys || failed=1
 	
+	(exit ${failed})
+	evaluate_retval
+	
+ 	boot_msg "Remounting root file system in read-write mode."
+	mount -n -o remount,rw / &> /dev/null
+	evaluate_retval
+	
+	rm -r /fastboot /forcefsck &> /dev/null
+	
+	boot_msg "Recording existing mounts in /etc/mtab."
+	> /etc/mtab
+	mount -n -f / || failed=1
+	mount -f /proc || failed=1
+	mount -f /sys || failed=1
 	(exit ${failed})
 	evaluate_retval
 	;;

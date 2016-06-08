@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "console" > /mnt/live/run/rc.earlyboot
+/etc/init.d/rc shutdown
+

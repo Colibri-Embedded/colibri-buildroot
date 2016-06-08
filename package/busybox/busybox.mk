@@ -63,7 +63,7 @@ define BUSYBOX_INSTALL_MDEV_SCRIPT
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.sysinit.d	
 	
 	$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/mdev \
-		$(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.sysinit.d/S85mdev
+		$(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.sysinit.d/S10mdev
 endef
 define BUSYBOX_INSTALL_MDEV_CONF
 	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0644 package/busybox/mdev.conf \
