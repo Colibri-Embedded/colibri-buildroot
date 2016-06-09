@@ -6,7 +6,7 @@
 # 
 # Authors     : Daniel Kesler
 # 
-# Version     : 1.00
+# Version     : 1.10
 #
 # Notes       :
 #
@@ -18,9 +18,9 @@
 case "$1" in
   start)
     boot_msg "Starting mdev."
+    ### Hotplug ###
 	echo /sbin/mdev >/proc/sys/kernel/hotplug
-	### Hotplug ###
-	/sbin/mdev -s
+	#/sbin/mdev -s # Skipping in favour of devtmpfs
 	evaluate_retval
 	
 	### Coldplug ###
