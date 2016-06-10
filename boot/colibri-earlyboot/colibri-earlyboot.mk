@@ -37,7 +37,7 @@ endif
 # Packages where only some files are used in initramfs image
 COLIBRI_EARLYBOOT_TEMP_IMPORT += util-linux
 # Packages which full content is used in the initramfs image
-COLIBRI_EARLYBOOT_FULL_IMPORT += busybox-initramfs zlib lzo ncurses readline parted fatresize dosfstools earlyboot-utils rsync
+COLIBRI_EARLYBOOT_FULL_IMPORT += busybox-initramfs zlib lzo ncurses readline parted fatresize dosfstools earlyboot-utils
 
 # Combine all used packages and remove duplicates
 COLIBRI_EARLYBOOT_DEPENDENCIES = $(sort $(COLIBRI_EARLYBOOT_TEMP_IMPORT) $(COLIBRI_EARLYBOOT_FULL_IMPORT) ) 

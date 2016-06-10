@@ -158,7 +158,7 @@ endif
 AVAHI_MAKE_OPTS += $(if $(BR2_NEEDS_GETTEXT_IF_LOCALE),LIBS=-lintl)
 
 define AVAHI_USERS
-	avahi -1 avahi -1 * - - -
+	avahi 70 avahi 70 * /run/avahi-daemon - - Avahi mDNS/DNS-SD Stack
 endef
 
 define AVAHI_REMOVE_INITSCRIPT

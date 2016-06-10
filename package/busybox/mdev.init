@@ -20,7 +20,7 @@ case "$1" in
     boot_msg "Starting mdev."
     ### Hotplug ###
 	echo /sbin/mdev >/proc/sys/kernel/hotplug
-	#/sbin/mdev -s # Skipping in favour of devtmpfs
+	/sbin/mdev -s
 	evaluate_retval
 	
 	### Coldplug ###

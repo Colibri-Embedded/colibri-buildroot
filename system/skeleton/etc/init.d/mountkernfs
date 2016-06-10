@@ -30,7 +30,7 @@ case "$1" in
 	mount -n -o remount,rw / &> /dev/null
 	evaluate_retval
 	
-	rm -r /fastboot /forcefsck &> /dev/null
+	#rm -r /fastboot /forcefsck &> /dev/null
 	
 	boot_msg "Recording existing mounts in /etc/mtab."
 	> /etc/mtab

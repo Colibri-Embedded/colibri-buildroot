@@ -355,6 +355,9 @@ endif
 $(1)-show-depends:
 			@echo $$($(2)_FINAL_DEPENDENCIES)
 
+$(1)-show-usertable:
+	@echo $$($(2)_PACKAGES)
+
 $(1)-graph-depends: graph-depends-requirements
 			@$$(INSTALL) -d $$(O)/graphs
 			@cd "$$(CONFIG_DIR)"; \
@@ -629,6 +632,15 @@ define bundle-add-metadata
 	$$($(2)_FAKEROOT) echo "build-date: $(shell date +%Y-%m-%d)" >> $(3)/var/lib/colibri/bundle/$($(2)_NAME)/info
 endef
 
+define bundle-add-users
+	if [ -n "$($(1)_USERS)" ]; then \
+		$$($(2)_FAKEROOT) touch $(3)/var/lib/colibri/bundle/$($(2)_NAME)/user_table; \
+		printf '$$(subst $$(sep),\n,$$($(1)_USERS)$$(sep))' >> $(3)/var/lib/colibri/bundle/$($(2)_NAME)/user_table; \
+		echo "User-table for: $(2)"; \
+		echo "$($(1)_USERS)"; \
+	fi;
+endef
+
 ifeq ($(BR2_TARGET_ROOTFS_COLIBRI_LZ4),y)
 BUNDLE_SQUASHFS_ARGS += -comp lz4
 else
@@ -730,6 +742,9 @@ define $(2)_INSTALL_TARGET_CMDS
 	mkdir -p $$($(2)_TARGET_DIR)
 	
 	$(call bundle-add-metadata,$(1),$(2),$$($(2)_TARGET_DIR))
+	
+#	$(call bundle-add-users,$(1),$(2),$$($(2)_TARGET_DIR))
+	$(foreach pkgname,$($(2)_PACKAGES),$(call bundle-add-users,$(call UPPERCASE,$(pkgname)),$(2),$$($(2)_TARGET_DIR)))
 	
 	if [ "x$($(2)_ADD_ROOTFS)" == "xYES" ] ; then \
 		$$($(2)_FAKEROOT) $(TAR) --overwrite -C $$($(2)_TARGET_DIR) -xf $(BINARIES_DIR)/rootfs.tar; \
