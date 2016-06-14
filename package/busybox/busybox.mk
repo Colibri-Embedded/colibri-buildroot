@@ -197,6 +197,7 @@ define BUSYBOX_INSTALL_LOGGING_SCRIPT
 		$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.shutdown.d; \
 		$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/logging $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.sysinit.d/S81logging; \
 		$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/logging $(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S61logging; \
+		$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0644 package/busybox/syslog.conf $(BUSYBOX_TARGET_DIR)/etc/syslog.conf; \
 	fi
 endef
 

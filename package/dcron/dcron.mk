@@ -28,6 +28,7 @@ define DCRON_INSTALL_TARGET_CMDS
 	
 	$(DCRON_FAKEROOT) mkdir -p -m=700 $(DCRON_TARGET_DIR)/var/spool/cron
 	$(DCRON_FAKEROOT) mkdir -p -m=700 $(DCRON_TARGET_DIR)/var/spool/cron/crontabs
+	$(DCRON_FAKEROOT) mkdir -p -m=700 $(DCRON_TARGET_DIR)/var/spool/cron/cronstamps
 	
 	$(DCRON_FAKEROOT) $(INSTALL) -d \
 	        $(DCRON_TARGET_DIR)/etc/cron.daily \

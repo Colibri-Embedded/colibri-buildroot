@@ -582,16 +582,21 @@ define bundle-install-package
 	$$($(1)_FAKEROOT) $(TAR) --overwrite -C $(3) -xf $$($(2)_TARGET_ARCHIVE);
 	$$($(1)_FAKEROOT) mkdir -p $(3)/var/lib/colibri/bundle/$($(1)_NAME)
 	$$($(1)_FAKEROOT) echo "$($(2)_NAME): $($(2)_VERSION)" >> $(3)/var/lib/colibri/bundle/$($(1)_NAME)/packages
+	$$($(1)_FAKEROOT) echo "$($(2)_NAME): $($(2)_LICENSE)" >> $(3)/var/lib/colibri/bundle/$($(1)_NAME)/licences
 	@echo "Importing $(2)";
 endef
 
 ifeq ($(BR2_ROOTFS_REMOVE_DOCUMENTATION),y)
+# $1: target-dir
+# $2: bundle-name
 define bundle-remove-documentation
 	$$($(2)_FAKEROOT) rm -rf $(1)/usr/share/{doc,man,info,gtk-doc,aclocal}/*
 endef
 endif
 
 ifeq ($(BR2_ROOTFS_REMOVE_DEVELOPMENT),y)
+# $1: target-dir
+# $2: bundle-name
 define bundle-remove-development
 	$$($(2)_FAKEROOT) rm -rf $(1)/usr/lib/cmake
     $$($(2)_FAKEROOT) rm -rf $(1)/usr/include/*
@@ -604,10 +609,17 @@ endef
 endif
 
 ifeq ($(BR2_ROOTFS_INCLUDE_LEGAL_INFO),y)
+# $1: upper-case-pkgname, 
+# $2: upper-case-bundle-name
+# $3: target-dir
 define bundle-include-legal-info
+	#$$($(2)_FAKEROOT) mkdir -p $(3)/usr/shared/licences/$($(2)_NAME)
+	$$($(2)_FAKEROOT) $$(TOPDIR)/support/scripts/get-license-file.sh $(3) $($(1)_NAME) $$($(1)_DIR) $(DL_DIR) "$($(1)_LICENSE)" "$($(1)_LICENSE_FILES)"
 endef
 endif
 
+# $1: target-dir
+# $2: bundle-name
 define bundle-strip-executables
 # Executables and libraries
 	echo "#!/bin/bash" > $$(@D)/strip_files.sh
@@ -632,6 +644,9 @@ define bundle-add-metadata
 	$$($(2)_FAKEROOT) echo "build-date: $(shell date +%Y-%m-%d)" >> $(3)/var/lib/colibri/bundle/$($(2)_NAME)/info
 endef
 
+# $1: upper-case-pkgname, 
+# $2: upper-case-bundle-name
+# $3: target-dir
 define bundle-add-users
 	if [ -n "$($(1)_USERS)" ]; then \
 		$$($(2)_FAKEROOT) touch $(3)/var/lib/colibri/bundle/$($(2)_NAME)/user_table; \
@@ -743,8 +758,9 @@ define $(2)_INSTALL_TARGET_CMDS
 	
 	$(call bundle-add-metadata,$(1),$(2),$$($(2)_TARGET_DIR))
 	
-#	$(call bundle-add-users,$(1),$(2),$$($(2)_TARGET_DIR))
 	$(foreach pkgname,$($(2)_PACKAGES),$(call bundle-add-users,$(call UPPERCASE,$(pkgname)),$(2),$$($(2)_TARGET_DIR)))
+	
+	$(foreach pkgname,$($(2)_PACKAGES),$(call bundle-include-legal-info,$(call UPPERCASE,$(pkgname)),$(2),$$($(2)_TARGET_DIR)))
 	
 	if [ "x$($(2)_ADD_ROOTFS)" == "xYES" ] ; then \
 		$$($(2)_FAKEROOT) $(TAR) --overwrite -C $$($(2)_TARGET_DIR) -xf $(BINARIES_DIR)/rootfs.tar; \

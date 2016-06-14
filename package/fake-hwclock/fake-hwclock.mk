@@ -21,12 +21,20 @@ define FAKE_HWCLOCK_INSTALL_TARGET_CMDS
 	$(FAKE_HWCLOCK_FAKEROOT) $(INSTALL) -D -m 0644 $(@D)/etc/default/fake-hwclock \
 		$(FAKE_HWCLOCK_TARGET_DIR)/etc/default/fake-hwclock
 	
+	$(FAKE_HWCLOCK_FAKEROOT) $(INSTALL) -d -m 0755 $(FAKE_HWCLOCK_TARGET_DIR)/etc/rc.d/rc.sysinit.d
+	$(FAKE_HWCLOCK_FAKEROOT) $(INSTALL) -d -m 0755 $(FAKE_HWCLOCK_TARGET_DIR)/etc/rc.d/rc.shutdown.d
+	
+	$(FAKE_HWCLOCK_FAKEROOT) ln -fs ../../init.d/fake-hwclock \
+		$(FAKE_HWCLOCK_TARGET_DIR)/etc/rc.d/rc.sysinit.d/S50fake-hwclock
+	$(FAKE_HWCLOCK_FAKEROOT) ln -fs ../../init.d/fake-hwclock \
+		$(FAKE_HWCLOCK_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S65fake-hwclock
+	
 	# Store current time as it's closer to reality then 1970 :)
 	$(FAKE_HWCLOCK_FAKEROOT) date -u '+%Y-%m-%d %H:%M:%S' > $(FAKE_HWCLOCK_TARGET_DIR)/etc/fake-hwclock.data
 	
 	# Manual pages
 	$(FAKE_HWCLOCK_FAKEROOT) $(INSTALL) -D -m 0644 $(@D)/fake-hwclock.8 \
-		$(FAKE_HWCLOCK_TARGET_DIR)/usr/shared/man/man8/fake-hwclock.8
+		$(FAKE_HWCLOCK_TARGET_DIR)/usr/share/man/man8/fake-hwclock.8
 endef
 
 $(eval $(generic-package))
