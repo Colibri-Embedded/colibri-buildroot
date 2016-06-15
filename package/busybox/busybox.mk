@@ -266,6 +266,11 @@ define BUSYBOX_INSTALL_NTPD_SCRIPT
 		
 	$(BUSYBOX_FAKEROOT) ln -fs ../../init.d/ntpd \
 		$(BUSYBOX_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S49ntpd
+	
+	# NTPD keepalive fix
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -d -m 0755 $(BUSYBOX_TARGET_DIR)/etc/cron.d
+	$(BUSYBOX_FAKEROOT) $(INSTALL) -D -m 0644 package/busybox/ntpd.cron \
+		$(BUSYBOX_TARGET_DIR)/etc/cron.d/ntpd
 endef
 endif
 

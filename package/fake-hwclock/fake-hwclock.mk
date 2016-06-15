@@ -28,6 +28,10 @@ define FAKE_HWCLOCK_INSTALL_TARGET_CMDS
 		$(FAKE_HWCLOCK_TARGET_DIR)/etc/rc.d/rc.sysinit.d/S50fake-hwclock
 	$(FAKE_HWCLOCK_FAKEROOT) ln -fs ../../init.d/fake-hwclock \
 		$(FAKE_HWCLOCK_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S65fake-hwclock
+		
+	# Cron task
+	$(FAKE_HWCLOCK_FAKEROOT) $(INSTALL) -d -m 0755 $(FAKE_HWCLOCK_TARGET_DIR)/etc/cron.hourly
+	$(FAKE_HWCLOCK_FAKEROOT) $(INSTALL) -D -m 0755 package/fake-hwclock/fake-hwclock.cron $(FAKE_HWCLOCK_TARGET_DIR)/etc/cron.hourly/fake-hwclock
 	
 	# Store current time as it's closer to reality then 1970 :)
 	$(FAKE_HWCLOCK_FAKEROOT) date -u '+%Y-%m-%d %H:%M:%S' > $(FAKE_HWCLOCK_TARGET_DIR)/etc/fake-hwclock.data

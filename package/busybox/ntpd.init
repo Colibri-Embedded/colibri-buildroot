@@ -38,8 +38,17 @@ case "$1" in
 		sleep 1
 		${0} start
 		;;
+	status)
+		start-stop-daemon -K -t -p $NTPD_PIDFILE
+		;;
+	keepalive)
+		${0} status &> /dev/null
+		if [ ! $? -eq 0 ]; then
+			${0} start
+		fi
+		;;
 	*)
-		echo "Usage: $0 {start|stop|restart}"
+		echo "Usage: $0 {start|stop|restart|reload|status}"
 		exit 1
 esac
 

@@ -40,6 +40,9 @@ case "$1" in
 		boot_msg "Stopping dropbear sshd."
 		start-stop-daemon -K -q -p $DROPBEAR_PIDFILE
 		evaluate_retval
+		
+		# Stop any remaining open ssh connection
+		killall dropbear &> /dev/null
 		;;
 	restart|reload)
 		${0} stop

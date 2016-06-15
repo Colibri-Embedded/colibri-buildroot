@@ -1,0 +1,2 @@
+# NTPD keepalive cron task
+*/5 * * * * /etc/init.d/ntpd keepalive

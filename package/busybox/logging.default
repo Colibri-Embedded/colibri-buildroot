@@ -1,4 +1,7 @@
 SYSLOGD_PIDFILE=/run/syslogd.pid
+# -s <size>, size in KB, 0=off no size limit
+# -b <N>, number of log rotations to keep, default is 1
+# For more optioins see 'syslogd --help'
 SYSLOGD_OPTIONS=
 
 KLOGD_PIDFILE=/run/klogd.pid
