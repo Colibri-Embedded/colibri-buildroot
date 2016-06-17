@@ -582,7 +582,7 @@ define bundle-install-package
 	$$($(1)_FAKEROOT) $(TAR) --overwrite -C $(3) -xf $$($(2)_TARGET_ARCHIVE);
 	$$($(1)_FAKEROOT) mkdir -p $(3)/var/lib/colibri/bundle/$($(1)_NAME)
 	$$($(1)_FAKEROOT) echo "$($(2)_NAME): $($(2)_VERSION)" >> $(3)/var/lib/colibri/bundle/$($(1)_NAME)/packages
-	$$($(1)_FAKEROOT) echo "$($(2)_NAME): $($(2)_LICENSE)" >> $(3)/var/lib/colibri/bundle/$($(1)_NAME)/licences
+	$$($(1)_FAKEROOT) echo "$($(2)_NAME): $($(2)_LICENSE)" >> $(3)/var/lib/colibri/bundle/$($(1)_NAME)/licenses
 	@echo "Importing $(2)";
 endef
 

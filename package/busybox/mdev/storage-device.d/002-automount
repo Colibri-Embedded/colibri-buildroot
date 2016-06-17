@@ -31,6 +31,10 @@ export ACTION=$2
 
 [ "${MDEV}" ] || exit 2
 
+make_friendly_label() {
+    echo $@ | sed "s/ /_/g"
+}
+
 mount_device() {
 	local UUID LABEL TYPE PPTYPE PARTLABEL PARTUUID
 	if command -v blkid >/dev/null 2>&1; then
@@ -77,9 +81,10 @@ mount_device() {
 		M=$(mount | grep /dev/${MDEV})
 		# mount the device only if it is not mounted already
 		if [ -z "$M" ]; then
-			mkdir -p /media/${LABEL}
-			echo "/media/${LABEL}" > /run/.${MDEV}_mount_dir
-			mount /dev/${MDEV} /media/${LABEL}
+			MOUNT_POINT=/run/media/$(make_friendly_label ${LABEL})
+			mkdir -p ${MOUNT_POINT}
+			echo "${MOUNT_POINT}" > /run/.${MDEV}_mount_dir
+			mount /dev/${MDEV} ${MOUNT_POINT}
 		fi
 	fi
 }
@@ -88,7 +93,7 @@ umount_device() {
 	# Check whether this device was automounted
 	if [ -e /run/.${MDEV}_mount_dir ]; then
 		DIR=$(cat /run/.${MDEV}_mount_dir)
-		umount /dev/${MDEV}
+		umount /${DIR}
 		rm -rf ${DIR}
 		rm /run/.${MDEV}_mount_dir
 	fi
