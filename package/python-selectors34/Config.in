@@ -1,0 +1,8 @@
+config BR2_PACKAGE_PYTHON_SELECTORS34
+	bool "python-serpent"
+	depends on BR2_PACKAGE_PYTHON
+	help
+	  python-selectors34 is a backport of the selectors module 
+	  from Python 3.4. 
+	  
+	  https://pypi.python.org/pypi/selectors34/

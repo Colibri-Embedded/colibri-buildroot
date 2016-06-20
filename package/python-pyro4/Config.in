@@ -1,0 +1,11 @@
+config BR2_PACKAGE_PYTHON_PYRO
+	bool "python-pyro4"
+	select BR2_PACKAGE_PYTHON_SERPENT
+	select BR2_PACKAGE_PYTHON_SELECTORS34
+	depends on BR2_PACKAGE_PYTHON
+	help
+	  python-pyro is a Python library stands for PYthon Remote Objects.
+	  It is an advanced and powerful Distributed Object Technology system
+	  written entirely in Python, that is designed to be very easy to use..
+
+	  https://pypi.python.org/pypi/Pyro4/

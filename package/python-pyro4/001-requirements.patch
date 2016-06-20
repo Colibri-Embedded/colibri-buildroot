@@ -1,0 +1,20 @@
+diff -ruN Pyro4-4.45.orig/requirements.txt Pyro4-4.45/requirements.txt
+--- Pyro4-4.45.orig/requirements.txt	2016-06-20 18:16:31.897107748 +0200
++++ Pyro4-4.45/requirements.txt	2016-06-20 18:16:44.184903551 +0200
+@@ -1,2 +1,2 @@
+ serpent>=1.11
+-selectors34 ; python_version < "3.4"
++selectors34
+diff -ruN Pyro4-4.45.orig/setup.py Pyro4-4.45/setup.py
+--- Pyro4-4.45.orig/setup.py	2016-06-20 18:16:31.903107648 +0200
++++ Pyro4-4.45/setup.py	2016-06-20 18:20:59.888654317 +0200
+@@ -45,9 +45,6 @@
+         "scripts": [],
+         "platforms": "any",
+         "install_requires": ["serpent>=1.11"],
+-        "extras_require": {
+-            ':python_version<"3.4"': ["selectors34"]
+-        },
+         "requires": ["serpent"],
+         "classifiers": [
+             "Development Status :: 5 - Production/Stable",

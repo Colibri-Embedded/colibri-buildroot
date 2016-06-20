@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_SERPENT
+	bool "python-serpent"
+	depends on BR2_PACKAGE_PYTHON
+	help
+	  python-serpent is a simple serialization library.
+	  
+	  https://pypi.python.org/pypi/serpent/
