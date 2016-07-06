@@ -13,5 +13,3 @@ PYTHON_PYRO4_SETUP_TYPE = setuptools
 PYTHON_PYRO4_DEPENDENCIES = python-serpent python-selectors34 python-six
 
 $(eval $(python-package))
-
-#https://github.com/irmen/Pyro4/archive/4.45.tar.gz
