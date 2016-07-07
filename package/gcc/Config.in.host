@@ -95,8 +95,8 @@ config BR2_GCC_VERSION
 	default "4.2.2-avr32-2.1.5" if BR2_GCC_VERSION_4_2_2_AVR32_2_1_5
 	default "4.5.4"     if BR2_GCC_VERSION_4_5_X
 	default "4.7.4"     if BR2_GCC_VERSION_4_7_X
-	default "4.8.4"     if BR2_GCC_VERSION_4_8_X
-	default "4.9.2"     if BR2_GCC_VERSION_4_9_X
+	default "4.8.5"     if BR2_GCC_VERSION_4_8_X
+	default "4.9.3"     if BR2_GCC_VERSION_4_9_X
 	default "arc-2014.12" if BR2_GCC_VERSION_4_8_ARC
 
 config BR2_EXTRA_GCC_CONFIG_OPTIONS

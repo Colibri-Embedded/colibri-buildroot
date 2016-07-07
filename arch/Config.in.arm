@@ -59,6 +59,31 @@ choice
 	help
 	  Specific CPU variant to use
 
+config BR2_armv4
+	bool "armv4"
+	select BR2_ARM_CPU_ARMV4
+	select BR2_ARM_CPU_HAS_ARM
+	select BR2_ARM_CPU_HAS_THUMB
+config BR2_armv5
+	bool "armv5"
+	select BR2_ARM_CPU_ARMV5
+	select BR2_ARM_CPU_HAS_ARM
+	select BR2_ARM_CPU_HAS_THUMB
+	select BR2_ARM_CPU_MAYBE_HAS_VFPV2
+config BR2_armv6
+	bool "armv6"
+	select BR2_ARM_CPU_ARMV6
+	select BR2_ARM_CPU_HAS_ARM
+	select BR2_ARM_CPU_HAS_THUMB
+	select BR2_ARM_CPU_MAYBE_HAS_VFPV2
+config BR2_armv7
+	bool "armv7"
+	select BR2_ARM_CPU_ARMV7
+	select BR2_ARM_CPU_HAS_ARM
+	select BR2_ARM_CPU_HAS_THUMB
+	select BR2_ARM_CPU_MAYBE_HAS_VFPV2
+	select BR2_ARM_CPU_MAYBE_HAS_VFPV3
+	select BR2_ARM_CPU_MAYBE_HAS_VFPV4
 config BR2_arm920t
 	bool "arm920t"
 	select BR2_ARM_CPU_HAS_ARM
@@ -376,6 +401,12 @@ config BR2_ENDIAN
 
 config BR2_ARCH_HAS_ATOMICS
 	default y
+	
+config BR2_GCC_TARGET_ARCH
+	default "armv4"	if BR2_ARM_CPU_ARMV4
+	default "armv5"	if BR2_ARM_CPU_ARMV5
+	default "armv6"	if BR2_ARM_CPU_ARMV6
+	default "armv7"	if BR2_ARM_CPU_ARMV7
 
 config BR2_GCC_TARGET_CPU
 	default "arm920t"	if BR2_arm920t
