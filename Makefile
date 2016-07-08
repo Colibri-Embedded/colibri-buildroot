@@ -398,6 +398,7 @@ include $(sort $(wildcard package/*/*.mk))
 
 include boot/common.mk
 include linux/linux.mk
+include linux2/linux2.mk
 include system/system.mk
 include fs/common.mk
 

@@ -1,12 +1,10 @@
-menu "Kernel"
-
-config BR2_LINUX_KERNEL
-	bool "Linux Kernel"
+config BR2_LINUX2_KERNEL
+	bool "Linux Kernel (secondary)"
 	help
-	  Enable this option if you want to build a Linux kernel for
+	  Enable this option if you want to build a second Linux kernel for
 	  your embedded device
 
-if BR2_LINUX_KERNEL
+if BR2_LINUX2_KERNEL
 
 #
 # Version selection. We provide the choice between:
@@ -20,10 +18,13 @@ if BR2_LINUX_KERNEL
 choice
 	prompt "Kernel version"
 
-config BR2_LINUX_KERNEL_LATEST_VERSION
+config BR2_LINUX2_KERNEL_SAME_AS_PRIMARY_VERSION
+	bool "Same as primary"
+
+config BR2_LINUX2_KERNEL_LATEST_VERSION
 	bool "3.18.6"
 
-config BR2_LINUX_KERNEL_SAME_AS_HEADERS
+config BR2_LINUX2_KERNEL_SAME_AS_HEADERS
 	bool "Same as toolchain kernel headers"
 	depends on BR2_TOOLCHAIN_BUILDROOT
 	help
@@ -34,7 +35,7 @@ config BR2_LINUX_KERNEL_SAME_AS_HEADERS
 	  not a requirement, but using the same version allows to
 	  download only one tarball of the kernel sources.
 
-config BR2_LINUX_KERNEL_CUSTOM_VERSION
+config BR2_LINUX2_KERNEL_CUSTOM_VERSION
 	bool "Custom version"
 	help
 	  This option allows to use a specific official version from
@@ -45,7 +46,7 @@ config BR2_LINUX_KERNEL_CUSTOM_VERSION
 	  URL at kernel.org. Instead, select "Custom tarball" and
 	  specify the right URL directly.
 
-config BR2_LINUX_KERNEL_CUSTOM_TARBALL
+config BR2_LINUX2_KERNEL_CUSTOM_TARBALL
 	bool "Custom tarball"
 	help
 	  This option allows to specify a URL pointing to a kernel source
@@ -56,19 +57,19 @@ config BR2_LINUX_KERNEL_CUSTOM_TARBALL
 	  use a make variable like $(TOPDIR) to reference the root of the
 	  Buildroot tree.
 
-config BR2_LINUX_KERNEL_CUSTOM_GIT
+config BR2_LINUX2_KERNEL_CUSTOM_GIT
 	bool "Custom Git repository"
 	help
 	  This option allows Buildroot to get the Linux kernel source
 	  code from a Git repository.
 
-config BR2_LINUX_KERNEL_CUSTOM_HG
+config BR2_LINUX2_KERNEL_CUSTOM_HG
 	bool "Custom Mercurial repository"
 	help
 	  This option allows Buildroot to get the Linux kernel source
 	  code from a Mercurial repository.
 
-config BR2_LINUX_KERNEL_CUSTOM_LOCAL
+config BR2_LINUX2_KERNEL_CUSTOM_LOCAL
 	bool "Local directory"
 	help
 	  This option allows Buildroot to get the Linux kernel source
@@ -76,55 +77,55 @@ config BR2_LINUX_KERNEL_CUSTOM_LOCAL
 
 endchoice
 
-config BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE
+config BR2_LINUX2_KERNEL_CUSTOM_VERSION_VALUE
 	string "Kernel version"
-	depends on BR2_LINUX_KERNEL_CUSTOM_VERSION
+	depends on BR2_LINUX2_KERNEL_CUSTOM_VERSION
 
-config BR2_LINUX_KERNEL_CUSTOM_TARBALL_LOCATION
+config BR2_LINUX2_KERNEL_CUSTOM_TARBALL_LOCATION
 	string "URL of custom kernel tarball"
-	depends on BR2_LINUX_KERNEL_CUSTOM_TARBALL
+	depends on BR2_LINUX2_KERNEL_CUSTOM_TARBALL
 
-if BR2_LINUX_KERNEL_CUSTOM_GIT || BR2_LINUX_KERNEL_CUSTOM_HG
+if BR2_LINUX2_KERNEL_CUSTOM_GIT || BR2_LINUX2_KERNEL_CUSTOM_HG
 
-config BR2_LINUX_KERNEL_CUSTOM_REPO_URL
+config BR2_LINUX2_KERNEL_CUSTOM_REPO_URL
 	string "URL of custom repository"
-	default BR2_LINUX_KERNEL_CUSTOM_GIT_REPO_URL \
-		if BR2_LINUX_KERNEL_CUSTOM_GIT_REPO_URL != ""  # legacy
+	default BR2_LINUX2_KERNEL_CUSTOM_GIT_REPO_URL \
+		if BR2_LINUX2_KERNEL_CUSTOM_GIT_REPO_URL != ""  # legacy
 
-config BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION
+config BR2_LINUX2_KERNEL_CUSTOM_REPO_VERSION
 	string "Custom repository version"
-	default BR2_LINUX_KERNEL_CUSTOM_GIT_VERSION \
-		if BR2_LINUX_KERNEL_CUSTOM_GIT_VERSION != ""  # legacy
+	default BR2_LINUX2_KERNEL_CUSTOM_GIT_VERSION \
+		if BR2_LINUX2_KERNEL_CUSTOM_GIT_VERSION != ""  # legacy
 	help
 	  Revision to use in the typical format used by Git/Mercurial
 	  E.G. a sha id, a tag, branch, ..
 
 endif
 
-config BR2_LINUX_KERNEL_CUSTOM_LOCAL_PATH
+config BR2_LINUX2_KERNEL_CUSTOM_LOCAL_PATH
 	string "Path to the local directory"
-	depends on BR2_LINUX_KERNEL_CUSTOM_LOCAL
+	depends on BR2_LINUX2_KERNEL_CUSTOM_LOCAL
 	help
 	  Path to the local directory with the Linux kernel source code.
 
-config BR2_LINUX_KERNEL_VERSION
+config BR2_LINUX2_KERNEL_VERSION
 	string
-	default "3.18.6" if BR2_LINUX_KERNEL_LATEST_VERSION
-	default BR2_DEFAULT_KERNEL_HEADERS if BR2_LINUX_KERNEL_SAME_AS_HEADERS
-	default BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE \
-		if BR2_LINUX_KERNEL_CUSTOM_VERSION
-	default "custom" if BR2_LINUX_KERNEL_CUSTOM_TARBALL
-	default BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION \
-		if BR2_LINUX_KERNEL_CUSTOM_GIT || BR2_LINUX_KERNEL_CUSTOM_HG
-	default "custom" if BR2_LINUX_KERNEL_CUSTOM_LOCAL
-
+	default "3.18.6" if BR2_LINUX2_KERNEL_LATEST_VERSION
+	default BR2_DEFAULT_KERNEL_HEADERS if BR2_LINUX2_KERNEL_SAME_AS_HEADERS
+	default BR2_LINUX2_KERNEL_CUSTOM_VERSION_VALUE \
+		if BR2_LINUX2_KERNEL_CUSTOM_VERSION
+	default "custom" if BR2_LINUX2_KERNEL_CUSTOM_TARBALL
+	default BR2_LINUX2_KERNEL_CUSTOM_REPO_VERSION \
+		if BR2_LINUX2_KERNEL_CUSTOM_GIT || BR2_LINUX2_KERNEL_CUSTOM_HG
+	default "custom" if BR2_LINUX2_KERNEL_CUSTOM_LOCAL
+	default BR2_LINUX_KERNEL_VERSION if BR2_LINUX2_KERNEL_SAME_AS_PRIMARY_VERSION
 #
 # Patch selection
 #
 
-config BR2_LINUX_KERNEL_PATCH
+config BR2_LINUX2_KERNEL_PATCH
 	string "Custom kernel patches"
-	depends on !BR2_LINUX_KERNEL_CUSTOM_LOCAL
+	depends on !BR2_LINUX2_KERNEL_CUSTOM_LOCAL
 	help
 	  A space-separated list of patches to apply to the
 	  kernel. Each patch can be described as an URL, a local file
@@ -137,27 +138,27 @@ config BR2_LINUX_KERNEL_PATCH
 
 choice
 	prompt "Kernel configuration"
-	default BR2_LINUX_KERNEL_USE_DEFCONFIG
+	default BR2_LINUX2_KERNEL_USE_DEFCONFIG
 
-config BR2_LINUX_KERNEL_USE_DEFCONFIG
+config BR2_LINUX2_KERNEL_USE_DEFCONFIG
 	bool "Using a defconfig"
 
-config BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG
+config BR2_LINUX2_KERNEL_USE_CUSTOM_CONFIG
 	bool "Using a custom config file"
 
 endchoice
 
-config BR2_LINUX_KERNEL_DEFCONFIG
+config BR2_LINUX2_KERNEL_DEFCONFIG
 	string "Defconfig name"
-	depends on BR2_LINUX_KERNEL_USE_DEFCONFIG
+	depends on BR2_LINUX2_KERNEL_USE_DEFCONFIG
 	help
 	  Name of the kernel defconfig file to use, without the
 	  trailing _defconfig.  The defconfig is located in
 	  arch/<arch>/configs in the kernel tree.
 
-config BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE
+config BR2_LINUX2_KERNEL_CUSTOM_CONFIG_FILE
 	string "Configuration file path"
-	depends on BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG
+	depends on BR2_LINUX2_KERNEL_USE_CUSTOM_CONFIG
 	help
 	  Path to the kernel configuration file
 
@@ -165,73 +166,73 @@ config BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE
 # Binary format
 #
 
-config BR2_LINUX_KERNEL_UBOOT_IMAGE
+config BR2_LINUX2_KERNEL_UBOOT_IMAGE
 	bool
 
 choice
 	prompt "Kernel binary format"
 
-config BR2_LINUX_KERNEL_UIMAGE
+config BR2_LINUX2_KERNEL_UIMAGE
 	bool "uImage"
 	depends on BR2_arc || BR2_arm || BR2_armeb || BR2_bfin || \
 		   BR2_powerpc || BR2_avr32 || BR2_sh || BR2_sh64 || \
 		   BR2_mips || BR2_mipsel || BR2_mips64 || BR2_mips64el
-	select BR2_LINUX_KERNEL_UBOOT_IMAGE
+	select BR2_LINUX2_KERNEL_UBOOT_IMAGE
 
-config BR2_LINUX_KERNEL_APPENDED_UIMAGE
+config BR2_LINUX2_KERNEL_APPENDED_UIMAGE
 	bool "uImage with appended DT"
 	depends on BR2_arm || BR2_armeb
-	select BR2_LINUX_KERNEL_DTS_SUPPORT
-	select BR2_LINUX_KERNEL_APPENDED_DTB
-	select BR2_LINUX_KERNEL_UBOOT_IMAGE
+	select BR2_LINUX2_KERNEL_DTS_SUPPORT
+	select BR2_LINUX2_KERNEL_APPENDED_DTB
+	select BR2_LINUX2_KERNEL_UBOOT_IMAGE
 
-config BR2_LINUX_KERNEL_BZIMAGE
+config BR2_LINUX2_KERNEL_BZIMAGE
 	bool "bzImage"
 	depends on BR2_i386 || BR2_x86_64
 
-config BR2_LINUX_KERNEL_ZIMAGE
+config BR2_LINUX2_KERNEL_ZIMAGE
 	bool "zImage"
 	depends on BR2_arm || BR2_armeb || BR2_powerpc || \
 		   BR2_powerpc64 || BR2_powerpc64le || BR2_sparc || \
 		   BR2_sh || BR2_sh64 || BR2_xtensa
 
-config BR2_LINUX_KERNEL_APPENDED_ZIMAGE
+config BR2_LINUX2_KERNEL_APPENDED_ZIMAGE
 	bool "zImage with appended DT"
 	depends on BR2_arm || BR2_armeb
-	select BR2_LINUX_KERNEL_DTS_SUPPORT
-	select BR2_LINUX_KERNEL_APPENDED_DTB
+	select BR2_LINUX2_KERNEL_DTS_SUPPORT
+	select BR2_LINUX2_KERNEL_APPENDED_DTB
 
-config BR2_LINUX_KERNEL_CUIMAGE
+config BR2_LINUX2_KERNEL_CUIMAGE
 	bool "cuImage"
 	depends on BR2_powerpc
-	select BR2_LINUX_KERNEL_UBOOT_IMAGE
-	select BR2_LINUX_KERNEL_DTS_SUPPORT
-	select BR2_LINUX_KERNEL_DTB_IS_SELF_BUILT
+	select BR2_LINUX2_KERNEL_UBOOT_IMAGE
+	select BR2_LINUX2_KERNEL_DTS_SUPPORT
+	select BR2_LINUX2_KERNEL_DTB_IS_SELF_BUILT
 
-config BR2_LINUX_KERNEL_SIMPLEIMAGE
+config BR2_LINUX2_KERNEL_SIMPLEIMAGE
 	bool "simpleImage"
 	depends on BR2_microblaze
-	select BR2_LINUX_KERNEL_UBOOT_IMAGE
-	select BR2_LINUX_KERNEL_DTS_SUPPORT
-	select BR2_LINUX_KERNEL_DTB_IS_SELF_BUILT
+	select BR2_LINUX2_KERNEL_UBOOT_IMAGE
+	select BR2_LINUX2_KERNEL_DTS_SUPPORT
+	select BR2_LINUX2_KERNEL_DTB_IS_SELF_BUILT
 
-config BR2_LINUX_KERNEL_LINUX_BIN
+config BR2_LINUX2_KERNEL_LINUX_BIN
 	bool "linux.bin"
 	depends on BR2_microblaze
-	select BR2_LINUX_KERNEL_UBOOT_IMAGE
+	select BR2_LINUX2_KERNEL_UBOOT_IMAGE
 
-config BR2_LINUX_KERNEL_VMLINUX_BIN
+config BR2_LINUX2_KERNEL_VMLINUX_BIN
 	bool "vmlinux.bin"
 	depends on BR2_mips || BR2_mipsel || BR2_sh || BR2_sh64
 
-config BR2_LINUX_KERNEL_VMLINUX
+config BR2_LINUX2_KERNEL_VMLINUX
 	bool "vmlinux"
 
-config BR2_LINUX_KERNEL_VMLINUZ
+config BR2_LINUX2_KERNEL_VMLINUZ
 	bool "vmlinuz"
 	depends on BR2_mips || BR2_mipsel
 
-config BR2_LINUX_KERNEL_IMAGE_TARGET_CUSTOM
+config BR2_LINUX2_KERNEL_IMAGE_TARGET_CUSTOM
 	bool "custom target"
 	help
 	  For certain cases a board-specific target image must be
@@ -244,27 +245,27 @@ config BR2_LINUX_KERNEL_IMAGE_TARGET_CUSTOM
 
 endchoice
 
-config BR2_LINUX_KERNEL_IMAGE_TARGET_NAME
+config BR2_LINUX2_KERNEL_IMAGE_TARGET_NAME
 	string "Kernel image target name"
-	depends on BR2_LINUX_KERNEL_IMAGE_TARGET_CUSTOM
+	depends on BR2_LINUX2_KERNEL_IMAGE_TARGET_CUSTOM
 	help
 	  Specify the kernel make target to build the kernel that you
 	  need.
 
-config BR2_LINUX_KERNEL_IMAGE_NAME
+config BR2_LINUX2_KERNEL_IMAGE_NAME
 	string "Kernel image name"
-	depends on BR2_LINUX_KERNEL_IMAGE_TARGET_CUSTOM
+	depends on BR2_LINUX2_KERNEL_IMAGE_TARGET_CUSTOM
 	help
 	  The filename of the kernel image, if it is different from the
 	  make target (above). Only Xtensa uses a filename different from
-	  the make target. Defaults to BR2_LINUX_KERNEL_IMAGE_TARGET_NAME.
+	  the make target. Defaults to BR2_LINUX2_KERNEL_IMAGE_TARGET_NAME.
 
 	  If unsure, leave it empty.
 
-config BR2_LINUX_KERNEL_UIMAGE_LOADADDR
+config BR2_LINUX2_KERNEL_UIMAGE_LOADADDR
 	string "load address (for 3.7+ multi-platform image)"
 	depends on BR2_arm || BR2_armeb
-	depends on BR2_LINUX_KERNEL_UIMAGE || BR2_LINUX_KERNEL_APPENDED_UIMAGE
+	depends on BR2_LINUX2_KERNEL_UIMAGE || BR2_LINUX2_KERNEL_APPENDED_UIMAGE
 	help
 	  If your ARM system's Linux kernel is configured with the new (3.7+)
 	  multi-architecture support (CONFIG_ARCH_MULTIPLATFORM=y in your
@@ -274,13 +275,13 @@ config BR2_LINUX_KERNEL_UIMAGE_LOADADDR
 
 	  If unsure, let this option empty.
 
-config BR2_LINUX_KERNEL_DTS_SUPPORT
+config BR2_LINUX2_KERNEL_DTS_SUPPORT
 	bool "Build a Device Tree Blob (DTB)"
 	help
 	  Compile one or more device tree sources into device tree blobs.
 	  Select the dts files to compile in the options below.
 
-if BR2_LINUX_KERNEL_DTS_SUPPORT
+if BR2_LINUX2_KERNEL_DTS_SUPPORT
 
 # We have mainly three cases when it comes to device tree support:
 #   1) We don't want any support at all. Then the ..DTS_SUPPORT
@@ -296,24 +297,24 @@ if BR2_LINUX_KERNEL_DTS_SUPPORT
 #      more logic will be needed.
 # The variable below address the second case, were you only want
 # limited actions from buildroot.
-config BR2_LINUX_KERNEL_DTB_IS_SELF_BUILT
+config BR2_LINUX2_KERNEL_DTB_IS_SELF_BUILT
 	bool
 
-config BR2_LINUX_KERNEL_APPENDED_DTB
+config BR2_LINUX2_KERNEL_APPENDED_DTB
 	bool
 
 choice
 	prompt "Device tree source"
-	default BR2_LINUX_KERNEL_USE_INTREE_DTS
+	default BR2_LINUX2_KERNEL_USE_INTREE_DTS
 
-config BR2_LINUX_KERNEL_USE_INTREE_DTS
+config BR2_LINUX2_KERNEL_USE_INTREE_DTS
 	bool "Use a device tree present in the kernel."
 	help
 	  Use a device tree source distributed with
 	  the kernel sources. The dts files are located
 	  in the arch/<arch>/boot/dts folder.
 
-config BR2_LINUX_KERNEL_USE_CUSTOM_DTS
+config BR2_LINUX2_KERNEL_USE_CUSTOM_DTS
 	bool "Use a custom device tree file"
 	help
 	  Use a custom device tree file, i.e, a device
@@ -321,17 +322,17 @@ config BR2_LINUX_KERNEL_USE_CUSTOM_DTS
 	  source tree.
 endchoice
 
-config BR2_LINUX_KERNEL_INTREE_DTS_NAME
+config BR2_LINUX2_KERNEL_INTREE_DTS_NAME
 	string "Device Tree Source file names"
-	depends on BR2_LINUX_KERNEL_USE_INTREE_DTS
+	depends on BR2_LINUX2_KERNEL_USE_INTREE_DTS
 	help
 	  Name of the device tree source file, without
 	  the trailing .dts. You can provide a list of
 	  dts files to build, separated by spaces.
 
-config BR2_LINUX_KERNEL_CUSTOM_DTS_PATH
+config BR2_LINUX2_KERNEL_CUSTOM_DTS_PATH
 	string "Device Tree Source file paths"
-	depends on BR2_LINUX_KERNEL_USE_CUSTOM_DTS
+	depends on BR2_LINUX2_KERNEL_USE_CUSTOM_DTS
 	help
 	  Path to the device tree source files. You can
 	  provide a list of dts paths to copy and build,
@@ -339,7 +340,7 @@ config BR2_LINUX_KERNEL_CUSTOM_DTS_PATH
 
 endif
 
-config BR2_LINUX_KERNEL_INSTALL_TARGET
+config BR2_LINUX2_KERNEL_INSTALL_TARGET
 	bool "Install kernel image to /boot in target"
 	depends on !BR2_TARGET_ROOTFS_INITRAMFS
 	help
@@ -351,7 +352,19 @@ config BR2_LINUX_KERNEL_INSTALL_TARGET
 	  /boot if DTBs have been generated by the kernel build
 	  process.
 
-config BR2_LINUX_KERNEL_INSTALL_SDCARD
+if BR2_LINUX2_KERNEL_INSTALL_TARGET
+
+config BR2_LINUX2_KERNEL_INSTALL_TARGET_NAME
+	string "Install kernel image to /boot in target with a custom name"
+	default "zImage2"
+	help
+	  Select this option to have the kernel image installed to
+	  /boot in the target root filesystem with a specified name so that
+	  it doesn't overwrite the primary kernel
+
+endif # BR2_LINUX2_KERNEL_INSTALL_TARGET
+
+config BR2_LINUX2_KERNEL_INSTALL_SDCARD
 	bool "Install kernel image to /sdcard"
 	help
 	  Select this option to have the kernel image installed to
@@ -360,25 +373,17 @@ config BR2_LINUX_KERNEL_INSTALL_SDCARD
 	  Note that this option also installs the Device Tree Blobs to
 	  /sdcard if DTBs have been generated by the kernel build
 	  process.
-	  
-if BR2_LINUX_KERNEL_INSTALL_SDCARD
 
-config BR2_LINUX_KERNEL_INSTALL_SDCARD_NAME
+if BR2_LINUX2_KERNEL_INSTALL_SDCARD
+
+config BR2_LINUX2_KERNEL_INSTALL_SDCARD_NAME
 	string "Install kernel image to /sdcard in target with a custom name"
-	default "kernel.img"
+	default "kernel2.img"
 	help
 	  Select this option to have the kernel image installed to
 	  /sdcard in the target root filesystem with a specified name so that
 	  it doesn't overwrite the primary kernel
 	  
-endif # BR2_LINUX_KERNEL_INSTALL_SDCARD
+endif # BR2_LINUX2_KERNEL_INSTALL_SDCARD
 
-# Linux extensions
-source "linux/Config.ext.in"
-
-# Secondary Linux
-source "linux2/Config.in"
-
-endif # BR2_LINUX_KERNEL
-
-endmenu
+endif # BR2_LINUX2_KERNEL
