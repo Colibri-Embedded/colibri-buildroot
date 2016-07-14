@@ -1,0 +1,23 @@
+config BR2_PACKAGE_LINUX_FIRMWARE_EXTRA
+	bool "linux-firmware-extra"
+	help
+	  This package provides various binary firmware files (closed
+	  binary blobs) for such devices like LAN, WLAN cards etc.
+	  That are not part (not yet) of upstream linux-firmware.
+
+	  https://github.com/Colibri-Embedded/linux-firmware-extra
+
+if BR2_PACKAGE_LINUX_FIRMWARE_EXTRA
+
+
+menu "WiFi firmware"
+
+config BR2_PACKAGE_LINUX_FIRMWARE_BRCM_BCM43430
+	bool "Broadcom BRCM bcm43430"
+	help
+	  Firmware files for the Broadcom bcm43430 WiFi/Bluetooth combo chip.
+
+endmenu
+
+
+endif # BR2_PACKAGE_LINUX_FIRMWARE_EXTRA
