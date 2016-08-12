@@ -33,13 +33,13 @@ PYTHON_NUMPY_INSTALL_STAGING = YES
 # host-python will be used for building SciPy but it is linked to host blas libraries
 # therefore the target site.cfg is copied to link it to target libraries
 define HOST_PYTHON_NUMPY_COPY_TARGET_FILES
-	cp $(STAGING_DIR)/usr/lib/python2.7/site-packages/numpy/distutils/site.cfg $(HOST_DIR)/usr/lib/python2.7/site-packages/numpy/distutils/
-	rm -f $(HOST_DIR)/usr/lib/python2.7/site-packages/numpy/core/lib/libnpymath.a
-	cp $(STAGING_DIR)/usr/lib/python2.7/site-packages/numpy/core/lib/libnpymath.a $(HOST_DIR)/usr/lib/python2.7/site-packages/numpy/core/lib/
+	cp $(STAGING_DIR)/usr/lib/python$(SELECTED_PYTHON_VERSION_MAJOR)/site-packages/numpy/distutils/site.cfg $(HOST_DIR)/usr/lib/python$(SELECTED_PYTHON_VERSION_MAJOR)/site-packages/numpy/distutils/
+	rm -f $(HOST_DIR)/usr/lib/python$(SELECTED_PYTHON_VERSION_MAJOR)/site-packages/numpy/core/lib/libnpymath.a
+	cp $(STAGING_DIR)/usr/lib/python$(SELECTED_PYTHON_VERSION_MAJOR)/site-packages/numpy/core/lib/libnpymath.a $(HOST_DIR)/usr/lib/python$(SELECTED_PYTHON_VERSION_MAJOR)/site-packages/numpy/core/lib/
 endef
 
 define HOST_PYTHON_NUMPY_FORCE_CROSS_GFORTRAN
-	sed -e "s@possible_executables = \['gfortran'\]@possible_executables = \['$(TARGET_CROSS)gfortran'\]@" -i $(HOST_DIR)/usr/lib/python2.7/site-packages/numpy/distutils/fcompiler/gnu.py
+	sed -e "s@possible_executables = \['gfortran'\]@possible_executables = \['$(TARGET_CROSS)gfortran'\]@" -i $(HOST_DIR)/usr/lib/python$(SELECTED_PYTHON_VERSION_MAJOR)/site-packages/numpy/distutils/fcompiler/gnu.py
 endef
 
 HOST_PYTHON_NUMPY_POST_INSTALL_HOOKS += HOST_PYTHON_NUMPY_COPY_TARGET_FILES \

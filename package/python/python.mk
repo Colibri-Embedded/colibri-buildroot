@@ -218,6 +218,10 @@ endif
 PYTHON_PATH = $(HOST_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/sysconfigdata/:$(HOST_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/:$(STAGING_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/sysconfigdata/:$(STAGING_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/
 #HOST_PYTHON_PATH = $(HOST_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/sysconfigdata/:$(HOST_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages/
 
+ifeq ($(BR2_PACKAGE_PYTHON),y)
+SELECTED_PYTHON_VERSION_MAJOR=$(PYTHON_VERSION_MAJOR)
+endif
+
 $(eval $(autotools-package))
 $(eval $(host-autotools-package))
 
