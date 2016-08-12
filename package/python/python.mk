@@ -143,7 +143,7 @@ PYTHON_CONF_OPTS += \
 	--disable-tk		\
 	--disable-nis		\
 	--disable-dbm		\
-	--disable-pyo-build
+	--disable-pyc-build
 
 # This is needed to make sure the Python build process doesn't try to
 # regenerate those files with the pgen program. Otherwise, it builds
@@ -225,20 +225,39 @@ endif
 $(eval $(autotools-package))
 $(eval $(host-autotools-package))
 
+define PYTHON_CREATE_PYC_FILES
+	PYTHONPATH="$(PYTHON_PATH)" \
+	$(HOST_DIR)/usr/bin/python$(PYTHON_VERSION_MAJOR) \
+		support/scripts/pycompile.py \
+		$(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)
+endef
+
+ifeq ($(BR2_PACKAGE_PYTHON_PYC_ONLY)$(BR2_PACKAGE_PYTHON_PY_PYC),y)
+PYTHON_POST_INSTALL_TARGET_HOOKS += PYTHON_CREATE_PYC_FILES
+endif
+
 ifeq ($(BR2_PACKAGE_PYTHON_PYC_ONLY),y)
-define PYTHON_FINALIZE_TARGET_REMOVE_PY
-	$(PYTHON_FAKEROOT) $(PYTHON_FAKEROOT_ENV) find $(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR) -name '*.py' -delete
+define PYTHON_REMOVE_PY_FILES
+	find $(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR) -name '*.py' -print0 | \
+		xargs -0 --no-run-if-empty rm -f
 endef
-
-PYTHON_POST_INSTALL_TARGET_HOOKS += PYTHON_FINALIZE_TARGET_REMOVE_PY
-
+PYTHON_POST_INSTALL_TARGET_HOOKS += PYTHON_REMOVE_PY_FILES
 endif
 
+# Normally, *.pyc files should not have been compiled, but just in
+# case, we make sure we remove all of them.
 ifeq ($(BR2_PACKAGE_PYTHON_PY_ONLY),y)
-define PYTHON_FINALIZE_TARGET_REMOVE_PYC
-	$(PYTHON_FAKEROOT) $(PYTHON_FAKEROOT_ENV) find $(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR) -name '*.pyc' -delete
+define PYTHON_REMOVE_PYC_FILES
+	find $(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR) -name '*.pyc' -print0 | \
+		xargs -0 --no-run-if-empty rm -f
 endef
-
-PYTHON_POST_INSTALL_TARGET_HOOKS += PYTHON_FINALIZE_TARGET_REMOVE_PYC
-
+PYTHON_POST_INSTALL_TARGET_HOOKS += PYTHON_REMOVE_PYC_FILES
 endif
+
+# In all cases, we don't want to keep the optimized .pyo files
+define PYTHON_REMOVE_PYO_FILES
+	find $(PYTHON_TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR) -name '*.pyo' -print0 | \
+		xargs -0 --no-run-if-empty rm -f
+endef
+PYTHON_POST_INSTALL_TARGET_HOOKS += PYTHON_REMOVE_PYO_FILES
+

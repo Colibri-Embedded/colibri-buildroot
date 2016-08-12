@@ -80,7 +80,7 @@ $(2)_PYTHON_DISTUTILS_ENV = \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	LDSHARED="$(TARGET_CROSS)gcc -shared" \
 	CROSS_COMPILE="$(TARGET_CROSS)" \
-	PYTHONPATH="$(if $(BR2_PACKAGE_PYTHON3),$(PYTHON3_PATH),$(PYTHON_PATH)):$$($(2)_TARGET_DIR)/usr/lib/python$$(SELECTED_PYTHON_VERSION_MAJOR)/site-packages" \
+	PYTHONPATH="$$($(2)_TARGET_DIR)/usr/lib/python$$(SELECTED_PYTHON_VERSION_MAJOR)/site-packages" \
 	_python_sysroot=$(STAGING_DIR) \
 	_python_prefix=/usr \
 	_python_exec_prefix=/usr
@@ -96,7 +96,7 @@ $(2)_PYTHON_SETUPTOOLS_ENV = \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	LDSHARED="$(TARGET_CROSS)gcc -shared -L$(STAGING_DIR)/usr/lib" \
 	CROSS_COMPILE="$(TARGET_CROSS)" \
-	PYTHONPATH="$(if $(BR2_PACKAGE_PYTHON3),$(PYTHON3_PATH),$(PYTHON_PATH)):$$($(2)_TARGET_DIR)/usr/lib/python$$(SELECTED_PYTHON_VERSION_MAJOR)/site-packages" \
+	PYTHONPATH="$$($(2)_TARGET_DIR)/usr/lib/python$$(SELECTED_PYTHON_VERSION_MAJOR)/site-packages" \
 	_python_sysroot=$(STAGING_DIR) \
 	_python_prefix=/usr \
 	_python_exec_prefix=/usr
@@ -119,7 +119,7 @@ endif
 # Distutils
 ifeq ($$($(2)_SETUP_TYPE),distutils)
 ifeq ($(4),target)
-$(2)_BASE_ENV         = $$($(2)_PYTHON_DISTUTILS_ENV) $$($(2)_DISTUTILS_OPTS)
+$(2)_BASE_ENV         = $$($(2)_PYTHON_DISTUTILS_ENV)
 $(2)_BASE_BUILD_TGT   = build
 $(2)_BASE_BUILD_OPTS   = $$(PKG_PYTHON_DISTUTILS_BUILD_OPTS)
 
@@ -135,7 +135,7 @@ endif
 # Setuptools
 else ifeq ($$($(2)_SETUP_TYPE),setuptools)
 ifeq ($(4),target)
-$(2)_BASE_ENV         = $$($(2)_PYTHON_SETUPTOOLS_ENV) $$($(2)_SETUPTOOLS_OPTS)
+$(2)_BASE_ENV         = $$($(2)_PYTHON_SETUPTOOLS_ENV)
 $(2)_BASE_BUILD_TGT   = build
 $(2)_BASE_BUILD_OPTS   =
 $(2)_BASE_INSTALL_TARGET_OPTS  = --prefix=$$(PACKAGES_DIR)/$(1)/usr \

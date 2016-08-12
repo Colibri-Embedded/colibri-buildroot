@@ -144,6 +144,16 @@ define HOST_PYTHON3_INSTALL_TOOLS
 	cp $(@D)/Parser/pgen $(HOST_DIR)/usr/bin/python-pgen
 	cp $(@D)/Programs/_freeze_importlib $(HOST_DIR)/usr/bin/python-freeze-importlib
 endef
+
+# Python from version 3.2 makes extensions have extensions of format 
+# 'cpython-XXm-ARCH-SYSTEM.so'. This is a problem as the generated 
+# extension is for the host python not for the target. Therefore the 
+# extension is hard wired to just '.so' which is also fully supported.
+define hoat_python3_fix_ext_so
+	sed -e "s@ext_suffix = get_config_var('EXT_SUFFIX')@ext_suffix = '.so'@g" -i $(HOST_DIR)/usr/lib/python$(PYTHON3_VERSION_MAJOR)/distutils/command/build_ext.py
+endef
+
+HOST_PYTHON3_POST_INSTALL_HOOKS += hoat_python3_fix_ext_so
 HOST_PYTHON3_POST_INSTALL_HOOKS += HOST_PYTHON3_INSTALL_TOOLS
 
 PYTHON3_CONF_ENV += \
@@ -222,7 +232,7 @@ define PYTHON3_CREATE_PYC_FILES
 endef
 
 ifeq ($(BR2_PACKAGE_PYTHON3_PYC_ONLY)$(BR2_PACKAGE_PYTHON3_PY_PYC),y)
-PYTHON3_TARGET_FINALIZE_HOOKS += PYTHON3_CREATE_PYC_FILES
+PYTHON3_POST_INSTALL_TARGET_HOOKS += PYTHON3_CREATE_PYC_FILES
 endif
 
 ifeq ($(BR2_PACKAGE_PYTHON3_PYC_ONLY),y)
@@ -230,7 +240,7 @@ define PYTHON3_REMOVE_PY_FILES
 	find $(PYTHON3_TARGET_DIR)/usr/lib/python$(PYTHON3_VERSION_MAJOR) -name '*.py' -print0 | \
 		xargs -0 --no-run-if-empty rm -f
 endef
-PYTHON3_TARGET_FINALIZE_HOOKS += PYTHON3_REMOVE_PY_FILES
+PYTHON3_POST_INSTALL_TARGET_HOOKS += PYTHON3_REMOVE_PY_FILES
 endif
 
 # Normally, *.pyc files should not have been compiled, but just in
@@ -240,7 +250,7 @@ define PYTHON3_REMOVE_PYC_FILES
 	find $(PYTHON3_TARGET_DIR)/usr/lib/python$(PYTHON3_VERSION_MAJOR) -name '*.pyc' -print0 | \
 		xargs -0 --no-run-if-empty rm -f
 endef
-PYTHON3_TARGET_FINALIZE_HOOKS += PYTHON3_REMOVE_PYC_FILES
+PYTHON3_POST_INSTALL_TARGET_HOOKS += PYTHON3_REMOVE_PYC_FILES
 endif
 
 # In all cases, we don't want to keep the optimized .opt-1.pyc and
@@ -250,4 +260,4 @@ define PYTHON3_REMOVE_OPTIMIZED_PYC_FILES
 	find $(PYTHON3_TARGET_DIR)/usr/lib/python$(PYTHON3_VERSION_MAJOR) -name '*.opt-1.pyc' -print0 -o -name '*.opt-2.pyc' -print0 | \
 		xargs -0 --no-run-if-empty rm -f
 endef
-PYTHON3_TARGET_FINALIZE_HOOKS += PYTHON3_REMOVE_OPTIMIZED_PYC_FILES
+PYTHON3_POST_INSTALL_TARGET_HOOKS += PYTHON3_REMOVE_OPTIMIZED_PYC_FILES
