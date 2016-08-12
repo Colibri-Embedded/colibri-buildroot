@@ -42,7 +42,7 @@ case "$1" in
 		evaluate_retval
 		
 		# Stop any remaining open ssh connection
-		killall dropbear &> /dev/null
+		# killall dropbear &> /dev/null
 		;;
 	restart|reload)
 		${0} stop
