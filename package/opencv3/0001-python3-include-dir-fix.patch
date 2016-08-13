@@ -1,0 +1,24 @@
+diff -ruN opencv3-3.1.0.orig/modules/python/common.cmake opencv3-3.1.0/modules/python/common.cmake
+--- opencv3-3.1.0.orig/modules/python/common.cmake	2016-08-13 22:13:11.402619397 +0200
++++ opencv3-3.1.0/modules/python/common.cmake	2016-08-13 22:13:27.872292611 +0200
+@@ -5,7 +5,8 @@
+ 
+ ocv_module_include_directories(
+     "${PYTHON_INCLUDE_PATH}"
+-    ${PYTHON_NUMPY_INCLUDE_DIRS}
++    "${PYTHON_INCLUDE_DIR}"
++    "${PYTHON_NUMPY_INCLUDE_DIRS}"
+     "${PYTHON_SOURCE_DIR}/src2"
+     )
+ 
+diff -ruN opencv3-3.1.0.orig/modules/python/python3/CMakeLists.txt opencv3-3.1.0/modules/python/python3/CMakeLists.txt
+--- opencv3-3.1.0.orig/modules/python/python3/CMakeLists.txt	2016-08-13 22:13:11.402619397 +0200
++++ opencv3-3.1.0/modules/python/python3/CMakeLists.txt	2016-08-13 22:13:50.216849259 +0200
+@@ -7,6 +7,7 @@
+ set(MODULE_INSTALL_SUBDIR python3)
+ 
+ set(PYTHON_INCLUDE_PATH ${PYTHON3_INCLUDE_PATH})
++set(PYTHON_INCLUDE_DIR ${PYTHON3_INCLUDE_DIR})
+ set(PYTHON_NUMPY_INCLUDE_DIRS ${PYTHON3_NUMPY_INCLUDE_DIRS})
+ set(PYTHON_EXECUTABLE ${PYTHON3_EXECUTABLE})
+ set(PYTHON_DEBUG_LIBRARIES ${PYTHON3_DEBUG_LIBRARIES})
