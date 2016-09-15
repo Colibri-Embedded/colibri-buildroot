@@ -21,21 +21,6 @@
 ################################################################################
 
 # Target distutils-based packages
-PKG_PYTHON_DISTUTILS_ENV = \
-	LD_LIBRARY_PATH=$(STAGING_DIR)/usr/lib:$(HOST_DIR)/usr/lib \
-	PATH=$(BR_PATH) \
-	CC="$(TARGET_CC)" \
-	CXX="$(TARGET_CXX)" \
-	F77="$(TARGET_FC)" \
-	F90="$(TARGET_FC)" \
-	CFLAGS="$(TARGET_CFLAGS)" \
-	LDFLAGS="$(TARGET_LDFLAGS)" \
-	LDSHARED="$(TARGET_CROSS)gcc -shared" \
-	PYTHONPATH="$(if $(BR2_PACKAGE_PYTHON3),$(PYTHON3_PATH),$(PYTHON_PATH))" \
-	_python_sysroot=$(STAGING_DIR) \
-	_python_prefix=/usr \
-	_python_exec_prefix=/usr
-
 PKG_PYTHON_DISTUTILS_BUILD_OPTS = \
 	--executable=$(HOST_DIR)/usr/bin/python
 
@@ -53,25 +38,6 @@ HOST_PKG_PYTHON_DISTUTILS_INSTALL_OPTS = \
 	--prefix=$(HOST_DIR)/usr
 
 # Target setuptools-based packages
-PKG_PYTHON_SETUPTOOLS_ENV = \
-	PATH=$(BR_PATH) \
-	CC="$(TARGET_CC)" \
-	CXX="$(TARGET_CXX)" \
-	F77="$(TARGET_FC)" \
-	F90="$(TARGET_FC)" \
-	CFLAGS="$(TARGET_CFLAGS)" \
-	LDFLAGS="$(TARGET_LDFLAGS)" \
-	LDSHARED="$(TARGET_CROSS)gcc -shared -L$(STAGING_DIR)/usr/lib" \
-	PYTHONPATH="$(if $(BR2_PACKAGE_PYTHON3),$(PYTHON3_PATH),$(PYTHON_PATH))" \
-	_python_sysroot=$(STAGING_DIR) \
-	_python_prefix=/usr \
-	_python_exec_prefix=/usr
-
-#PKG_PYTHON_SETUPTOOLS_INSTALL_TARGET_OPTS = \
-#	--prefix=$$(PACKAGES_DIR)/$(pkgname)/usr \
-#	--executable=/usr/bin/python \
-#	--single-version-externally-managed \
-#	--root=/
 
 PKG_PYTHON_SETUPTOOLS_INSTALL_STAGING_OPTS = \
 	--prefix=$(STAGING_DIR)/usr \
@@ -102,6 +68,39 @@ HOST_PKG_PYTHON_SETUPTOOLS_INSTALL_OPTS = \
 
 define inner-python-package
 
+# Target distutils-based packages
+$(2)_PYTHON_DISTUTILS_ENV = \
+	LD_LIBRARY_PATH=$(STAGING_DIR)/usr/lib:$(HOST_DIR)/usr/lib \
+	PATH=$(BR_PATH) \
+	CC="$(TARGET_CC)" \
+	CXX="$(TARGET_CXX)" \
+	F77="$(TARGET_FC)" \
+	F90="$(TARGET_FC)" \
+	CFLAGS="$(TARGET_CFLAGS)" \
+	LDFLAGS="$(TARGET_LDFLAGS)" \
+	LDSHARED="$(TARGET_CROSS)gcc -shared" \
+	CROSS_COMPILE="$(TARGET_CROSS)" \
+	PYTHONPATH="$$($(2)_TARGET_DIR)/usr/lib/python$$(SELECTED_PYTHON_VERSION_MAJOR)/site-packages" \
+	_python_sysroot=$(STAGING_DIR) \
+	_python_prefix=/usr \
+	_python_exec_prefix=/usr
+
+$(2)_PYTHON_SETUPTOOLS_ENV = \
+	LD_LIBRARY_PATH=$(STAGING_DIR)/usr/lib:$(HOST_DIR)/usr/lib \
+	PATH=$(BR_PATH) \
+	CC="$(TARGET_CC)" \
+	CXX="$(TARGET_CXX)" \
+	F77="$(TARGET_FC)" \
+	F90="$(TARGET_FC)" \
+	CFLAGS="$(TARGET_CFLAGS)" \
+	LDFLAGS="$(TARGET_LDFLAGS)" \
+	LDSHARED="$(TARGET_CROSS)gcc -shared -L$(STAGING_DIR)/usr/lib" \
+	CROSS_COMPILE="$(TARGET_CROSS)" \
+	PYTHONPATH="$$($(2)_TARGET_DIR)/usr/lib/python$$(SELECTED_PYTHON_VERSION_MAJOR)/site-packages" \
+	_python_sysroot=$(STAGING_DIR) \
+	_python_prefix=/usr \
+	_python_exec_prefix=/usr
+
 $(2)_SRCDIR	= $$($(2)_DIR)/$$($(2)_SUBDIR)
 $(2)_BUILDDIR	= $$($(2)_SRCDIR)
 
@@ -120,7 +119,7 @@ endif
 # Distutils
 ifeq ($$($(2)_SETUP_TYPE),distutils)
 ifeq ($(4),target)
-$(2)_BASE_ENV         = $$(PKG_PYTHON_DISTUTILS_ENV)
+$(2)_BASE_ENV         = $$($(2)_PYTHON_DISTUTILS_ENV)
 $(2)_BASE_BUILD_TGT   = build
 $(2)_BASE_BUILD_OPTS   = $$(PKG_PYTHON_DISTUTILS_BUILD_OPTS)
 
@@ -136,7 +135,7 @@ endif
 # Setuptools
 else ifeq ($$($(2)_SETUP_TYPE),setuptools)
 ifeq ($(4),target)
-$(2)_BASE_ENV         = $$(PKG_PYTHON_SETUPTOOLS_ENV)
+$(2)_BASE_ENV         = $$($(2)_PYTHON_SETUPTOOLS_ENV)
 $(2)_BASE_BUILD_TGT   = build
 $(2)_BASE_BUILD_OPTS   =
 $(2)_BASE_INSTALL_TARGET_OPTS  = --prefix=$$(PACKAGES_DIR)/$(1)/usr \

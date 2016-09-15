@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_PICAMERA
+	bool "python-picamera"
+	help
+	  python-picamera is pure python interface Raspberry Pi Camera 
+	  module.
+	  
+	  https://picamera.readthedocs.io/

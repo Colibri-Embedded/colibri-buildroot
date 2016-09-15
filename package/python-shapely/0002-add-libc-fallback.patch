@@ -1,0 +1,12 @@
+diff -ruN python-shapely-1.5.13.orig/shapely/geos.py python-shapely-1.5.13/shapely/geos.py
+--- python-shapely-1.5.13.orig/shapely/geos.py	2016-08-12 17:42:42.235431725 +0200
++++ python-shapely-1.5.13/shapely/geos.py	2016-08-12 17:43:38.004314810 +0200
+@@ -64,7 +64,7 @@
+ 
+ if sys.platform.startswith('linux'):
+     _lgeos = load_dll('geos_c', fallbacks=['libgeos_c.so.1', 'libgeos_c.so'])
+-    free = load_dll('c').free
++    free = load_dll('c', fallbacks=['libc.so.6']).free
+     free.argtypes = [c_void_p]
+     free.restype = None
+ 

@@ -10,8 +10,8 @@ diff -rupN numpy-1.8.0.orig/numpy/distutils/fcompiler/gnu.py numpy-1.8.0.fix/num
          if m:
              v = m.group(1)
 +            if self.compiler_type == 'gnu95':
-+				return ('gfortran', m.group(2))
-+				
++                return ('gfortran', m.group(2))
++                
 +            v = m.group(1)
              if v.startswith('0') or v.startswith('2') or v.startswith('3'):
                  # the '0' is for early g77's

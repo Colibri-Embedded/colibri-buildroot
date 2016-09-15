@@ -1,6 +1,5 @@
 config BR2_PACKAGE_PYTHON_SHAPELY
 	bool "python-shapely"
-	depends on BR2_PACKAGE_PYTHON
 	select BR2_PACKAGE_GEOS
 	help
 	  Shapely is a Python package for manipulation and analysis of planar 

@@ -1,0 +1,12 @@
+diff -ruN opencv3-3.1.0.orig/modules/python/common.cmake opencv3-3.1.0/modules/python/common.cmake
+--- opencv3-3.1.0.orig/modules/python/common.cmake	2016-08-13 22:13:11.402619397 +0200
++++ opencv3-3.1.0/modules/python/common.cmake	2016-08-13 22:25:38.373806630 +0200
+@@ -60,7 +60,7 @@
+ endif()
+ ocv_target_link_libraries(${the_module} ${OPENCV_MODULE_${the_module}_DEPS})
+ 
+-execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import distutils.sysconfig; print(distutils.sysconfig.get_config_var('SO'))"
++execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import distutils.sysconfig; print('.so')"
+                 RESULT_VARIABLE PYTHON_CVPY_PROCESS
+                 OUTPUT_VARIABLE CVPY_SUFFIX
+                 OUTPUT_STRIP_TRAILING_WHITESPACE)

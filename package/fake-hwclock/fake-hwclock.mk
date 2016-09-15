@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-FAKE_HWCLOCK_VERSION = 0.10
+FAKE_HWCLOCK_VERSION = 0.11
 FAKE_HWCLOCK_SOURCE = fake-hwclock_$(FAKE_HWCLOCK_VERSION).tar.gz
 FAKE_HWCLOCK_SITE = http://http.debian.net/debian/pool/main/f/fake-hwclock/
 FAKE_HWCLOCK_LICENSE = GPLv2
