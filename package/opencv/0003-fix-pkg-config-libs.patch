@@ -1,0 +1,24 @@
+diff -ruN opencv-2.4.10.orig/cmake/OpenCVGenPkgconfig.cmake opencv-2.4.10/cmake/OpenCVGenPkgconfig.cmake
+--- opencv-2.4.10.orig/cmake/OpenCVGenPkgconfig.cmake	2016-09-12 14:06:37.770058221 +0200
++++ opencv-2.4.10/cmake/OpenCVGenPkgconfig.cmake	2016-09-12 14:06:52.333754393 +0200
+@@ -39,7 +39,9 @@
+ foreach(CVLib ${OpenCV_LIB_COMPONENTS})
+   get_target_property(libpath ${CVLib} LOCATION_${CMAKE_BUILD_TYPE})
+   get_filename_component(libname "${libpath}" NAME)
+-
++  string(REGEX REPLACE "(.so|.a)$" "" libname_raw ${libname})
++  string(REGEX REPLACE "^lib" "" libname_raw ${libname_raw})
++  
+   if(INSTALL_TO_MANGLED_PATHS)
+     set(libname "${libname}.${OPENCV_VERSION}")
+   endif()
+@@ -51,7 +53,8 @@
+     set(installDir "${OPENCV_LIB_INSTALL_PATH}")
+   endif()
+ 
+-  set(OpenCV_LIB_COMPONENTS_ "${OpenCV_LIB_COMPONENTS_} \${exec_prefix}/${installDir}/${libname}")
++#  set(OpenCV_LIB_COMPONENTS_ "${OpenCV_LIB_COMPONENTS_} \${exec_prefix}/${installDir}/${libname}")
++  set(OpenCV_LIB_COMPONENTS_ "${OpenCV_LIB_COMPONENTS_} -l${libname_raw}")
+ endforeach()
+ 
+ # add extra dependencies required for OpenCV
