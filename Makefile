@@ -281,7 +281,6 @@ unexport RUBYOPT
 
 include package/pkg-utils.mk
 include package/doc-asciidoc.mk
-include package/html-menu.mk
 
 ifeq ($(BR2_HAVE_DOT_CONFIG),y)
 
