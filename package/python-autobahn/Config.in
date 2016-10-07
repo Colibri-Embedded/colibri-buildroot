@@ -1,0 +1,10 @@
+config BR2_PACKAGE_PYTHON_AUTOBAHN
+	bool "python-autobahn"
+	select BR2_PACKAGE_PYTHON_TXAIO
+	select BR2_PACKAGE_PYTHON_SIX
+	help
+	  The Autobahn project provides open-source implementations 
+	  of the The WebSocket Protocol and 
+	  The Web Application Messaging Protocol (WAMP) network protocols.
+
+	  http://autobahn.ws/python/index.html

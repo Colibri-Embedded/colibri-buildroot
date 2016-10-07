@@ -12,3 +12,4 @@ M4_LICENSE_FILES = COPYING
 HOST_M4_CONF_OPTS = --disable-static
 
 $(eval $(host-autotools-package))
+$(eval $(autotools-package))

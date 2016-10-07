@@ -12,3 +12,4 @@ BISON_LICENSE_FILES = COPYING
 HOST_BISON_DEPENDENCIES = host-m4
 
 $(eval $(host-autotools-package))
+$(eval $(autotools-package))

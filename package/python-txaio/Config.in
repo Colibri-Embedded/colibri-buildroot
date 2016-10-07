@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_TXAIO
+	bool "python-txaio"
+	help
+	  txaio is a helper library for writing code that runs unmodified 
+	  on both Twisted and asyncio / Trollius.
+
+	  https://pypi.python.org/pypi/txaio
