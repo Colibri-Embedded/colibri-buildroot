@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_SETPROCTITLE
+	bool "python-setproctitle"
+	help
+	  The setproctitle module allows a process to change its title 
+	  (as displayed by system tools such as ps and top).
+
+	  https://pypi.python.org/pypi/setproctitle
