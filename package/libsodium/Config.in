@@ -1,0 +1,7 @@
+config BR2_PACKAGE_LIBSODIUM
+	bool "libsodium"
+	help
+	  Sodium is a new, easy-to-use software library for encryption, 
+	  decryption, signatures, password hashing and more.
+
+	  https://github.com/jedisct1/libsodium

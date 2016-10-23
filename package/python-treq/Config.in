@@ -1,0 +1,10 @@
+config BR2_PACKAGE_PYTHON_TREQ
+	bool "python-treq"
+	select BR2_PACKAGE_PYTHON_PYOPENSSL
+	select BR2_PACKAGE_PYTHON_REQUESTS
+	select BR2_PACKAGE_PYTHON_SERVICE_IDENTIFY
+	select BR2_PACKAGE_PYTHON_TWISTED
+	help
+	  A requests-like API built on top of twisted.web's Agent
+
+	  https://pypi.python.org/pypi/treq

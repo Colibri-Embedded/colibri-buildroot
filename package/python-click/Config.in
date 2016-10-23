@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PYTHON_CLICK
+	bool "python-click"
+	help
+	  Add some help text
+
+	  Add the homepage url

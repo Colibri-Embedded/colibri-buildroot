@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_CROSSBAR
+	bool "python-crossbar"
+	
+	help
+	  Crossbar.io - The Unified Application Router.
+
+	  https://pypi.python.org/pypi/crossbar

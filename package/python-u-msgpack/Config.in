@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PYTHON_U_MSGPACK
+	bool "python-u-msgpack"
+	help
+	  A portable, lightweight MessagePack serializer and deserializer written in pure Python.
+
+	  https://pypi.python.org/pypi/u-msgpack-python

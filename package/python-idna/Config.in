@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PYTHON_IDNA
+	bool "python-idna"
+	help
+	  Internationalized Domain Names in Applications (IDNA)
+
+	  https://pypi.python.org/pypi/idna

@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PYTHON_PYASN1_MODULES
+	bool "python-pyasn1-modules"
+	help
+	  A collection of ASN.1-based protocols modules.
+
+	  https://pypi.python.org/pypi/pyasn1-modules

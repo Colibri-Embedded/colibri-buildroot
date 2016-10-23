@@ -1,0 +1,9 @@
+config BR2_PACKAGE_PYTHON_CRYPTOGRAPHY
+	bool "python-cryptography"
+	select BR2_PACKAGE_PYTHON_CFFI
+	select BR2_PACKAGE_PYTHON_IDNA
+	help
+	  cryptography is a package which provides cryptographic recipes 
+	  and primitives to Python developers.
+
+	  https://pypi.python.org/pypi/cryptography

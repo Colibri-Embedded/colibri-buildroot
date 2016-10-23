@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PYTHON_PYUBJSON
+	bool "python-pyubjson"
+	help
+	  Universal Binary JSON encoder/decoder.
+	  
+	  https://pypi.python.org/pypi/py-ubjson/0.8.5

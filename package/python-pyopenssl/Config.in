@@ -1,0 +1,9 @@
+config BR2_PACKAGE_PYTHON_PYOPENSSL
+	bool "python-pyopenssl"
+	select BR2_PACKAGE_OPENSSL
+	select BR2_PACKAGE_PYTHON_SIX
+	select BR2_PACKAGE_PYTHON_CRYPTOGRAPHY
+	help
+	  Python wrapper module around the OpenSSL library
+
+	  https://pypi.python.org/pypi/pyOpenSSL
