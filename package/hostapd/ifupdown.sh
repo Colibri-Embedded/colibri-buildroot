@@ -1,29 +1,32 @@
 #!/bin/bash
 
 # quit if we're called for the loopback
-if [ "$IFACE" = lo ]; then
+if [ "$IFACE" == lo ]; then
 	echo "iface is loopback"
 	exit 0
 fi
 
-if [ x"$IF_DNSMASQ_RANGE" == "x" ]; then
-	echo "no dnsmasq range"
+if [ "$IFACE" == "--all" ]; then
 	exit 0
 fi
 
-DNSMASQ_PIDFILE="/run/dnsmasq_$IFACE.pid"
-DNSMASQ_RANGE="$IF_DNSMASQ_RANGE,$IF_NETMASK,12h"
+if [ x"$IF_HOSTAPD" == "x" ]; then
+	echo "no hostapd conf"
+	exit 0
+fi
+
+HOSTAPD_PIDFILE="/run/hostapd_$IFACE.pid"
 
 do_start()
 {
-	dnsmasq -x $DNSMASQ_PIDFILE -F $DNSMASQ_RANGE -i $IFACE -I lo
+	hostapd -B -P $HOSTAPD_PIDFILE $IF_HOSTAPD
 }
 
 do_stop()
 {
-	if [ -f $DNSMASQ_PIDFILE ]; then
-		kill $(cat $DNSMASQ_PIDFILE)
-		rm -f $DNSMASQ_PIDFILE
+	if [ -f $HOSTAPD_PIDFILE ]; then
+		kill $(cat $HOSTAPD_PIDFILE)
+		rm -f $HOSTAPD_PIDFILE
 	fi
 }
 
