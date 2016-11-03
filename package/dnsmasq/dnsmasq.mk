@@ -120,13 +120,23 @@ define DNSMASQ_INSTALL_IFUPDOWN
 		
 	$(DNSMASQ_FAKEROOT) $(INSTALL) -d -m 0755 $(DNSMASQ_TARGET_DIR)/etc/network/if-up.d
 	$(DNSMASQ_FAKEROOT) $(INSTALL) -d -m 0755 $(DNSMASQ_TARGET_DIR)/etc/network/if-down.d
-		
+	$(DNSMASQ_FAKEROOT) $(INSTALL) -d -m 0755 $(DNSMASQ_TARGET_DIR)/etc/network/if-pre-up.d
+	$(DNSMASQ_FAKEROOT) $(INSTALL) -d -m 0755 $(DNSMASQ_TARGET_DIR)/etc/network/if-post-down.d
+	
 	$(DNSMASQ_FAKEROOT) $(INSTALL) -m 0755 -D package/dnsmasq/ifupdown.sh \
 		$(DNSMASQ_TARGET_DIR)/etc/dnsmasq/ifupdown.sh
+		
 	$(DNSMASQ_FAKEROOT) ln -fs ../../dnsmasq/ifupdown.sh \
 		$(DNSMASQ_TARGET_DIR)/etc/network/if-up.d/dnsmasq
+		
 	$(DNSMASQ_FAKEROOT) ln -fs ../../dnsmasq/ifupdown.sh \
 		$(DNSMASQ_TARGET_DIR)/etc/network/if-down.d/dnsmasq
+		
+	$(DNSMASQ_FAKEROOT) ln -fs ../../dnsmasq/ifupdown.sh \
+		$(DNSMASQ_TARGET_DIR)/etc/network/if-pre-up.d/dnsmasq
+		
+	$(DNSMASQ_FAKEROOT) ln -fs ../../dnsmasq/ifupdown.sh \
+		$(DNSMASQ_TARGET_DIR)/etc/network/if-post-down.d/dnsmasq
 endef
 
 define DNSMASQ_INSTALL_TARGET_CMDS

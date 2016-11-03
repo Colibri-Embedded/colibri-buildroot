@@ -60,6 +60,12 @@ if [ ! -x "$WPA_SUP_BIN" ] || [ ! -x "$WPA_CLI_BIN" ]; then
 	exit 0
 fi
 
+if [ -z "IF_WPA_TIMEOUT" ];
+	WPA_TIMEOUT="10"
+else
+	WPA_TIMEOUT="$IF_WPA_TIMEOUT"
+fi
+
 do_start () {
 	if test_wpa_cli; then
 		# if wpa_action is active for this IFACE, do nothing
@@ -135,6 +141,19 @@ do_stop () {
 	fi
 }
 
+wait_for_connection()
+{
+	WPA_TIMEOUT=10
+	while [ "$WPA_TIMEOUT" != "0" ]; do
+		WPA_TIMEOUT=$(expr $WPA_TIMEOUT - 1)
+		STATUS=$($WPA_CLI_BIN -p $WPA_CTRL_DIR -i $IFACE status | awk 'BEGIN{FS="="} /wpa_state/ {print $2;}')
+		if [ "$STATUS" == "COMPLETED" ]; then
+			return
+		fi
+		sleep 1
+	done
+}
+
 case "$MODE" in 
 	start)
 		do_start
@@ -148,8 +167,10 @@ case "$MODE" in
 				init_wpa_cli 		|| { kill_wpa_supplicant; exit 1; }
 				;;
 		esac
+		# Wait until a connection is made or TIMEOUT is reached
+		# a workaround for slow networks and hardware
+		wait_for_connection
 		;;
-
 	stop)
 		do_stop
 		case "$PHASE" in

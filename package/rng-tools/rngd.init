@@ -1,0 +1,51 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : Random Number Generator daemon
+# 
+# Authors     : Daniel Kesler
+# 
+# Version     : 01.00
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+test -r /etc/default/rngd && source /etc/default/rngd
+
+[ -z $RNGD_PIDFILE ] && RNGD_PIDFILE=/run/rngd.pid
+[ -z $RNGD_INPUT ] && RNGD_INPUT=/dev/hwrng
+[ -z $RNGD_OUTPUT ] && RNGD_OUTPUT=/dev/random
+
+SERVICE_NAME="HW Random Number Generator"
+DAEMON="/usr/sbin/rngd"
+
+RNGD_ARGS="-r $RNGD_INPUT -o $RNGD_OUTPUT --no-drng=1 -b -p $RNGD_PIDFILE"
+
+case "$1" in
+  start)
+ 	boot_msg "Starting ${SERVICE_NAME}."
+	start-stop-daemon -S -q --exec $DAEMON -- $RNGD_ARGS
+	evaluate_retval
+	;;
+  stop)
+	boot_msg "Stopping ${SERVICE_NAME}."
+	start-stop-daemon -K -q -s 9 -p $RNGD_PIDFILE
+	evaluate_retval
+	;;
+  restart|reload)
+	${0} stop
+	sleep 1
+	${0} start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
+

@@ -88,13 +88,23 @@ define HOSTAPD_INSTALL_IFUPDOWN
 		
 	$(HOSTAPD_FAKEROOT) $(INSTALL) -d -m 0755 $(HOSTAPD_TARGET_DIR)/etc/network/if-up.d
 	$(HOSTAPD_FAKEROOT) $(INSTALL) -d -m 0755 $(HOSTAPD_TARGET_DIR)/etc/network/if-down.d
-		
+	$(HOSTAPD_FAKEROOT) $(INSTALL) -d -m 0755 $(HOSTAPD_TARGET_DIR)/etc/network/if-pre-up.d
+	$(HOSTAPD_FAKEROOT) $(INSTALL) -d -m 0755 $(HOSTAPD_TARGET_DIR)/etc/network/if-post-down.d
+	
 	$(HOSTAPD_FAKEROOT) $(INSTALL) -m 0755 -D package/hostapd/ifupdown.sh \
 		$(HOSTAPD_TARGET_DIR)/etc/hostapd/ifupdown.sh
+		
 	$(HOSTAPD_FAKEROOT) ln -fs ../../hostapd/ifupdown.sh \
 		$(HOSTAPD_TARGET_DIR)/etc/network/if-up.d/hostapd
+		
 	$(HOSTAPD_FAKEROOT) ln -fs ../../hostapd/ifupdown.sh \
 		$(HOSTAPD_TARGET_DIR)/etc/network/if-down.d/hostapd
+		
+	$(HOSTAPD_FAKEROOT) ln -fs ../../hostapd/ifupdown.sh \
+		$(HOSTAPD_TARGET_DIR)/etc/network/if-pre-up.d/hostapd
+		
+	$(HOSTAPD_FAKEROOT) ln -fs ../../hostapd/ifupdown.sh \
+		$(HOSTAPD_TARGET_DIR)/etc/network/if-post-down.d/hostapd
 endef
 
 define HOSTAPD_INSTALL_TARGET_CMDS
