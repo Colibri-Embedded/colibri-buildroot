@@ -1,5 +1,5 @@
 ################################################################################
-# Generic package infrastructure
+# Linux module package infrastructure
 #
 # This file implements an infrastructure that eases development of
 # package .mk files. It should be used for packages that do not rely
@@ -34,270 +34,9 @@
 
 # Start step
 # $1: step name
-define step_start
-	$(foreach hook,$(GLOBAL_INSTRUMENTATION_HOOKS),$(call $(hook),start,$(1),$($(PKG)_NAME))$(sep))
-endef
-
-# End step
-# $1: step name
-define step_end
-	$(foreach hook,$(GLOBAL_INSTRUMENTATION_HOOKS),$(call $(hook),end,$(1),$($(PKG)_NAME))$(sep))
-endef
-
-#######################################
-# Actual steps hooks
-
-# Time steps
-define step_time
-	printf "%s:%-5.5s:%-20.20s: %s\n"           \
-	       "$$(date +%s)" "$(1)" "$(2)" "$(3)"  \
-	       >>"$(BUILD_DIR)/build-time.log"
-endef
-GLOBAL_INSTRUMENTATION_HOOKS += step_time
-
-# User-supplied script
-ifneq ($(BR2_INSTRUMENTATION_SCRIPTS),)
-define step_user
-	@$(foreach user_hook, $(BR2_INSTRUMENTATION_SCRIPTS), \
-		$(EXTRA_ENV) $(user_hook) "$(1)" "$(2)" "$(3)"$(sep))
-endef
-GLOBAL_INSTRUMENTATION_HOOKS += step_user
-endif
 
 ################################################################################
-# Implicit targets -- produce a stamp file for each step of a package build
-################################################################################
-
-# Retrieve the archive
-$(BUILD_DIR)/%/.stamp_downloaded:
-	$(foreach hook,$($(PKG)_PRE_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
-ifeq ($(DL_MODE),DOWNLOAD)
-# Only show the download message if it isn't already downloaded
-	$(Q)if test ! -e $(DL_DIR)/$($(PKG)_SOURCE); then \
-		$(call MESSAGE,"Downloading") ; \
-	else \
-		for p in $($(PKG)_PATCH) ; do \
-			if test ! -e $(DL_DIR)/$$p ; then \
-				$(call MESSAGE,"Downloading") ; \
-				break ; \
-			fi ; \
-		done ; \
-	fi
-endif
-	$(if $($(PKG)_SOURCE),$(call DOWNLOAD,$($(PKG)_SITE:/=)/$($(PKG)_SOURCE)))
-	$(foreach p,$($(PKG)_EXTRA_DOWNLOADS),\
-		$(if $(findstring ://,$(p)),\
-			$(call DOWNLOAD,$(p)),\
-			$(call DOWNLOAD,$($(PKG)_SITE:/=)/$(p))\
-		)\
-	$(sep))
-	$(foreach p,$($(PKG)_PATCH),\
-		$(if $(findstring ://,$(p)),\
-			$(call DOWNLOAD,$(p)),\
-			$(call DOWNLOAD,$($(PKG)_SITE:/=)/$(p))\
-		)\
-	$(sep))
-	$(foreach hook,$($(PKG)_POST_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
-ifeq ($(DL_MODE),DOWNLOAD)
-	$(Q)mkdir -p $(@D)
-	$(Q)touch $@
-endif
-
-# Unpack the archive
-$(BUILD_DIR)/%/.stamp_extracted:
-	@$(call step_start,extract)
-	@$(call MESSAGE,"Extracting")
-	$(foreach hook,$($(PKG)_PRE_EXTRACT_HOOKS),$(call $(hook))$(sep))
-	$(Q)mkdir -p $(@D)
-	$($(PKG)_EXTRACT_CMDS)
-# some packages have messed up permissions inside
-	$(Q)chmod -R +rw $(@D)
-	$(foreach hook,$($(PKG)_POST_EXTRACT_HOOKS),$(call $(hook))$(sep))
-	$(Q)touch $@
-	@$(call step_end,extract)
-
-# Rsync the source directory if the <pkg>_OVERRIDE_SRCDIR feature is
-# used.
-$(BUILD_DIR)/%/.stamp_rsynced:
-	@$(call MESSAGE,"Syncing from source dir $(SRCDIR)")
-	@test -d $(SRCDIR) || (echo "ERROR: $(SRCDIR) does not exist" ; exit 1)
-	$(foreach hook,$($(PKG)_PRE_RSYNC_HOOKS),$(call $(hook))$(sep))
-	rsync -au $(RSYNC_VCS_EXCLUSIONS) $(SRCDIR)/ $(@D)
-	$(foreach hook,$($(PKG)_POST_RSYNC_HOOKS),$(call $(hook))$(sep))
-	$(Q)touch $@
-
-# Handle the SOURCE_CHECK and SHOW_EXTERNAL_DEPS cases for rsynced
-# packages
-$(BUILD_DIR)/%/.stamp_rsync_sourced:
-ifeq ($(DL_MODE),SOURCE_CHECK)
-	test -d $(SRCDIR)
-else ifeq ($(DL_MODE),SHOW_EXTERNAL_DEPS)
-	echo "file://$(SRCDIR)"
-else
-	@true # Nothing to do to source a local package
-endif
-
-# Patch
-#
-# The RAWNAME variable is the lowercased package name, which allows to
-# find the package directory (typically package/<pkgname>) and the
-# prefix of the patches
-#
-# For BR2_GLOBAL_PATCH_DIR, only generate if it is defined
-$(BUILD_DIR)/%/.stamp_patched: NAMEVER = $(RAWNAME)-$($(PKG)_VERSION)
-$(BUILD_DIR)/%/.stamp_patched: PATCH_BASE_DIRS =  $(PKGDIR)
-$(BUILD_DIR)/%/.stamp_patched: PATCH_BASE_DIRS += $(addsuffix /$(RAWNAME),$(call qstrip,$(BR2_GLOBAL_PATCH_DIR)))
-$(BUILD_DIR)/%/.stamp_patched:
-	@$(call step_start,patch)
-	@$(call MESSAGE,"Patching")
-	$(foreach hook,$($(PKG)_PRE_PATCH_HOOKS),$(call $(hook))$(sep))
-	$(foreach p,$($(PKG)_PATCH),$(APPLY_PATCHES) $(@D) $(DL_DIR) $(notdir $(p))$(sep))
-	$(Q)( \
-	for D in $(PATCH_BASE_DIRS); do \
-	  if test -d $${D}; then \
-	    if test -d $${D}/$($(PKG)_VERSION); then \
-	      $(APPLY_PATCHES) $(@D) $${D}/$($(PKG)_VERSION) \*.patch \*.patch.$(ARCH) || exit 1; \
-	    else \
-	      $(APPLY_PATCHES) $(@D) $${D} \*.patch \*.patch.$(ARCH) || exit 1; \
-	    fi; \
-	  fi; \
-	done; \
-	)
-	$(foreach hook,$($(PKG)_POST_PATCH_HOOKS),$(call $(hook))$(sep))
-	$(Q)touch $@
-	@$(call step_end,patch)
-
-# Check that all directories specified in BR2_GLOBAL_PATCH_DIR exist.
-$(foreach dir,$(call qstrip,$(BR2_GLOBAL_PATCH_DIR)),\
-	$(if $(wildcard $(dir)),,\
-		$(error BR2_GLOBAL_PATCH_DIR contains nonexistent directory $(dir))))
-
-# Configure
-$(BUILD_DIR)/%/.stamp_configured:
-	@$(call step_start,configure)
-	@$(call MESSAGE,"Configuring")
-	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
-	$($(PKG)_CONFIGURE_CMDS)
-	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
-	$(Q)touch $@
-	@$(call step_end,configure)
-
-# Build
-$(BUILD_DIR)/%/.stamp_built::
-	@$(call step_start,build)
-	@$(call MESSAGE,"Building")
-	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
-	+$($(PKG)_BUILD_CMDS)
-	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
-	$(Q)touch $@
-	@$(call step_end,build)
-
-# Install to host dir
-$(BUILD_DIR)/%/.stamp_host_installed:
-	@$(call step_start,install-host)
-	@$(call MESSAGE,"Installing to host directory")
-	$(foreach hook,$($(PKG)_PRE_INSTALL_HOOKS),$(call $(hook))$(sep))
-	+$($(PKG)_INSTALL_CMDS)
-	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))
-	$(Q)touch $@
-	@$(call step_end,install-host)
-
-# Install to staging dir
-$(BUILD_DIR)/%/.stamp_staging_installed:
-	@$(call step_start,install-staging)
-	@$(call MESSAGE,"Installing to staging directory")
-	$(foreach hook,$($(PKG)_PRE_INSTALL_STAGING_HOOKS),$(call $(hook))$(sep))
-	+$($(PKG)_INSTALL_STAGING_CMDS)
-	$(foreach hook,$($(PKG)_POST_INSTALL_STAGING_HOOKS),$(call $(hook))$(sep))
-	$(Q)if test -n "$($(PKG)_CONFIG_SCRIPTS)" ; then \
-		$(call MESSAGE,"Fixing package configuration files") ;\
-			$(SED)  "s,$(BASE_DIR),@BASE_DIR@,g" \
-				-e "s,$(STAGING_DIR),@STAGING_DIR@,g" \
-				-e "s,^\(exec_\)\?prefix=.*,\1prefix=@STAGING_DIR@/usr,g" \
-				-e "s,-I/usr/,-I@STAGING_DIR@/usr/,g" \
-				-e "s,-L/usr/,-L@STAGING_DIR@/usr/,g" \
-				-e "s,@STAGING_DIR@,$(STAGING_DIR),g" \
-				-e "s,@BASE_DIR@,$(BASE_DIR),g" \
-				$(addprefix $(STAGING_DIR)/usr/bin/,$($(PKG)_CONFIG_SCRIPTS)) ;\
-	fi
-	$(Q)touch $@
-	@$(call step_end,install-staging)
-
-# Install to images dir
-$(BUILD_DIR)/%/.stamp_images_installed:
-	@$(call step_start,install-image)
-	$(foreach hook,$($(PKG)_PRE_INSTALL_IMAGES_HOOKS),$(call $(hook))$(sep))
-	@$(call MESSAGE,"Installing to images directory")
-	+$($(PKG)_INSTALL_IMAGES_CMDS)
-	$(foreach hook,$($(PKG)_POST_INSTALL_IMAGES_HOOKS),$(call $(hook))$(sep))
-	$(Q)touch $@
-	@$(call step_end,install-image)
-	
-# Install to sdcard dir
-$(BUILD_DIR)/%/.stamp_sdcard_installed:
-	@$(call step_start,install-sdcards)
-	$(foreach hook,$($(PKG)_PRE_INSTALL_SDCARD_HOOKS),$(call $(hook))$(sep))
-	@$(call MESSAGE,"Installing to sdcard directory")
-	+$($(PKG)_INSTALL_SDCARD_CMDS)
-	$(foreach hook,$($(PKG)_POST_INSTALL_SDCARD_HOOKS),$(call $(hook))$(sep))
-	$(Q)touch $@
-	@$(call step_end,install-sdcards)
-
-# Install to target dir
-$(BUILD_DIR)/%/.stamp_target_installed:
-	@$(call step_start,install-target)
-	@$(call MESSAGE,"Installing to target")
-	$(RM) $(@D)/.fakeroot_env
-	$(foreach hook,$($(PKG)_PRE_INSTALL_TARGET_HOOKS),$(call $(hook))$(sep))
-	+$($(PKG)_INSTALL_TARGET_CMDS)
-	$(if $(BR2_INIT_SYSTEMD),\
-		$($(PKG)_INSTALL_INIT_SYSTEMD))
-	$(if $(BR2_INIT_SYSV)$(BR2_INIT_BUSYBOX),\
-		$($(PKG)_INSTALL_INIT_SYSV))
-	$(foreach hook,$($(PKG)_POST_INSTALL_TARGET_HOOKS),$(call $(hook))$(sep))
-	$(Q)if test -n "$($(PKG)_CONFIG_SCRIPTS)" ; then \
-		$(RM) -f $(addprefix $(TARGET_DIR)/usr/bin/,$($(PKG)_CONFIG_SCRIPTS)) ; \
-	fi
-	$(Q)if [ "x$($(PKG)_ARCHIVE_TARGET)" == "xYES" ] ; then \
-		$($(PKG)_FAKEROOT) $($(PKG)_FAKEROOT_ENV) -- $(TAR) -cf $($(PKG)_TARGET_ARCHIVE) -C $($(PKG)_TARGET_DIR) . ; \
-		retr=$$?; \
-		if [ "$$retr" != "0" ]; then \
-			exit $$retr; \
-		fi; \
-		$(RM) -rf $($(PKG)_TARGET_DIR) ; \
-		$(RM) $(@D)/.fakeroot_env ; \
-	fi
-	$(Q)touch $@
-	@$(call step_end,install-target)
-	
-# Remove package sources
-$(BUILD_DIR)/%/.stamp_dircleaned:
-	rm -Rf $(@D)
-	rm -Rf $($(PKG)_TARGET_DIR)
-	rm -Rf $($(PKG)_TARGET_ARCHIVE)
-	[ -n "$($(PKG)_DIRCLEAN_EXTRA)" ] && rm -Rf $($(PKG)_DIRCLEAN_EXTRA) || true
-
-################################################################################
-# virt-provides-single -- check that provider-pkg is the declared provider for
-# the virtual package virt-pkg
-#
-# argument 1 is the lower-case name of the virtual package
-# argument 2 is the upper-case name of the virtual package
-# argument 3 is the lower-case name of the provider
-#
-# example:
-#   $(call virt-provides-single,libegl,LIBEGL,rpi-userland)
-################################################################################
-define virt-provides-single
-ifneq ($$(call qstrip,$$(BR2_PACKAGE_PROVIDES_$(2))),$(3))
-$$(error Configuration error: both "$(3)" and $$(BR2_PACKAGE_PROVIDES_$(2))\
-are selected as providers for virtual package "$(1)". Only one provider can\
-be selected at a time. Please fix your configuration)
-endif
-endef
-
-################################################################################
-# inner-generic-package -- generates the make targets needed to build a
+# inner-generic-bundle-package -- generates the make targets needed to build a
 # generic package
 #
 #  argument 1 is the lowercase package name
@@ -306,6 +45,8 @@ endef
 #  argument 3 is the uppercase package name, without the HOST_ prefix
 #             for host packages
 #  argument 4 is the type (target or host)
+#  argument 5 is the lowercase of the original package name
+#  argument 6 is the uppercase of the original package name
 #
 # Note about variable and function references: inside all blocks that are
 # evaluated with $(eval), which includes all 'inner-xxx-package' blocks,
@@ -331,24 +72,21 @@ endef
 #
 ################################################################################
 
-define inner-generic-package
-
-# Define default values for various package-related variables, if not
-# already defined. For some variables (version, source, site and
-# subdir), if they are undefined, we try to see if a variable without
-# the HOST_ prefix is defined. If so, we use such a variable, so that
-# this information has only to be specified once, for both the
-# target and host packages of a given .mk file.
+define inner-generic-linux-module-package
 
 $(2)_TYPE           =  $(4)
 $(2)_NAME			=  $(1)
+$(2)_LINUX_PREFIX	=  $(7)
+$(2)_LINUX_PREFIX_U	=  $(call UPPERCASE,$(7))
 $(2)_RAWNAME		=  $$(patsubst host-%,%,$(1))
 $(2)_TARGET_DIR		=  $$(PACKAGES_DIR)/$(1)
-#~ $(2)_TARGET_ARCHIVE	=  $$(PACKAGES_DIR)/$(1)_$$($(2)_VERSION).tar
 $(2)_TARGET_ARCHIVE	=  $$(PACKAGES_DIR)/$(1).tar
+$(2)_VERSION		=  $$($(6)_VERSION)
+
+$(2)_KSRC			=  $(BUILD_DIR)/$(7)-$$($$($(2)_LINUX_PREFIX_U)_VERSION)
+$(2)_KERNEL_VERSION =  $$($$($(2)_LINUX_PREFIX_U)_VERSION_PROBED)
 
 # Fakeroot 
-
 ifndef $(2)_FAKEROOT
  ifdef $(3)_FAKEROOT
   $(2)_FAKEROOT = $$($(3)_FAKEROOT) -s $$(@D)/.fakeroot_env -i $$(@D)/.fakeroot_env
@@ -356,8 +94,6 @@ ifndef $(2)_FAKEROOT
   $(2)_FAKEROOT ?= $$(FAKEROOT) -s $$(@D)/.fakeroot_env -i $$(@D)/.fakeroot_env
  endif
 endif
-
-#$(2)_FAKEROOT_ENV	= -s $$(@D)/.fakeroot_env -i $$(@D)/.fakeroot_env
 
 # Keep the package version that may contain forward slashes in the _DL_VERSION
 # variable, then replace all forward slashes ('/') by underscores ('_') to
@@ -389,41 +125,17 @@ ifndef $(2)_SUBDIR
  endif
 endif
 
-$(2)_SRCDIR		       = $$($(2)_DIR)/$$($(2)_SUBDIR)
-$(2)_BUILDDIR		       ?= $$($(2)_SRCDIR)
+$(2)_SRCDIR			= $$($(2)_DIR)/$$($(2)_SUBDIR)
+$(2)_BUILDDIR		?= $$($(2)_SRCDIR)
 
 ifneq ($$($(2)_OVERRIDE_SRCDIR),)
 $(2)_VERSION = custom
 endif
 
-ifndef $(2)_SOURCE
- ifdef $(3)_SOURCE
-  $(2)_SOURCE = $$($(3)_SOURCE)
- else
-  $(2)_SOURCE			?= $$($(2)_RAWNAME)-$$($(2)_VERSION).tar.gz
- endif
-endif
-
-ifndef $(2)_PATCH
- ifdef $(3)_PATCH
-  $(2)_PATCH = $$($(3)_PATCH)
- endif
-endif
-
-ifndef $(2)_SITE
- ifdef $(3)_SITE
-  $(2)_SITE = $$($(3)_SITE)
- endif
-endif
-
-ifndef $(2)_SITE_METHOD
- ifdef $(3)_SITE_METHOD
-  $(2)_SITE_METHOD = $$($(3)_SITE_METHOD)
- else
-	# Try automatic detection using the scheme part of the URI
-	$(2)_SITE_METHOD = $$(call geturischeme,$$($(2)_SITE))
- endif
-endif
+$(2)_SOURCE = $$($(6)_SOURCE)
+$(2)_PATCH = $$($(6)_PATCH)
+$(2)_SITE = $$($(6)_SITE)
+$(2)_SITE_METHOD = $$($(6)_SITE_METHOD)
 
 ifeq ($$($(2)_SITE_METHOD),local)
 ifeq ($$($(2)_OVERRIDE_SRCDIR),)
@@ -477,15 +189,13 @@ $(2)_FINAL_DEPENDENCIES = $$(sort $$($(2)_DEPENDENCIES))
 
 $(2)_INSTALL_STAGING		?= NO
 $(2)_INSTALL_IMAGES		?= NO
-$(2)_INSTALL_SDCARD		?= NO
 $(2)_INSTALL_TARGET		?= YES
-$(2)_ARCHIVE_TARGET		?= YES
+$(2)_ARCHIVE_TARGET		?= NO
 
 # define sub-target stamps
 $(2)_TARGET_INSTALL_TARGET =	$$($(2)_DIR)/.stamp_target_installed
 $(2)_TARGET_INSTALL_STAGING =	$$($(2)_DIR)/.stamp_staging_installed
 $(2)_TARGET_INSTALL_IMAGES =	$$($(2)_DIR)/.stamp_images_installed
-$(2)_TARGET_INSTALL_SDCARD =	$$($(2)_DIR)/.stamp_sdcard_installed
 $(2)_TARGET_INSTALL_HOST =      $$($(2)_DIR)/.stamp_host_installed
 $(2)_TARGET_ARCHIVE_TARGET =	$$($(2)_DIR)/.stamp_target_archived
 $(2)_TARGET_BUILD =		$$($(2)_DIR)/.stamp_built
@@ -523,8 +233,6 @@ $(2)_PRE_INSTALL_TARGET_HOOKS   ?=
 $(2)_POST_INSTALL_TARGET_HOOKS  ?=
 $(2)_PRE_INSTALL_IMAGES_HOOKS   ?=
 $(2)_POST_INSTALL_IMAGES_HOOKS  ?=
-$(2)_PRE_INSTALL_SDCARD_HOOKS   ?=
-$(2)_POST_INSTALL_SDCARD_HOOKS  ?=
 $(2)_PRE_LEGAL_INFO_HOOKS       ?=
 $(2)_POST_LEGAL_INFO_HOOKS      ?=
 
@@ -534,7 +242,7 @@ $(1):			$(1)-install
 ifeq ($$($(2)_TYPE),host)
 $(1)-install:	        $(1)-install-host
 else
-$(1)-install:		$(1)-install-staging $(1)-install-target $(1)-install-images $(1)-install-sdcard
+$(1)-install:		$(1)-install-staging $(1)-install-target $(1)-install-images
 endif
 
 ifeq ($$($(2)_INSTALL_TARGET),YES)
@@ -558,13 +266,6 @@ $(1)-install-images:		$$($(2)_TARGET_INSTALL_IMAGES)
 $$($(2)_TARGET_INSTALL_IMAGES):	$$($(2)_TARGET_BUILD)
 else
 $(1)-install-images:
-endif
-
-ifeq ($$($(2)_INSTALL_SDCARD),YES)
-$(1)-install-sdcard:		$$($(2)_TARGET_INSTALL_SDCARD)
-$$($(2)_TARGET_INSTALL_SDCARD):	$$($(2)_TARGET_BUILD)
-else
-$(1)-install-sdcard:
 endif
 
 $(1)-install-host:      	$$($(2)_TARGET_INSTALL_HOST)
@@ -628,6 +329,9 @@ endif
 $(1)-show-depends:
 			@echo $$($(2)_FINAL_DEPENDENCIES)
 
+$(1)-show-usertable:
+	@echo $$($(2)_PACKAGES)
+
 $(1)-graph-depends: graph-depends-requirements
 			@$$(INSTALL) -d $$(O)/graphs
 			@cd "$$(CONFIG_DIR)"; \
@@ -663,7 +367,6 @@ $(1)-reconfigure:	$(1)-clean-for-reconfigure $(1)
 $$($(2)_TARGET_INSTALL_TARGET):		PKG=$(2)
 $$($(2)_TARGET_INSTALL_STAGING):	PKG=$(2)
 $$($(2)_TARGET_INSTALL_IMAGES):		PKG=$(2)
-$$($(2)_TARGET_INSTALL_SDCARD):		PKG=$(2)
 $$($(2)_TARGET_INSTALL_HOST):           PKG=$(2)
 $$($(2)_TARGET_BUILD):			PKG=$(2)
 $$($(2)_TARGET_CONFIGURE):		PKG=$(2)
@@ -678,6 +381,20 @@ $$($(2)_TARGET_EXTRACT):		PKG=$(2)
 $$($(2)_TARGET_SOURCE):			PKG=$(2)
 $$($(2)_TARGET_SOURCE):			PKGDIR=$(pkgdir)
 $$($(2)_TARGET_DIRCLEAN):		PKG=$(2)
+
+# Build commands from origin package
+ifndef $(2)_BUILD_CMDS
+define $(2)_BUILD_CMDS
+$$($(6)_BUILD_MODULE_CMDS)
+endef # $(2)_BUILD_CMDS
+endif
+
+# Install commands from origin package
+ifndef $(2)_INSTALL_TARGET_CMDS
+define $(2)_INSTALL_TARGET_CMDS
+$$($(6)_INSTALL_MODULE_CMDS)
+endef # $(2)_INSTALL_TARGET_CMDS
+endif
 
 # Compute the name of the Kconfig option that correspond to the
 # package being enabled. We handle three cases: the special Linux
@@ -786,18 +503,6 @@ $(eval $(call check-deprecated-variable,$(2)_BUILD_OPT,$(2)_BUILD_OPTS))
 $(eval $(call check-deprecated-variable,$(2)_GETTEXTIZE_OPT,$(2)_GETTEXTIZE_OPTS))
 $(eval $(call check-deprecated-variable,$(2)_KCONFIG_OPT,$(2)_KCONFIG_OPTS))
 
-TARGETS += $(1)
-
-ifneq ($$($(2)_PERMISSIONS),)
-PACKAGES_PERMISSIONS_TABLE += $$($(2)_PERMISSIONS)$$(sep)
-endif
-ifneq ($$($(2)_DEVICES),)
-PACKAGES_DEVICES_TABLE += $$($(2)_DEVICES)$$(sep)
-endif
-ifneq ($$($(2)_USERS),)
-PACKAGES_USERS += $$($(2)_USERS)$$(sep)
-endif
-
 ifeq ($$($(2)_SITE_METHOD),svn)
 DL_TOOLS_DEPENDENCIES += svn
 else ifeq ($$($(2)_SITE_METHOD),git)
@@ -821,15 +526,39 @@ DL_TOOLS_DEPENDENCIES += $$(firstword $$(call suitable-extractor,$$($(2)_SOURCE)
 endif
 
 endif # $(2)_KCONFIG_VAR
-endef # inner-generic-package
+endef # inner-generic-linux-module-package
+
+#~ generic-linux-module-package = $(call inner-generic-linux-module-package,$(pkgname)-linux,$(call UPPERCASE,$(pkgname)-linux),$(call UPPERCASE,$(pkgname)-linux),target)
+#~ generic-linux2-module-package = $(call inner-generic-linux-module-package,$(pkgname)-linux2,$(call UPPERCASE,$(pkgname)-linux2),$(call UPPERCASE,$(pkgname)-linux2),target)
+
+
+define inner-lunux-module-package
+
+$(2)_TARGET_DIR		= $$(PACKAGES_DIR)/$(1)
+$(2)_TARGET_ARCHIVE	= $$(PACKAGES_DIR)/$(1).tar
+$(2)_DIRCLEAN_EXTRA = $(BUILD_DIR)/$(1)-linux-$($(2)_VERSION) $(BUILD_DIR)/$(1)-linux2-$($(2)_VERSION)
+
+$(1)-test:
+	@echo $(1)-linux $(1)-linux2
+	@echo $(2)
+	@echo $(3)
+	@echo $(4)
+
+# Add dependency against the provider
+$(2)_DEPENDENCIES += linux $(1)-linux linux2 $(1)-linux2
+
+
+# Call the generic package infrastructure to generate the necessary
+# make targets
+$(call inner-generic-package,$(1),$(2),$(3),$(4))
+
+$(call inner-generic-linux-module-package,$(1)-linux,$(2)_LINUX,$(3)_LINUX2,$(4),$(1),$(3),linux)
+$(call inner-generic-linux-module-package,$(1)-linux2,$(2)_LINUX2,$(3)_LINUX2,$(4),$(1),$(3),linux2)
+
+endef # inner-lunux-module-package
 
 ################################################################################
-# generic-package -- the target generator macro for generic packages
+# bundle-package -- the target generator macro for bundle packages
 ################################################################################
 
-# In the case of target packages, keep the package name "pkg"
-generic-package = $(call inner-generic-package,$(pkgname),$(call UPPERCASE,$(pkgname)),$(call UPPERCASE,$(pkgname)),target)
-# In the case of host packages, turn the package name "pkg" into "host-pkg"
-host-generic-package = $(call inner-generic-package,host-$(pkgname),$(call UPPERCASE,host-$(pkgname)),$(call UPPERCASE,$(pkgname)),host)
-
-# :mode=makefile:
+linux-module-package = $(call inner-lunux-module-package,$(pkgname),$(call UPPERCASE,$(pkgname)),$(call UPPERCASE,$(pkgname)),target)

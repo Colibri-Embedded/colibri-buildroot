@@ -60,7 +60,7 @@ if [ ! -x "$WPA_SUP_BIN" ] || [ ! -x "$WPA_CLI_BIN" ]; then
 	exit 0
 fi
 
-if [ -z "IF_WPA_TIMEOUT" ];
+if [ -z "IF_WPA_TIMEOUT" ]; then
 	WPA_TIMEOUT="10"
 else
 	WPA_TIMEOUT="$IF_WPA_TIMEOUT"
