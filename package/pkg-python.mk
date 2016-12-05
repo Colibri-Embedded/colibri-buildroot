@@ -71,7 +71,7 @@ define inner-python-package
 # Target distutils-based packages
 $(2)_PYTHON_DISTUTILS_ENV = \
 	LD_LIBRARY_PATH=$(STAGING_DIR)/usr/lib:$(HOST_DIR)/usr/lib \
-	PATH=$(BR_PATH) \
+	PATH=$(BR_PATH):$(STAGING_DIR)/usr/bin:$(STAGING_DIR)/usr/sbin \
 	CC="$(TARGET_CC)" \
 	CXX="$(TARGET_CXX)" \
 	F77="$(TARGET_FC)" \
@@ -87,7 +87,7 @@ $(2)_PYTHON_DISTUTILS_ENV = \
 
 $(2)_PYTHON_SETUPTOOLS_ENV = \
 	LD_LIBRARY_PATH=$(STAGING_DIR)/usr/lib:$(HOST_DIR)/usr/lib \
-	PATH=$(BR_PATH) \
+	PATH=$(BR_PATH):$(STAGING_DIR)/usr/bin:$(STAGING_DIR)/usr/sbin \
 	CC="$(TARGET_CC)" \
 	CXX="$(TARGET_CXX)" \
 	F77="$(TARGET_FC)" \
