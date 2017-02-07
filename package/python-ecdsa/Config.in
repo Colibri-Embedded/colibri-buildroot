@@ -1,0 +1,8 @@
+config BR2_PACKAGE_PYTHON_JOSE
+	bool "python-jose"
+	select BR2_PACKAGE_PYTHON_PYCRYPTO
+	select BR2_PACKAGE_PYTHON_SIX
+	help
+	  Typed interactions with the GitHub API v3.
+
+	  https://github.com/mpdavis/python-jose
