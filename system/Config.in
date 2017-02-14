@@ -397,6 +397,13 @@ config BR2_TARGET_LOCALE_GEN
 	default "en_US.UTF-8"
 	help
 		Specify one locale per line in the format LANG.CHARMAP
+		
+config BR2_TARGET_LOCALE_DEFAULT
+	string "Default locale"
+	default "en_US.UTF-8"
+	help
+		Specify default system language
+		
 endif # BR2_TARGET_LOCALES
 
 config BR2_ROOTFS_USERS_TABLES
