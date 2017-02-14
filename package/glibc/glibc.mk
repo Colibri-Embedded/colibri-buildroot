@@ -1,4 +1,4 @@
-################################################################################
+ ################################################################################
 #
 # glibc/eglibc
 #
@@ -121,6 +121,15 @@ define GLIBC_INSTALL_TARGET_CMDS
 		$(call copy_toolchain_lib_root,$(STAGING_DIR)/,,lib,$$libs,/lib) ; \
 	done
 	
+	$(GLIBC_MAKE_ENV) $(GLIBC_FAKEROOT) -- $(GLIBC_MAKE1) $(GLIBC_INSTALL_TARGET_OPTS) -C $(GLIBC_SRCDIR)
+
+	$(GLIBC_FAKEROOT) find $(GLIBC_TARGET_DIR) -name "*.o" -delete
+	$(GLIBC_FAKEROOT) find $(GLIBC_TARGET_DIR) -name "*.map" -delete
+	
+	# Install selected locale to staging
+	python support/scripts/locale-gen.py -l $(@D)/$(GLIBC_SRC_SUBDIR)/localedata/locales -c $(@D)/$(GLIBC_SRC_SUBDIR)/localedata/charmaps -g $(BR2_TARGET_LOCALE_GEN) -p $(TARGET_DIR)
+	# Install selected locale to GLIBC_TARGET_DIR
+	python support/scripts/locale-gen.py -l $(@D)/$(GLIBC_SRC_SUBDIR)/localedata/locales -c $(@D)/$(GLIBC_SRC_SUBDIR)/localedata/charmaps -g $(BR2_TARGET_LOCALE_GEN) -p $(GLIBC_TARGET_DIR)
 endef
 
 $(eval $(autotools-package))
