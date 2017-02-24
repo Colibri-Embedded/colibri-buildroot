@@ -246,7 +246,7 @@ define LINUX2_INSTALL_DTB
 	cp $(addprefix \
 		$(KERNEL2_ARCH_PATH)/boot/$(if $(wildcard \
 		$(addprefix $(KERNEL2_ARCH_PATH)/boot/dts/,$(KERNEL2_DTBS))),dts/),$(KERNEL2_DTBS)) \
-		$(BINARIES_DIR)/
+		$(BINARIES2_DIR)/
 endef
 define LINUX2_INSTALL_DTB_TARGET
 	# dtbs moved from arch/<ARCH>/boot to arch/<ARCH>/boot/dts since 3.8-rc1
@@ -326,7 +326,7 @@ endef
 
 
 define LINUX2_INSTALL_IMAGES_CMDS
-	cp $(LINUX2_IMAGE_PATH) $(BINARIES_DIR)
+	cp $(LINUX2_IMAGE_PATH) $(BINARIES2_DIR)
 	$(LINUX2_INSTALL_DTB)
 endef
 
@@ -377,9 +377,9 @@ $(LINUX2_DIR)/.stamp_initramfs_rebuilt: $(LINUX2_DIR)/.stamp_target_installed $(
 	$(TARGET_MAKE_ENV) $(MAKE) $(LINUX2_MAKE_FLAGS) -C $(@D) $(LINUX2_TARGET_NAME)
 	$(LINUX2_APPEND_DTB)
 	# Copy the kernel image to its final destination
-	cp $(LINUX2_IMAGE_PATH) $(BINARIES_DIR)
+	cp $(LINUX2_IMAGE_PATH) $(BINARIES2_DIR)
 	# If there is a .ub file copy it to the final destination
-	test ! -f $(LINUX2_IMAGE_PATH).ub || cp $(LINUX2_IMAGE_PATH).ub $(BINARIES_DIR)
+	test ! -f $(LINUX2_IMAGE_PATH).ub || cp $(LINUX2_IMAGE_PATH).ub $(BINARIES2_DIR)
 	$(Q)touch $@
 
 # The initramfs building code must make sure this target gets called

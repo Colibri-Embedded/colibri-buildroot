@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-HOSTAPD_VERSION = 2.3
+HOSTAPD_VERSION = 2.6
 HOSTAPD_SITE = http://hostap.epitest.fi/releases
 HOSTAPD_SUBDIR = hostapd
 HOSTAPD_CONFIG = $(HOSTAPD_DIR)/$(HOSTAPD_SUBDIR)/.config
@@ -82,11 +82,37 @@ define HOSTAPD_BUILD_CMDS
 		$(MAKE) CC="$(TARGET_CC)" -C $(@D)/$(HOSTAPD_SUBDIR)
 endef
 
+define HOSTAPD_INSTALL_IFUPDOWN
+	$(HOSTAPD_FAKEROOT) $(INSTALL) -m 0755 -D package/hostapd/ifupdown.sh \
+		$(HOSTAPD_TARGET_DIR)/etc/hostapd/ifupdown.sh
+		
+	$(HOSTAPD_FAKEROOT) $(INSTALL) -d -m 0755 $(HOSTAPD_TARGET_DIR)/etc/network/if-up.d
+	$(HOSTAPD_FAKEROOT) $(INSTALL) -d -m 0755 $(HOSTAPD_TARGET_DIR)/etc/network/if-down.d
+	$(HOSTAPD_FAKEROOT) $(INSTALL) -d -m 0755 $(HOSTAPD_TARGET_DIR)/etc/network/if-pre-up.d
+	$(HOSTAPD_FAKEROOT) $(INSTALL) -d -m 0755 $(HOSTAPD_TARGET_DIR)/etc/network/if-post-down.d
+	
+	$(HOSTAPD_FAKEROOT) $(INSTALL) -m 0755 -D package/hostapd/ifupdown.sh \
+		$(HOSTAPD_TARGET_DIR)/etc/hostapd/ifupdown.sh
+		
+	$(HOSTAPD_FAKEROOT) ln -fs ../../hostapd/ifupdown.sh \
+		$(HOSTAPD_TARGET_DIR)/etc/network/if-up.d/hostapd
+		
+	$(HOSTAPD_FAKEROOT) ln -fs ../../hostapd/ifupdown.sh \
+		$(HOSTAPD_TARGET_DIR)/etc/network/if-down.d/hostapd
+		
+	$(HOSTAPD_FAKEROOT) ln -fs ../../hostapd/ifupdown.sh \
+		$(HOSTAPD_TARGET_DIR)/etc/network/if-pre-up.d/hostapd
+		
+	$(HOSTAPD_FAKEROOT) ln -fs ../../hostapd/ifupdown.sh \
+		$(HOSTAPD_TARGET_DIR)/etc/network/if-post-down.d/hostapd
+endef
+
 define HOSTAPD_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/$(HOSTAPD_SUBDIR)/hostapd \
 		$(HOSTAPD_TARGET_DIR)/usr/sbin/hostapd
 	$(INSTALL) -m 0755 -D $(@D)/$(HOSTAPD_SUBDIR)/hostapd_cli \
 		$(HOSTAPD_TARGET_DIR)/usr/bin/hostapd_cli
+	$(HOSTAPD_INSTALL_IFUPDOWN)
 endef
 
 $(eval $(generic-package))

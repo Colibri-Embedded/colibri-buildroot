@@ -724,6 +724,7 @@ endif
 $(2)_ADD_TOOLCHAIN_DEPENDENCY = NO
 
 $(2)_ARCHIVE_TARGET = NO
+$(2)_BUNDLE_TARGET = YES
 
 # A virtual package does not have any source associated
 $(2)_SOURCE =
@@ -771,12 +772,12 @@ define $(2)_INSTALL_TARGET_CMDS
 	$(call bundle-remove-development,$$($(2)_TARGET_DIR),$(2))
 	$(call bundle-strip-executables,$$($(2)_TARGET_DIR),$(2))
 	
-	rm -rf $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE_PATTERN)
-	rm -rf $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE_PATTERN).md5sum
-	$$($(2)_FAKEROOT) $$($(2)_MKSQUASHFS) $$($(2)_TARGET_DIR) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) $(BUNDLE_SQUASHFS_ARGS) 
-	$$($(2)_MD5SUM) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) > $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE_HASH)
-	sed -e s@$(BUNDLES_DIR)/@@ -i $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE_HASH)
-	rm -rf $$($(2)_TARGET_DIR)
+#	rm -rf $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE_PATTERN)
+#	rm -rf $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE_PATTERN).md5sum
+#	$$($(2)_FAKEROOT) $$($(2)_MKSQUASHFS) $$($(2)_TARGET_DIR) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) $(BUNDLE_SQUASHFS_ARGS) 
+#	$$($(2)_MD5SUM) $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE) > $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE_HASH)
+#	sed -e s@$(BUNDLES_DIR)/@@ -i $(BUNDLES_DIR)/$$($(2)_BUNDLE_IMAGE_HASH)
+#	rm -rf $$($(2)_TARGET_DIR)
 endef
 endif
 

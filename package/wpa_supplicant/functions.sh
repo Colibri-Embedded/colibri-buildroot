@@ -154,7 +154,7 @@ test_daemon_pidfile () {
 			--exec "$DAEMON" --pidfile "$PIDFILE"; then
 			return 0
 		else
-			rm -f "$PIDFILE"
+			rm -f "$PIDFILE" &> /dev/null
 			return 1
 		fi
 	else

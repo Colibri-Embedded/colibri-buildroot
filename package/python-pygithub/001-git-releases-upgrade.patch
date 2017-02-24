@@ -1,0 +1,79 @@
+From 4a30b83d5c904da9d4fe2ccb28890f2da2318254 Mon Sep 17 00:00:00 2001
+From: Daniel Kesler <kesler.daniel@gmail.com>
+Date: Mon, 6 Feb 2017 17:27:42 +0100
+Subject: [PATCH] added tarball_url, zipball_url, prerelease and draft property
+ to GitRelease
+
+---
+ github/GitRelease.py | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/github/GitRelease.py b/github/GitRelease.py
+index 2c1ae52..f28ed6e 100644
+--- a/github/GitRelease.py
++++ b/github/GitRelease.py
+@@ -90,6 +90,38 @@ def html_url(self):
+         self._completeIfNotSet(self._html_url)
+         return self._html_url.value
+ 
++    @property
++    def tarball_url(self):
++        """
++        :type: string
++        """
++        self._completeIfNotSet(self._tarball_url)
++        return self._tarball_url.value
++
++    @property
++    def zipball_url(self):
++        """
++        :type: string
++        """
++        self._completeIfNotSet(self._zipball_url)
++        return self._zipball_url.value
++
++    @property
++    def prerelease(self):
++        """
++        :type: string
++        """
++        self._completeIfNotSet(self._prerelease)
++        return self._prerelease.value
++
++    @property
++    def draft(self):
++        """
++        :type: string
++        """
++        self._completeIfNotSet(self._draft)
++        return self._draft.value
++
+     def delete_release(self):
+         headers, data = self._requester.requestJsonAndCheck(
+             "DELETE",
+@@ -124,8 +156,13 @@ def _initAttributes(self):
+         self._url = github.GithubObject.NotSet
+         self._upload_url = github.GithubObject.NotSet
+         self._html_url = github.GithubObject.NotSet
++        self._tarball_url = github.GithubObject.NotSet
++        self._zipball_url = github.GithubObject.NotSet
++        self._prerelease = github.GithubObject.NotSet
++        self._draft = github.GithubObject.NotSet
+ 
+     def _useAttributes(self, attributes):
++        
+         if "body" in attributes:
+             self._body = self._makeStringAttribute(attributes["body"])
+         if "name" in attributes:
+@@ -140,3 +177,11 @@ def _useAttributes(self, attributes):
+             self._upload_url = self._makeStringAttribute(attributes["upload_url"])
+         if "html_url" in attributes:
+             self._html_url = self._makeStringAttribute(attributes["html_url"])
++        if "tarball_url" in attributes:
++            self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
++        if "zipball_url" in attributes:
++            self._zipball_url = self._makeStringAttribute(attributes["zipball_url"])
++        if "prerelease" in attributes:
++            self._prerelease = self._makeBoolAttribute(attributes["prerelease"])
++        if "draft" in attributes:
++            self._draft = self._makeBoolAttribute(attributes["draft"])

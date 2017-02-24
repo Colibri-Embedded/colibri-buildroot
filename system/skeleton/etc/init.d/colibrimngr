@@ -1,0 +1,41 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     : Daniel Kesler <kesler.daniel@gmail.com>
+# 
+# Version     : 00.01
+#
+# Notes       : Colibri Manager postponed post_install scripts
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+SERVICE_NAME=colibrimngr
+FIRSTBOOT=no
+
+# Check if this is a fistboot.
+if [ -e "/mnt/live/lib/firstboot" ]; then
+    FIRSTBOOT=yes
+fi
+
+case "$1" in
+  start)
+    boot_msg "Colibri Manager"
+    [ "$FIRSTBOOT" == "yes" ] && /sbin/depmod
+    /sbin/colibrimngr onboot &> /var/log/colibrimngr_onboot.log
+    is_success
+    ;;
+  stop)
+    ;;
+  *)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+esac
+
+exit $?
+

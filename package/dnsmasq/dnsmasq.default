@@ -1,0 +1,3 @@
+DNSMASQ_ONBOOT=no
+DNSMASQ_PIDFILE=/run/dnsmasq.pid
+DNSMASQ_CONF=/etc/dnsmasq/dnsmasq.conf

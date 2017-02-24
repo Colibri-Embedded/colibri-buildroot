@@ -385,6 +385,27 @@ config BR2_TARGET_LOCALTIME
 
 endif # BR2_TARGET_TZ_INFO
 
+config BR2_TARGET_LOCALES
+	bool "Install locales"
+	depends on BR2_TOOLCHAIN_USES_GLIBC || BR2_TOOLCHAIN_USES_EGLIBC
+	help
+	  Say 'y' here to install locales.
+	  
+if BR2_TARGET_LOCALES
+config BR2_TARGET_LOCALE_GEN
+	string "Path to locale.gen"
+	default "en_US.UTF-8"
+	help
+		Specify one locale per line in the format LANG.CHARMAP
+		
+config BR2_TARGET_LOCALE_DEFAULT
+	string "Default locale"
+	default "en_US.UTF-8"
+	help
+		Specify default system language
+		
+endif # BR2_TARGET_LOCALES
+
 config BR2_ROOTFS_USERS_TABLES
 	string "Path to the users tables"
 	help

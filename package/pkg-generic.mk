@@ -267,6 +267,19 @@ $(BUILD_DIR)/%/.stamp_target_installed:
 		$(RM) -rf $($(PKG)_TARGET_DIR) ; \
 		$(RM) $(@D)/.fakeroot_env ; \
 	fi
+	if [ "x$($(PKG)_BUNDLE_TARGET)" == "xYES" ] ; then \
+		$(RM) -rf $(BUNDLES_DIR)/$($(PKG)_BUNDLE_IMAGE_PATTERN) ; \
+		$(RM) -rf $(BUNDLES_DIR)/$($(PKG)_BUNDLE_IMAGE_PATTERN).md5sum ; \
+		$($(PKG)_FAKEROOT) $($(PKG)_MKSQUASHFS) $($(PKG)_TARGET_DIR) $(BUNDLES_DIR)/$($(PKG)_BUNDLE_IMAGE) $(BUNDLE_SQUASHFS_ARGS) ; \
+		retr=$$?; \
+		if [ "$$retr" != "0" ]; then \
+			exit $$retr; \
+		fi; \
+		$($(PKG)_MD5SUM) $(BUNDLES_DIR)/$($(PKG)_BUNDLE_IMAGE) > $(BUNDLES_DIR)/$($(PKG)_BUNDLE_IMAGE_HASH) ; \
+		sed -e "s@$(BUNDLES_DIR)/@@" -i $(BUNDLES_DIR)/$($(PKG)_BUNDLE_IMAGE_HASH) ; \
+		$(RM) -rf $($(PKG)_TARGET_DIR) ; \
+		$(RM) $(@D)/.fakeroot_env ; \
+	fi
 	$(Q)touch $@
 	@$(call step_end,install-target)
 	
@@ -275,6 +288,7 @@ $(BUILD_DIR)/%/.stamp_dircleaned:
 	rm -Rf $(@D)
 	rm -Rf $($(PKG)_TARGET_DIR)
 	rm -Rf $($(PKG)_TARGET_ARCHIVE)
+	[ -n "$($(PKG)_DIRCLEAN_EXTRA)" ] && rm -Rf $($(PKG)_DIRCLEAN_EXTRA) || true
 
 ################################################################################
 # virt-provides-single -- check that provider-pkg is the declared provider for
@@ -479,6 +493,7 @@ $(2)_INSTALL_IMAGES		?= NO
 $(2)_INSTALL_SDCARD		?= NO
 $(2)_INSTALL_TARGET		?= YES
 $(2)_ARCHIVE_TARGET		?= YES
+$(2)_BUNDLE_TARGET		?= NO
 
 # define sub-target stamps
 $(2)_TARGET_INSTALL_TARGET =	$$($(2)_DIR)/.stamp_target_installed

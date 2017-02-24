@@ -157,6 +157,7 @@ BR_GRAPH_OUT := $(or $(BR2_GRAPH_OUT),pdf)
 
 BUILD_DIR := $(BASE_DIR)/build
 BINARIES_DIR := $(BASE_DIR)/images
+BINARIES2_DIR := $(BASE_DIR)/images2
 SDCARD_DIR := $(BASE_DIR)/sdcard
 BUNDLES_DIR := $(SDCARD_DIR)/bundles
 TARGET_DIR := $(BASE_DIR)/target
@@ -430,7 +431,7 @@ TARGETS_LEGAL_INFO := $(patsubst %,%-legal-info,\
 		$(TARGETS) $(TARGETS_HOST_DEPS) $(HOST_DEPS))
 
 dirs: $(BUILD_DIR) $(STAGING_DIR) $(TARGET_DIR) \
-	$(HOST_DIR) $(BINARIES_DIR) $(PACKAGES_DIR) \
+	$(HOST_DIR) $(BINARIES_DIR) $(BINARIES2_DIR) $(PACKAGES_DIR) \
 	$(SDCARD_DIR) $(BUNDLES_DIR)
 
 $(BUILD_DIR)/buildroot-config/auto.conf: $(BR2_CONFIG)
@@ -455,7 +456,7 @@ world: colibri-bundles
 # dependencies anywhere else
 #
 ################################################################################
-$(BUILD_DIR) $(HOST_DIR) $(BINARIES_DIR) $(SDCARD_DIR) $(BUNDLES_DIR) $(LEGAL_INFO_DIR) $(REDIST_SOURCES_DIR_TARGET) $(REDIST_SOURCES_DIR_HOST):
+$(BUILD_DIR) $(HOST_DIR) $(BINARIES_DIR) $(BINARIES2_DIR) $(SDCARD_DIR) $(BUNDLES_DIR) $(LEGAL_INFO_DIR) $(REDIST_SOURCES_DIR_TARGET) $(REDIST_SOURCES_DIR_HOST):
 	@mkdir -p $@
 
 # We make a symlink lib32->lib or lib64->lib as appropriate

@@ -1,0 +1,3 @@
+RNGD_PIDFILE=/run/rngd.pid
+RNGD_INPUT=/dev/hwrng
+RNGD_OUTPUT=/dev/random

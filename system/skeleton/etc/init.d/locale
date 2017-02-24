@@ -1,0 +1,44 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : Locale language initialization
+# 
+# Authors     : Daniel Kesler <kesler.daniel@gmail.com>
+# 
+# Version     : 00.10
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+if [ -f /etc/default/locale ]; then
+    # In order to permit auto-detection of the charmap when
+    # console-setup-mini operates without configuration file.
+    . /etc/default/locale
+    export LANG
+else
+	export LANG="en_US.UTF-8"
+fi
+
+case "$1" in
+  start)
+	boot_msg "Locale setup."
+	;;
+  stop)
+	;;
+  restart|reload)
+	${0} stop
+	sleep 1
+	${0} start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
+

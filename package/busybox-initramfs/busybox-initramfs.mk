@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-BUSYBOX_INITRAMFS_VERSION = 1.23.1
+BUSYBOX_INITRAMFS_VERSION = 1.26.2
 BUSYBOX_INITRAMFS_SITE = http://www.busybox.net/downloads
 BUSYBOX_INITRAMFS_SOURCE = busybox-$(BUSYBOX_INITRAMFS_VERSION).tar.bz2
 BUSYBOX_INITRAMFS_LICENSE = GPLv2

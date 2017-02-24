@@ -30,7 +30,7 @@ case "$1" in
 		;;
 	stop)
 		boot_msg "Stopping $NAME."
-		start-stop-daemon -K -q -p $NTPD_PIDFILE
+		start-stop-daemon -K -o -q -p $NTPD_PIDFILE
 		evaluate_retval
 		;;
 	restart|reload)

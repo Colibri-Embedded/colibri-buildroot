@@ -105,6 +105,13 @@ endif
 TARGET_FINALIZE_HOOKS += SYSTEM_GETTY
 endif
 
+ifneq ($(BR2_TARGET_LOCALE_DEFAULT),)
+define SYSTEM_DEFAULT_LOCALE
+	echo "LANG=$(BR2_TARGET_LOCALE_DEFAULT)" > $(TARGET_DIR)/etc/default/locale
+endef
+TARGET_FINALIZE_HOOKS += SYSTEM_DEFAULT_LOCALE
+endif
+
 ifeq ($(BR2_TARGET_GENERIC_REMOUNT_ROOTFS_RW),y)
 # Find commented line, if any, and remove leading '#'s
 define SYSTEM_REMOUNT_RW

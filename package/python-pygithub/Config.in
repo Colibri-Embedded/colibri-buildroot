@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_GITHUB
+	bool "python-pygithub"
+	select BR2_PACKAGE_PYTHON_JOSE
+	help
+	  Typed interactions with the GitHub API v3.
+
+	  https://github.com/PyGithub/PyGithub

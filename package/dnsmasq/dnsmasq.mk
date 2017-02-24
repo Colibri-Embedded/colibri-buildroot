@@ -108,15 +108,58 @@ define DNSMASQ_INSTALL_DBUS
 endef
 endif
 
+define DNSMASQ_INSTALL_CONF
+	$(DNSMASQ_FAKEROOT) $(INSTALL) -d -m 0755 $(DNSMASQ_TARGET_DIR)/etc/dnsmasq/conf.d
+	$(DNSMASQ_FAKEROOT) $(INSTALL) -m 644 -D package/dnsmasq/dnsmasq.conf \
+		$(DNSMASQ_TARGET_DIR)/etc/dnsmasq/dnsmasq.conf
+endef 
+
+define DNSMASQ_INSTALL_IFUPDOWN
+	$(DNSMASQ_FAKEROOT) $(INSTALL) -m 0755 -D package/dnsmasq/ifupdown.sh \
+		$(DNSMASQ_TARGET_DIR)/etc/dnsmasq/ifupdown.sh
+		
+	$(DNSMASQ_FAKEROOT) $(INSTALL) -d -m 0755 $(DNSMASQ_TARGET_DIR)/etc/network/if-up.d
+	$(DNSMASQ_FAKEROOT) $(INSTALL) -d -m 0755 $(DNSMASQ_TARGET_DIR)/etc/network/if-down.d
+	$(DNSMASQ_FAKEROOT) $(INSTALL) -d -m 0755 $(DNSMASQ_TARGET_DIR)/etc/network/if-pre-up.d
+	$(DNSMASQ_FAKEROOT) $(INSTALL) -d -m 0755 $(DNSMASQ_TARGET_DIR)/etc/network/if-post-down.d
+	
+	$(DNSMASQ_FAKEROOT) $(INSTALL) -m 0755 -D package/dnsmasq/ifupdown.sh \
+		$(DNSMASQ_TARGET_DIR)/etc/dnsmasq/ifupdown.sh
+		
+	$(DNSMASQ_FAKEROOT) ln -fs ../../dnsmasq/ifupdown.sh \
+		$(DNSMASQ_TARGET_DIR)/etc/network/if-up.d/dnsmasq
+		
+	$(DNSMASQ_FAKEROOT) ln -fs ../../dnsmasq/ifupdown.sh \
+		$(DNSMASQ_TARGET_DIR)/etc/network/if-down.d/dnsmasq
+		
+	$(DNSMASQ_FAKEROOT) ln -fs ../../dnsmasq/ifupdown.sh \
+		$(DNSMASQ_TARGET_DIR)/etc/network/if-pre-up.d/dnsmasq
+		
+	$(DNSMASQ_FAKEROOT) ln -fs ../../dnsmasq/ifupdown.sh \
+		$(DNSMASQ_TARGET_DIR)/etc/network/if-post-down.d/dnsmasq
+endef
+
 define DNSMASQ_INSTALL_TARGET_CMDS
+	$(DNSMASQ_INSTALL_CONF)
+	$(DNSMASQ_INSTALL_IFUPDOWN)
 	$(DNSMASQ_MAKE_ENV) $(MAKE) -C $(@D) $(DNSMASQ_MAKE_OPTS) install$(DNSMASQ_I18N)
 	mkdir -p $(DNSMASQ_TARGET_DIR)/var/lib/misc/
 	$(DNSMASQ_INSTALL_DBUS)
 endef
 
 define DNSMASQ_INSTALL_INIT_SYSV
-	$(INSTALL) -m 755 -D package/dnsmasq/S80dnsmasq \
-		$(DNSMASQ_TARGET_DIR)/etc/init.d/S80dnsmasq
+	$(DNSMASQ_FAKEROOT) $(DNSMASQ_FAKEROOT_ENV) $(INSTALL) -D -m 0755 package/dnsmasq/dnsmasq.init \
+		$(DNSMASQ_TARGET_DIR)/etc/init.d/dnsmasq
+	$(DNSMASQ_FAKEROOT) $(DNSMASQ_FAKEROOT_ENV) $(INSTALL) -D -m 0644 package/dnsmasq/dnsmasq.default \
+		$(DNSMASQ_TARGET_DIR)/etc/default/dnsmasq
+		
+	$(DNSMASQ_FAKEROOT) $(DNSMASQ_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(DNSMASQ_TARGET_DIR)/etc/rc.d/rc.startup.d
+	$(DNSMASQ_FAKEROOT) $(DNSMASQ_FAKEROOT_ENV) $(INSTALL) -d -m 0755 $(DNSMASQ_TARGET_DIR)/etc/rc.d/rc.shutdown.d
+	
+	$(DNSMASQ_FAKEROOT) $(DNSMASQ_FAKEROOT_ENV) ln -fs ../../init.d/dnsmasq \
+		$(DNSMASQ_TARGET_DIR)/etc/rc.d/rc.startup.d/S80dnsmasq
+	$(DNSMASQ_FAKEROOT) $(DNSMASQ_FAKEROOT_ENV) ln -fs ../../init.d/dnsmasq \
+		$(DNSMASQ_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S80dnsmasq
 endef
 
 $(eval $(generic-package))
