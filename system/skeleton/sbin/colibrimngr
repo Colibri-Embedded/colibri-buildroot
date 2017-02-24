@@ -112,6 +112,18 @@ copy_to_bundles() {
 	fi
 }
 
+# B_FILENAME, TRIGGER_NAME
+create_trigger()
+{
+	B_FILE=$(basename $1)
+	TRIGGER=$2
+	
+	if [ -n $TRIGGER ]; then
+		touch /mnt/live/${BUNDLES}/${B_FILE}.${TRIGGER}
+		dbg_msg "TRIGGER for ${B_FILE}.${TRIGGER}"
+	fi
+}
+
 copy_to_boot() {
 	SRC_FILE=$1
 	DST_FILE=$2
@@ -139,6 +151,11 @@ remove_bundle() {
 	fi
 
 	if [ $CAN_REMOVE == "yes" ]; then
+	
+										
+		# post_remove script execute
+		exec_bundle_script $1 pre_remove
+	
 		BUNDLE=$(is_bundle_installed $1)
 		if [ "x$BUNDLE" != "x" ]; then
 			echo -n "Removing $BUNDLE..."
@@ -146,6 +163,9 @@ remove_bundle() {
 			rm -f /mnt/live/${BUNDLES}/${BUNDLE}.*
 			echo "DONE"
 		fi
+		
+		# post_remove script execute
+		exec_bundle_script $1 post_remove
 	else
 		if [ $POSTPONE == "yes" ]; then
 			echo "Bundle $BUNDLE removal is postponed."
@@ -171,6 +191,12 @@ activate_bundle() {
 			mkdir -p /mnt/live/${BDATA}/${CB}
 			mount -o loop -t squashfs "/mnt/live/${BUNDLES}/${CB}" "/mnt/live/${BDATA}/${CB}" 2>/dev/null
 			mount -o remount,add:1:"/mnt/live/${BDATA}/${CB}" aufs / 2>/dev/null
+			
+			if [ -f "/mnt/live/${BUNDLES}/${CB}.post_install" ]; then
+				B_NAME=$(filename_to_bundleinfo ${CB} name)
+				exec_bundle_script post_install $B_NAME
+			fi
+			
 			echo "DONE"
 		else
 			echo "Bundle not installed"
@@ -371,6 +397,56 @@ __enable__() #min-args:1
 	sync
 }
 
+# B_NAME, script
+exec_bundle_script()
+{
+	echo "exec_bundle_script:" $@
+	B_NAME=$2
+	case $1 in
+		post_remove)
+			if [ -x "/var/lib/colibri/bundle/$B_NAME/post_remove.sh" ]; then
+				/var/lib/colibri/bundle/$B_NAME/post_remove.sh
+			fi
+			;;
+		pre_remove)
+			if [ -x "/var/lib/colibri/bundle/$B_NAME/pre_remove.sh" ]; then
+				/var/lib/colibri/bundle/$B_NAME/pre_remove.sh
+			fi
+			;;
+		post_install)
+			if [ -x "/var/lib/colibri/bundle/$B_NAME/post_install.sh" ]; then
+				/var/lib/colibri/bundle/$B_NAME/post_install.sh
+			fi
+			;;
+		pre_install)
+			if [ -x "/var/lib/colibri/bundle/$B_NAME/pre_install.sh" ]; then
+				/var/lib/colibri/bundle/$B_NAME/pre_install.sh
+			fi
+			;;
+	esac
+}
+
+#help: trigger on-boot commands
+__onboot__()
+{
+	remount_bundles_rw
+	
+	for bundle in $(cd /mnt/live/${BUNDLES}/; ls *.${BEXT}.*);do
+		case "${bundle##*.}" in
+			post_install)
+				B_FILE=$(echo $bundle | sed s/.post_install//)
+				B_NAME=$(filename_to_bundleinfo $B_FILE name)
+				exec_bundle_script post_install $B_NAME
+				# Remove bundle trigger
+				#~ rm /mnt/live/${BUNDLES}/${bundle}
+				;;
+			post_remove)
+				;;
+		esac
+	done
+	remount_bundles_ro
+}
+
 #help: [-force] [-postpone] <bundle_file>, Install one or more bundles.
 __install__() #min-args:1
 {
@@ -434,6 +510,7 @@ __install__() #min-args:1
 								dbg_msg "Bundle is inactive"
 								# we can remove the bundle safely
 								remove_bundle $B_NAME
+								
 								CAN_INSTALL="yes"
 								IS_INACTIVE="yes"
 							else
@@ -474,6 +551,8 @@ __install__() #min-args:1
 							if [ x"$IS_INACTIVE" == x"yes" ]; then
 								TO_ACTIVATE="$TO_ACTIVATE $B_NAME"
 							fi
+							
+							create_trigger $B_FULL_FILENAME post_install
 						fi
 						
 					# ... if [ "$?" == "0" ]; then
