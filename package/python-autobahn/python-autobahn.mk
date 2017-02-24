@@ -10,6 +10,6 @@ PYTHON_AUTOBAHN_SITE = https://github.com/crossbario/autobahn-python/archive/
 PYTHON_AUTOBAHN_LICENSE = MIT
 # README.rst refers to the file "LICENSE" but it's not included
 PYTHON_AUTOBAHN_SETUP_TYPE = setuptools
-PYTHON_AUTOBAHN_DEPENDENCIES = python-txaio
+PYTHON_AUTOBAHN_DEPENDENCIES = python-six python-txaio python-wsaccel 
 
 $(eval $(python-package))

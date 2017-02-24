@@ -43,6 +43,24 @@ $(eval $(autotools-package))
 
 '''
 
+makefile_cmake_template='''################################################################################
+#
+# {{pkg_name}}
+#
+################################################################################
+
+{{pkg_name_ucase}}_VERSION = {{pkg_version}}
+{{pkg_name_ucase}}_SOURCE = $({{pkg_name_ucase}}_VERSION).tar.gz
+{{pkg_name_ucase}}_SITE = # add website here #
+{{pkg_name_ucase}}_LICENSE = 
+{{pkg_name_ucase}}_LICENSE_FILES = 
+#{{pkg_name_ucase}}_DEPENDENCIES = 
+#{{pkg_name_ucase}}_INSTALL_STAGING = YES
+
+$(eval $(cmake-package))
+
+'''
+
 config_in_template='''config BR2_PACKAGE_{{pkg_name_ucase}}
 	bool "{{pkg_name}}"
 	help
@@ -55,6 +73,7 @@ templateLoader = jinja2.DictLoader({
 	'Config.in': config_in_template,
 	'python.mk': makefile_py_template,
 	'autotools.mk': makefile_autotools_template,
+	'cmake.mk': makefile_cmake_template,
 })
 templateEnv = jinja2.Environment( loader=templateLoader )
 
@@ -114,6 +133,28 @@ def generate_python_package():
 	create_dir(pkg_name)
 	create_from_template('Config.in', os.path.join(pkg_name,'Config.in'), params)
 	create_from_template('python.mk', os.path.join(pkg_name,pkg_name+'.mk'), params)
+	
+def generate_cmake_package():
+	# Package name
+	pkg_name = input("Package name (newpackage): " )
+	if not pkg_name:
+		print("No package name provided. Exiting...")
+		exit()
+
+	# Package name
+	pkg_version = input("Package version (1.0.0): " )
+	if not pkg_version:
+		pkg_version = '1.0.0'
+
+	params = {
+		"pkg_name" : pkg_name,
+		"pkg_name_ucase" : pkg_name.upper().replace('-','_'),
+		"pkg_version" : pkg_version
+	}
+
+	create_dir(pkg_name)
+	create_from_template('Config.in', os.path.join(pkg_name,'Config.in'), params)
+	create_from_template('cmake.mk', os.path.join(pkg_name,pkg_name+'.mk'), params)
 
 def generate_autotools_package():
 	# Package name
@@ -141,6 +182,7 @@ commands = {
 	'package' : {
 		'python' : generate_python_package,
 		'autotools' : generate_autotools_package,
+		'cmake' : generate_cmake_package,
 	}
 }
 

@@ -1,0 +1,15 @@
+diff -ruN crossbar-0.15.0.orig/requirements-in.txt crossbar-0.15.0/requirements-in.txt
+--- crossbar-0.15.0.orig/requirements-in.txt	2016-10-23 19:52:53.688088136 +0200
++++ crossbar-0.15.0/requirements-in.txt	2016-10-23 19:53:52.918861945 +0200
+@@ -6,11 +6,9 @@
+ netaddr>=0.7.18
+ PyTrie>=0.2
+ Jinja2>=2.8
+-mistune>=0.7.3
+ Pygments>=2.1.3
+ PyYAML>=3.11
+ shutilwhich>=1.1.0
+-sdnotify>=0.3.1
+ psutil>=4.3.0
+ lmdb>=0.89
+ u-msgpack-python>=2.1

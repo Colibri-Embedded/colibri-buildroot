@@ -2,6 +2,7 @@ config BR2_PACKAGE_PYTHON_AUTOBAHN
 	bool "python-autobahn"
 	select BR2_PACKAGE_PYTHON_TXAIO
 	select BR2_PACKAGE_PYTHON_SIX
+	select BR2_PACKAGE_PYTHON_WSACCEL
 	help
 	  The Autobahn project provides open-source implementations 
 	  of the The WebSocket Protocol and 
