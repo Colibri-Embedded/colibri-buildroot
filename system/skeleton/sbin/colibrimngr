@@ -123,6 +123,12 @@ copy_to_boot() {
 	cp ${SRC_FILE} /mnt/live/mnt/boot/${DST_FILE}
 }
 
+extract_to_boot() {
+	SRC_FILE=$1
+	
+	unzip -o $SRC_FILE -d /mnt/live/mnt/boot/
+}
+
 remove_bundle() {
 	POSTPONE="$2"
 	CAN_REMOVE="no"
@@ -596,7 +602,7 @@ __restore__() #min-args:1
 	__install__ ${B_LIST}
 }
 
-#help: <kernel|initramfs|bootloader> <file>, Update kernel,initramfs or bootloader.
+#help: <kernel|initramfs|earlyboot-webui|earlyboot-product-sh|earlyboot-conf|direct|all> <file>, Update kernel,initramfs or bootloader.
 __updateboot__() #min-args:1
 {
 	check_root
@@ -644,7 +650,12 @@ __updateboot__() #min-args:1
 			dbg_msg "direct"
 			copy_to_boot ${B_FILE} ${B_DIRECT}
 			REBOOT_REQUIRED="no"
-			;;			
+			;;
+		all)
+			dbg_msg "all"
+			extract_to_boot ${B_FILE}
+			REBOOT_REQUIRED="yes"
+			;;
 		*)
 			echo "'$CMD' is not supported."
 	esac
