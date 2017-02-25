@@ -21,23 +21,24 @@ if [ -f /etc/default/locale ]; then
     . /etc/default/locale
     export LANG
 else
-	export LANG="en_US.UTF-8"
+    export LANG="en_US.UTF-8"
 fi
 
 case "$1" in
-  start)
-	boot_msg "Locale setup."
-	;;
-  stop)
-	;;
-  restart|reload)
-	${0} stop
-	sleep 1
-	${0} start
-	;;
-  *)
-	echo "Usage: $0 {start|stop|restart}"
-	exit 1
+    start)
+        boot_msg "Locale setup."
+        is_success
+        ;;
+    stop)
+        ;;
+        restart|reload)
+        ${0} stop
+        sleep 1
+        ${0} start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
 esac
 
 exit $?

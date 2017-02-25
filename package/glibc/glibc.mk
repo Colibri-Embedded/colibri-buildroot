@@ -116,6 +116,13 @@ ifeq ($(BR2_PACKAGE_GDB),y)
 GLIBC_LIBS_LIB += libthread_db.so.*
 endif
 
+define GLIBC_INSTALL_LOCALE
+	# Install selected locale to staging
+	python support/scripts/locale-gen.py -l $(@D)/$(GLIBC_SRC_SUBDIR)/localedata/locales -c $(@D)/$(GLIBC_SRC_SUBDIR)/localedata/charmaps -g $(BR2_TARGET_LOCALE_GEN) -p $(TARGET_DIR)
+	# Install selected locale to GLIBC_TARGET_DIR
+	python support/scripts/locale-gen.py -l $(@D)/$(GLIBC_SRC_SUBDIR)/localedata/locales -c $(@D)/$(GLIBC_SRC_SUBDIR)/localedata/charmaps -g $(BR2_TARGET_LOCALE_GEN) -p $(GLIBC_TARGET_DIR)
+endef
+
 define GLIBC_INSTALL_TARGET_CMDS
 	for libs in $(GLIBC_LIBS_LIB); do \
 		$(call copy_toolchain_lib_root,$(STAGING_DIR)/,,lib,$$libs,/lib) ; \
@@ -125,11 +132,10 @@ define GLIBC_INSTALL_TARGET_CMDS
 
 	$(GLIBC_FAKEROOT) find $(GLIBC_TARGET_DIR) -name "*.o" -delete
 	$(GLIBC_FAKEROOT) find $(GLIBC_TARGET_DIR) -name "*.map" -delete
-	
-	# Install selected locale to staging
-	python support/scripts/locale-gen.py -l $(@D)/$(GLIBC_SRC_SUBDIR)/localedata/locales -c $(@D)/$(GLIBC_SRC_SUBDIR)/localedata/charmaps -g $(BR2_TARGET_LOCALE_GEN) -p $(TARGET_DIR)
-	# Install selected locale to GLIBC_TARGET_DIR
-	python support/scripts/locale-gen.py -l $(@D)/$(GLIBC_SRC_SUBDIR)/localedata/locales -c $(@D)/$(GLIBC_SRC_SUBDIR)/localedata/charmaps -g $(BR2_TARGET_LOCALE_GEN) -p $(GLIBC_TARGET_DIR)
 endef
+
+ifeq ($(BR2_TARGET_LOCALES),y)
+GLIBC_POST_INSTALL_TARGET_HOOKS += GLIBC_INSTALL_LOCALE
+endif
 
 $(eval $(autotools-package))
