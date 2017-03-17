@@ -255,6 +255,13 @@ define LINUX_INSTALL_DTB_SDCARD
 		$(addprefix $(KERNEL_ARCH_PATH)/boot/dts/,$(KERNEL_DTBS))),dts/),$(KERNEL_DTBS)) \
 		$(SDCARD_DIR)
 endef
+define LINUX_INSTALL_DTB_BOOTFILES
+	# dtbs moved from arch/<ARCH>/boot to arch/<ARCH>/boot/dts since 3.8-rc1
+	cp $(addprefix \
+		$(KERNEL_ARCH_PATH)/boot/$(if $(wildcard \
+		$(addprefix $(KERNEL_ARCH_PATH)/boot/dts/,$(KERNEL_DTBS))),dts/),$(KERNEL_DTBS)) \
+		$(BOOTFILES_DIR)
+endef
 endif
 endif
 
@@ -309,6 +316,10 @@ define LINUX_INSTALL_KERNEL_IMAGE_TO_SDCARD
 endef
 endif
 
+define LINUX_INSTALL_KERNEL_IMAGE_TO_BOOTFILES
+	install -m 0644 -D $(LINUX_IMAGE_PATH) $(BOOTFILES_DIR)/$(BR2_LINUX_KERNEL_INSTALL_SDCARD_NAME)
+	$(LINUX_INSTALL_DTB_BOOTFILES)
+endef
 
 define LINUX_INSTALL_HOST_TOOLS
 	# Installing dtc (device tree compiler) as host tool, if selected
@@ -326,6 +337,7 @@ endef
 define LINUX_INSTALL_TARGET_CMDS
 	$(LINUX_INSTALL_KERNEL_IMAGE_TO_TARGET)
 	$(LINUX_INSTALL_KERNEL_IMAGE_TO_SDCARD)
+	$(LINUX_INSTALL_KERNEL_IMAGE_TO_BOOTFILES)
 	# Install modules and remove symbolic links pointing to build
 	# directories, not relevant on the target
 	@if grep -q "CONFIG_MODULES=y" $(@D)/.config; then 	\

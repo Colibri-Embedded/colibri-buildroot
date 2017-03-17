@@ -30,10 +30,18 @@ endef
 IFPLUGD_POST_INSTALL_TARGET_HOOKS += IFPLUGD_INSTALL_FIXUP
 
 define IFPLUGD_INSTALL_INIT_SYSV
-	$(IFPLUGD_FAKEROOT) $(INSTALL) -D -m 0755 $(@D)/conf/ifplugd.init \
-		$(IFPLUGD_TARGET_DIR)/etc/init.d/S45ifplugd
-	# don't use bash for init script
-	$(IFPLUGD_FAKEROOT) $(SED) 's^/bin/bash^/bin/sh^g' $(IFPLUGD_TARGET_DIR)/etc/init.d/S45ifplugd
+	$(IFPLUGD_FAKEROOT) $(INSTALL) -D -m 0755 package/ifplugd/ifplugd.init \
+		$(IFPLUGD_TARGET_DIR)/etc/init.d/ifplugd
+	$(IFPLUGD_FAKEROOT) $(INSTALL) -D -m 0644 package/ifplugd/ifplugd.default \
+		$(IFPLUGD_TARGET_DIR)/etc/default/ifplugd
+		
+	$(IFPLUGD_FAKEROOT) $(INSTALL) -d -m 0755 $(IFPLUGD_TARGET_DIR)/etc/rc.d/rc.startup.d	
+	$(IFPLUGD_FAKEROOT) $(INSTALL) -d -m 0755 $(IFPLUGD_TARGET_DIR)/etc/rc.d/rc.shutdown.d
+	
+	$(IFPLUGD_FAKEROOT) ln -fs ../../init.d/ifplugd \
+		$(IFPLUGD_TARGET_DIR)/etc/rc.d/rc.startup.d/S45ifplugd
+	$(IFPLUGD_FAKEROOT) ln -fs ../../init.d/ifplugd \
+		$(IFPLUGD_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S45ifplugd
 endef
 
 $(eval $(autotools-package))

@@ -26,6 +26,7 @@ define DHCPCD_CONFIGURE_CMDS
 	(cd $(@D); \
 	$(TARGET_CONFIGURE_OPTS) ./configure \
 		--os=linux \
+		--rundir=/run \
 		$(DHCPCD_CONFIG_OPTS) )
 endef
 

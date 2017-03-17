@@ -158,6 +158,7 @@ BR_GRAPH_OUT := $(or $(BR2_GRAPH_OUT),pdf)
 BUILD_DIR := $(BASE_DIR)/build
 BINARIES_DIR := $(BASE_DIR)/images
 BINARIES2_DIR := $(BASE_DIR)/images2
+BOOTFILES_DIR := $(BASE_DIR)/bootfiles
 SDCARD_DIR := $(BASE_DIR)/sdcard
 BUNDLES_DIR := $(SDCARD_DIR)/bundles
 TARGET_DIR := $(BASE_DIR)/target
@@ -432,7 +433,7 @@ TARGETS_LEGAL_INFO := $(patsubst %,%-legal-info,\
 
 dirs: $(BUILD_DIR) $(STAGING_DIR) $(TARGET_DIR) \
 	$(HOST_DIR) $(BINARIES_DIR) $(BINARIES2_DIR) $(PACKAGES_DIR) \
-	$(SDCARD_DIR) $(BUNDLES_DIR)
+	$(SDCARD_DIR) $(BUNDLES_DIR) $(BOOTFILES_DIR)
 
 $(BUILD_DIR)/buildroot-config/auto.conf: $(BR2_CONFIG)
 	$(MAKE1) $(EXTRAMAKEARGS) HOSTCC="$(HOSTCC_NOCCACHE)" HOSTCXX="$(HOSTCXX_NOCCACHE)" silentoldconfig
@@ -456,7 +457,7 @@ world: colibri-bundles
 # dependencies anywhere else
 #
 ################################################################################
-$(BUILD_DIR) $(HOST_DIR) $(BINARIES_DIR) $(BINARIES2_DIR) $(SDCARD_DIR) $(BUNDLES_DIR) $(LEGAL_INFO_DIR) $(REDIST_SOURCES_DIR_TARGET) $(REDIST_SOURCES_DIR_HOST):
+$(BUILD_DIR) $(HOST_DIR) $(BINARIES_DIR) $(BINARIES2_DIR) $(BOOTFILES_DIR) $(SDCARD_DIR) $(BUNDLES_DIR) $(LEGAL_INFO_DIR) $(REDIST_SOURCES_DIR_TARGET) $(REDIST_SOURCES_DIR_HOST):
 	@mkdir -p $@
 
 # We make a symlink lib32->lib or lib64->lib as appropriate
@@ -934,17 +935,23 @@ endif
 	@echo 'it on-line at http://buildroot.org/docs.html'
 	@echo
 
-release: OUT = buildroot-$(BR2_VERSION)
+#release: OUT = buildroot-$(BR2_VERSION)
 
 # Create release tarballs. We need to fiddle a bit to add the generated
 # documentation to the git output
-release:
-	git archive --format=tar --prefix=$(OUT)/ HEAD > $(OUT).tar
-	$(MAKE) O=$(OUT) manual-html manual-text manual-pdf
-	tar rf $(OUT).tar $(OUT)
-	gzip -9 -c < $(OUT).tar > $(OUT).tar.gz
-	bzip2 -9 -c < $(OUT).tar > $(OUT).tar.bz2
-	rm -rf $(OUT) $(OUT).tar
+#release:
+#	git archive --format=tar --prefix=$(OUT)/ HEAD > $(OUT).tar
+#	$(MAKE) O=$(OUT) manual-html manual-text manual-pdf
+#	tar rf $(OUT).tar $(OUT)
+#	gzip -9 -c < $(OUT).tar > $(OUT).tar.gz
+#	bzip2 -9 -c < $(OUT).tar > $(OUT).tar.bz2
+#	rm -rf $(OUT) $(OUT).tar
+
+BOOTFILES_VERSION ?= v$(shell date +%Y%m%d)
+
+bootfiles: colibri-earlyboot linux linux2 rpi-firmware
+	echo $(BOOTFILES_VERSION) > $(BOOTFILES_DIR)/version
+	cd $(BOOTFILES_DIR); zip -o $(BINARIES_DIR)/boot-$(BOOTFILES_VERSION) -r *
 
 print-version:
 	@echo $(BR2_VERSION_FULL)

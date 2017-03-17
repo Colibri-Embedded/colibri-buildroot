@@ -12,8 +12,8 @@ RPI_FIRMWARE_SITE = $(call github,raspberrypi,firmware,$(RPI_FIRMWARE_VERSION))
 RPI_FIRMWARE_LICENSE = BSD-3c
 RPI_FIRMWARE_LICENSE_FILES = boot/LICENCE.broadcom
 RPI_FIRMWARE_INSTALL_TARGET = NO
-RPI_FIRMWARE_INSTALL_IMAGES = YES
 RPI_FIRMWARE_INSTALL_SDCARD = YES
+RPI_FIRMWARE_INSTALL_BOOTFILES = YES
 
 ifeq ($(BR2_PACKAGE_RPI_FIRMWARE_INSTALL_DTBS),y)
 #~ RPI_FIRMWARE_DEPENDENCIES += host-rpi-firmware
@@ -35,6 +35,15 @@ define RPI_FIRMWARE_INSTALL_DTB_SDCARD
 		$(INSTALL) -D -m 0644 $${ovldtb} $(SDCARD_DIR)/overlays/$${ovldtb##*/} || exit 1; \
 	done
 endef
+define RPI_FIRMWARE_INSTALL_DTB_BOOTFILES
+	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2708-rpi-b.dtb $(BOOTFILES_DIR)/bcm2708-rpi-b.dtb
+	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2708-rpi-b-plus.dtb $(BOOTFILES_DIR)/bcm2708-rpi-b-plus.dtb
+	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2709-rpi-2-b.dtb $(BOOTFILES_DIR)/bcm2709-rpi-2-b.dtb
+	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2710-rpi-3-b.dtb $(BOOTFILES_DIR)/bcm2710-rpi-3-b.dtb
+	for ovldtb in  $(@D)/boot/overlays/*.dtbo; do \
+		$(INSTALL) -D -m 0644 $${ovldtb} $(BOOTFILES_DIR)/overlays/$${ovldtb##*/} || exit 1; \
+	done
+endef
 endif
 
 ifeq ($(BR2_PACKAGE_RPI_FIRMWARE_CUSTOM_CONFIG),y)
@@ -45,13 +54,13 @@ RPI_FIRMWARE_CONFIG_TXT		= package/rpi-firmware/config.txt
 RPI_FIRMWARE_CMDLINE_TXT	= package/rpi-firmware/cmdline.txt
 endif
 
-define RPI_FIRMWARE_INSTALL_IMAGES_CMDS
-	$(INSTALL) -D -m 0644 $(@D)/boot/bootcode.bin $(BINARIES_DIR)/rpi-firmware/bootcode.bin
-	$(INSTALL) -D -m 0644 $(@D)/boot/start$(BR2_PACKAGE_RPI_FIRMWARE_BOOT).elf $(BINARIES_DIR)/rpi-firmware/start.elf
-	$(INSTALL) -D -m 0644 $(@D)/boot/fixup$(BR2_PACKAGE_RPI_FIRMWARE_BOOT).dat $(BINARIES_DIR)/rpi-firmware/fixup.dat
-	$(INSTALL) -D -m 0644 $(RPI_FIRMWARE_CONFIG_TXT) $(BINARIES_DIR)/rpi-firmware/config.txt
-	$(INSTALL) -D -m 0644 $(RPI_FIRMWARE_CMDLINE_TXT) $(BINARIES_DIR)/rpi-firmware/cmdline.txt
-	$(RPI_FIRMWARE_INSTALL_DTB)
+define RPI_FIRMWARE_INSTALL_BOOTFILES_CMDS
+	$(INSTALL) -D -m 0644 $(@D)/boot/bootcode.bin $(BOOTFILES_DIR)//bootcode.bin
+	$(INSTALL) -D -m 0644 $(@D)/boot/start$(BR2_PACKAGE_RPI_FIRMWARE_BOOT).elf $(BOOTFILES_DIR)/start.elf
+	$(INSTALL) -D -m 0644 $(@D)/boot/fixup$(BR2_PACKAGE_RPI_FIRMWARE_BOOT).dat $(BOOTFILES_DIR)/fixup.dat
+	$(INSTALL) -D -m 0644 $(RPI_FIRMWARE_CONFIG_TXT) $(BOOTFILES_DIR)/config.txt
+	$(INSTALL) -D -m 0644 $(RPI_FIRMWARE_CMDLINE_TXT) $(BOOTFILES_DIR)/cmdline.txt
+	$(RPI_FIRMWARE_INSTALL_DTB_BOOTFILES)
 endef
 
 define RPI_FIRMWARE_INSTALL_SDCARD_CMDS

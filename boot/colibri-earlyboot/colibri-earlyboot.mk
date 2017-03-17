@@ -58,14 +58,19 @@ ifeq ($(BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM),y)
 define COLIBRI_EARLYBOOT_INSTALL_TARGET_CMDS
 	$(COLIBRI_EARLYBOOT_FAKEROOT) -- $(MAKE1) -C $(@D) DESTDIR=$(COLIBRI_EARLYBOOT_TARGET_DIR) install
 	$(INSTALL) -D -m 0644 $(BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM_CONFIG) $(SDCARD_DIR)/earlyboot/earlyboot.conf
+	$(INSTALL) -D -m 0644 $(BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM_CONFIG) $(BOOTFILES_DIR)/earlyboot/earlyboot.conf
 	$(INSTALL) -D -m 0644 $(BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM_PRODUCT) $(SDCARD_DIR)/earlyboot/product.sh
+	$(INSTALL) -D -m 0644 $(BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM_PRODUCT) $(BOOTFILES_DIR)/earlyboot/product.sh
 	$(TAR) -cf $(SDCARD_DIR)/earlyboot/webui.tar -C $(BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM_WEBUI) .
+	$(TAR) -cf $(BOOTFILES_DIR)/earlyboot/webui.tar -C $(BR2_TARGET_COLIBRI_EARLYBOOT_CUSTOM_WEBUI) .
 endef
 else
 define COLIBRI_EARLYBOOT_INSTALL_TARGET_CMDS
 	$(COLIBRI_EARLYBOOT_FAKEROOT) -- $(MAKE1) -C $(@D) DESTDIR=$(COLIBRI_EARLYBOOT_TARGET_DIR) install
 	$(INSTALL) -D -m 0644 $(@D)/earlyboot.conf $(SDCARD_DIR)/earlyboot/earlyboot.conf
+	$(INSTALL) -D -m 0644 $(@D)/earlyboot.conf $(BOOTFILES_DIR)/earlyboot/earlyboot.conf
 	$(INSTALL) -D -m 0644 $(@D)/product.sh $(SDCARD_DIR)/earlyboot/product.sh
+	$(INSTALL) -D -m 0644 $(@D)/product.sh $(BOOTFILES_DIR)/earlyboot/product.sh
 endef
 endif
 
@@ -103,6 +108,8 @@ define COLIBRI_EARLYBOOT_CREATE_INITRAMFS_IMG
 	chmod +x $(@D)/create_initramfs.sh
 	$(COLIBRI_EARLYBOOT_FAKEROOT) -- $(@D)/create_initramfs.sh
 	rm $(@D)/create_initramfs.sh
+	
+	cp $(SDCARD_DIR)/initramfs.img $(BOOTFILES_DIR)/
 endef
 
 COLIBRI_EARLYBOOT_POST_INSTALL_TARGET_HOOKS += COLIBRI_EARLYBOOT_CREATE_INITRAMFS_IMG

@@ -733,6 +733,8 @@ __updateboot__() #min-args:1
 		all)
 			dbg_msg "all"
 			extract_to_boot ${B_FILE}
+			# Disable firstboot as this is an update
+			sed -i /mnt/live/mnt/boot/cmdline.txt -e 's/colibri.firstboot=1/colibri.firstboot=0/'
 			REBOOT_REQUIRED="yes"
 			;;
 		*)
