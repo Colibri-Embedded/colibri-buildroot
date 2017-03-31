@@ -8,3 +8,10 @@ config BR2_PACKAGE_DHCPCD
 	  An RFC2131 compliant DHCP client
 
 	  http://roy.marples.name/projects/dhcpcd/
+
+if BR2_PACKAGE_DHCPCD
+
+config BR2_TARGET_DHCPCD_CUSTOM_CONF
+	string "Custom dhcpcd.config"
+	
+endif

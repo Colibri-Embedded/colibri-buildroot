@@ -35,8 +35,15 @@ define DHCPCD_BUILD_CMDS
 		-C $(@D) all
 endef
 
+ifneq ($(BR2_TARGET_DHCPCD_CUSTOM_CONF),)
+define DHCPCD_INSTALL_CUSTOM_CONF
+	$(DHCPCD_FAKEROOT) cp $(BR2_TARGET_DHCPCD_CUSTOM_CONF) $(DHCPCD_TARGET_DIR)/etc/
+endef
+endif
+
 define DHCPCD_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) install DESTDIR=$(DHCPCD_TARGET_DIR)
+	$(DHCPCD_INSTALL_CUSTOM_CONF)
 endef
 
 # NOTE: Even though this package has a configure script, it is not generated

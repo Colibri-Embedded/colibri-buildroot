@@ -18,6 +18,43 @@
 SERVICE_NAME=colibrimngr
 FIRSTBOOT=no
 
+cdr2mask ()
+{
+   # Number of args to shift, 255..255, first non-255 byte, zeroes
+   set -- $(( 5 - ($1 / 8) )) 255 255 255 255 $(( (255 << (8 - ($1 % 8))) & 255 )) 0 0 0
+   [ $1 -gt 1 ] && shift $1 || shift
+   echo ${1-0}.${2-0}.${3-0}.${4-0}
+}
+
+copy_network_config()
+{
+    if [ -e "/mnt/live/mnt/boot/earlyboot/earlyboot.conf" ]; then
+        cat /mnt/live/mnt/boot/earlyboot/earlyboot.conf | grep NETWORK_ > /tmp/temp.env
+        source /tmp/temp.env
+        rm /tmp/temp.env
+
+        INTERFACESD=/etc/network/interfaces.d
+        IFACE="$NETWORK_IF"
+        PFX=$(echo "$NETWORK_IPV4" | awk -F'/' '{print $2}')
+        IP=$(echo "$NETWORK_IPV4" | awk -F'/' '{print $1}')
+        NETMASK=$(cdr2mask $PFX)
+        GATEWAY="$NETWORK_GW"
+
+cat <<EOF > $INTERFACESD/$IFACE
+# Automatically generated, do not edit
+
+allow-hotplug $IFACE
+auto $IFACE
+iface $IFACE inet static
+  address  $IP
+  netmask  $NETMASK
+  gateway  $GATEWAY
+EOF
+
+    fi
+}
+
+
 # Check if this is a fistboot.
 if [ -e "/mnt/live/lib/firstboot" ]; then
     FIRSTBOOT=yes
@@ -26,7 +63,11 @@ fi
 case "$1" in
   start)
     boot_msg "Colibri Manager"
-    [ "$FIRSTBOOT" == "yes" ] && /sbin/depmod
+    if [ "$FIRSTBOOT" == "yes" ]; then
+        copy_network_config
+        /sbin/depmod
+    fi
+    
     /sbin/colibrimngr onboot &> /var/log/colibrimngr_onboot.log
     is_success
     ;;

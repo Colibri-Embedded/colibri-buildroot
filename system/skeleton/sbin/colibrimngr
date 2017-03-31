@@ -438,7 +438,7 @@ __onboot__()
 				B_NAME=$(filename_to_bundleinfo $B_FILE name)
 				exec_bundle_script post_install $B_NAME
 				# Remove bundle trigger
-				#~ rm /mnt/live/${BUNDLES}/${bundle}
+				rm /mnt/live/${BUNDLES}/${bundle}
 				;;
 			post_remove)
 				;;

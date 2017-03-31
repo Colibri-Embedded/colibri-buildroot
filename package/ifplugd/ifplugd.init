@@ -1,0 +1,46 @@
+#!/bin/sh
+################################################################
+# Begin $rc_base/init.d/
+#
+# Description : 
+# 
+# Authors     : Daniel Kesler <kesler.daniel@gmail.com>
+# 
+# Version     : 00.10
+#
+# Notes       :
+#
+###############################################################
+
+. /etc/default/rc
+. ${rc_functions}
+
+test -r /etc/default/ifplugd && source /etc/default/ifplugd
+
+[ -z $IFPLUGD_PIDFILE ] && IFPLUGD_PIDFILE=/run/ifplugd.pid
+
+DAEMON=/usr/sbin/ifplugd
+
+case "$1" in
+  start)
+	boot_msg "Starting ifplugd server."
+	start-stop-daemon -S -m -b -q -p $IFPLUGD_PIDFILE --exec $DAEMON -- -n
+	evaluate_retval
+	;;
+  stop)
+	boot_msg "Stopping ifplugd server."
+	start-stop-daemon -K -q -p $IFPLUGD_PIDFILE
+	evaluate_retval
+	;;
+  restart|reload)
+	${0} stop
+	sleep 1
+	${0} start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
+
