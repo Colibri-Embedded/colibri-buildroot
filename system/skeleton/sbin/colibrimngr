@@ -38,7 +38,8 @@ source /mnt/live/lib/.config
 ######################
 
 dbg_msg() {
-	echo "dbg: $@"
+	#echo "dbg: $@"
+	true
 }
 
 signal_reboot()
@@ -479,8 +480,8 @@ __install__() #min-args:1
 			CAN_INSTALL="no"
 			IS_INACTIVE="no"
 			
-			echo "B_NAME $B_NAME"
-			echo "B_FILE $B_FILE"
+			dbg_msg "B_NAME" $B_NAME
+			dbg_msg "B_FILE" $B_FILE
 			
 			if [ -f $B_FULL_FILENAME ]; then
 				# Check that md5sum file exists
