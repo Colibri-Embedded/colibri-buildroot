@@ -3,10 +3,9 @@
 # module-rtl8188eu
 #
 ################################################################################
-
 MODULE_RTL8188EU_VERSION = 4.3.0.8_13968
-MODULE_RTL8188EU_SOURCE = 8188eu-v$(MODULE_RTL8188EU_VERSION).tar.xz
-MODULE_RTL8188EU_SITE = https://dl.dropboxusercontent.com/u/27457926/
+MODULE_RTL8188EU_SOURCE = v$(MODULE_RTL8188EU_VERSION).tar.gz
+MODULE_RTL8188EU_SITE = https://github.com/Colibri-Embedded/8188eu/archive
 
 #~   # Disable power saving
 #~   sed -i 's/^CONFIG_POWER_SAVING \= y/CONFIG_POWER_SAVING = n/' Makefile
