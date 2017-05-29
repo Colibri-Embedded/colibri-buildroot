@@ -4,13 +4,14 @@
 #
 ################################################################################
 
-AVRDUDE_VERSION = eabe067c4527bc2eedc5db9288ef5cf1818ec720
-AVRDUDE_SITE = $(call github,kcuzner,avrdude,$(AVRDUDE_VERSION))
+AVRDUDE_VERSION = 6.3
+AVRDUDE_SITE = http://download.savannah.gnu.org/releases/avrdude
+AVRDUDE_SOURCE = avrdude-$(AVRDUDE_VERSION).tar.gz
 AVRDUDE_LICENSE = GPLv2+
 AVRDUDR_LICENSE_FILES = avrdude/COPYING
-AVRDUDE_SUBDIR = avrdude
-# Sources coming from git, without generated configure and Makefile.in
-# files.
+
+AVRDUDE_CONF_OPTS += --enable-linuxgpio
+
 AVRDUDE_AUTORECONF = YES
 AVRDUDE_DEPENDENCIES += elfutils libusb libusb-compat ncurses \
 	host-flex host-bison
