@@ -32,8 +32,8 @@ DBUS_CONF_OPTS = \
 	--disable-doxygen-docs \
 	--disable-dnotify \
 	--with-xml=expat \
-	--with-system-socket=/var/run/dbus/system_bus_socket \
-	--with-system-pid-file=/var/run/messagebus.pid
+	--with-system-socket=/run/dbus/system_bus_socket \
+	--with-system-pid-file=/run/messagebus.pid
 
 ifeq ($(BR2_STATIC_LIBS),y)
 DBUS_CONF_OPTS += LIBS='-pthread'
@@ -62,28 +62,38 @@ endif
 
 # fix rebuild (dbus makefile errors out if /var/lib/dbus is a symlink)
 define DBUS_REMOVE_VAR_LIB_DBUS
-	rm -rf $(DBUS_TARGET_DIR)/var/lib/dbus
+	$(DBUS_FAKEROOT) rm -rf $(DBUS_TARGET_DIR)/var/lib/dbus
 endef
 
 DBUS_POST_BUILD_HOOKS += DBUS_REMOVE_VAR_LIB_DBUS
 
 define DBUS_REMOVE_DEVFILES
-	rm -rf $(DBUS_TARGET_DIR)/usr/lib/dbus-1.0
+	$(DBUS_FAKEROOT) rm -rf $(DBUS_TARGET_DIR)/usr/lib/dbus-1.0
 endef
 
 DBUS_POST_INSTALL_TARGET_HOOKS += DBUS_REMOVE_DEVFILES
 
 define DBUS_INSTALL_TARGET_FIXUP
-	mkdir -p $(DBUS_TARGET_DIR)/var/lib
-	rm -rf $(DBUS_TARGET_DIR)/var/lib/dbus
-	ln -sf /tmp/dbus $(DBUS_TARGET_DIR)/var/lib/dbus
+	$(DBUS_FAKEROOT) mkdir -p $(DBUS_TARGET_DIR)/var/lib
+	$(DBUS_FAKEROOT) rm -rf $(DBUS_TARGET_DIR)/var/lib/dbus
+	$(DBUS_FAKEROOT) ln -sf /tmp/dbus $(DBUS_TARGET_DIR)/var/lib/dbus
 endef
 
 DBUS_POST_INSTALL_TARGET_HOOKS += DBUS_INSTALL_TARGET_FIXUP
 
-define DBUS_INSTALL_INIT_SYSV
-	$(INSTALL) -m 0755 -D package/dbus/S30dbus \
-		$(DBUS_TARGET_DIR)/etc/init.d/S30dbus
+define DBUS_INSTALL_INIT_SYSV		
+	$(DBUS_FAKEROOT) $(INSTALL) -D -m 0755 package/dbus/dbus.init \
+		$(DBUS_TARGET_DIR)/etc/init.d/dbus
+	$(DBUS_FAKEROOT) $(INSTALL) -D -m 0644 package/dbus/dbus.default \
+		$(DBUS_TARGET_DIR)/etc/default/dbus
+		
+	$(DBUS_FAKEROOT) $(INSTALL) -d -m 0755 $(DBUS_TARGET_DIR)/etc/rc.d/rc.sysinit.d	
+	$(DBUS_FAKEROOT) $(INSTALL) -d -m 0755 $(DBUS_TARGET_DIR)/etc/rc.d/rc.shutdown.d
+	
+	$(DBUS_FAKEROOT) ln -fs ../../init.d/dbus \
+		$(DBUS_TARGET_DIR)/etc/rc.d/rc.sysinit.d/S30dbus
+	$(DBUS_FAKEROOT) ln -fs ../../init.d/dbus \
+		$(DBUS_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S60dbus
 endef
 
 HOST_DBUS_DEPENDENCIES = host-pkgconf host-expat

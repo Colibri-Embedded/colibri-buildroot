@@ -1,0 +1,74 @@
+#!/bin/sh
+#
+# messagebus:   The D-BUS systemwide message bus
+#
+# chkconfig: 345 97 03
+# description:  This is a daemon which broadcasts notifications of system events \
+#               and other messages. See http://www.freedesktop.org/software/dbus/
+#
+# processname: dbus-daemon
+# pidfile: /var/run/messagebus.pid
+#
+
+. /etc/default/rc
+. ${rc_functions}
+
+test -r /etc/default/dbus && source /etc/default/dbus
+
+DAEMON=/usr/bin/dbus-daemon
+DBUS_ARGS=""
+
+# Sanity checks.
+[ -x /usr/bin/dbus-daemon ] || exit 0
+
+# Create needed directories.
+[ -d /run/dbus ] || mkdir -p /run/dbus
+[ -d /var/lock/subsys ] || mkdir -p /var/lock/subsys
+[ -d /tmp/dbus ] || mkdir -p /tmp/dbus
+
+RETVAL=0
+
+start() {
+    boot_msg "Starting system message bus."
+
+    dbus-uuidgen --ensure
+    DBUS_ARGS="$DBUS_ARGS --system"
+    
+	start-stop-daemon -S -q -p $DBUS_PIDFILE --exec $DAEMON -- $DBUS_ARGS
+	evaluate_retval
+	#~ [ $RETVAL -eq 0 ] && touch /var/lock/subsys/dbus-daemon
+}
+
+stop() {
+    boot_msg "Stopping system message bus."
+    start-stop-daemon -K -q -p $DBUS_PIDFILE
+    RETVAL=$?
+    evaluate_retval
+    #~ rm -f /var/lock/subsys/dbus-daemon
+    rm -f $DBUS_PIDFILE
+}
+
+# See how we were called.
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        start-stop-daemon -K -t -q -p $DBUS_PIDFILE
+        ;;
+    restart)
+		${0} stop
+		sleep 1
+		${0} start
+        ;;
+    reload)
+        echo "Message bus can't reload its configuration, you have to restart it"
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|status|restart|reload}"
+        ;;
+esac
+exit $RETVAL

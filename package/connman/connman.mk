@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-CONNMAN_VERSION = 1.27
+CONNMAN_VERSION = 1.34
 CONNMAN_SOURCE = connman-$(CONNMAN_VERSION).tar.xz
 CONNMAN_SITE = $(BR2_KERNEL_MIRROR)/linux/network/connman
 CONNMAN_DEPENDENCIES = libglib2 dbus iptables
@@ -28,7 +28,20 @@ CONNMAN_DEPENDENCIES += \
 	$(if $(BR2_PACKAGE_CONNMAN_WISPR),gnutls)
 
 define CONNMAN_INSTALL_INIT_SYSV
-	$(INSTALL) -m 0755 -D package/connman/S45connman $(CONNMAN_TARGET_DIR)/etc/init.d/S45connman
+	
+	$(CONNMAN_FAKEROOT) $(INSTALL) -D -m 0755 package/connman/connman.init \
+		$(CONNMAN_TARGET_DIR)/etc/init.d/connman
+	$(CONNMAN_FAKEROOT) $(INSTALL) -D -m 0644 package/connman/connman.default \
+		$(CONNMAN_TARGET_DIR)/etc/default/connman
+		
+	$(CONNMAN_FAKEROOT) $(INSTALL) -d -m 0755 $(CONNMAN_TARGET_DIR)/etc/rc.d/rc.sysinit.d	
+	$(CONNMAN_FAKEROOT) $(INSTALL) -d -m 0755 $(CONNMAN_TARGET_DIR)/etc/rc.d/rc.shutdown.d
+	
+	$(CONNMAN_FAKEROOT) ln -fs ../../init.d/connman \
+		$(CONNMAN_TARGET_DIR)/etc/rc.d/rc.sysinit.d/S90connman
+	$(CONNMAN_FAKEROOT) ln -fs ../../init.d/connman \
+		$(CONNMAN_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S60connman
+	
 endef
 
 
@@ -37,7 +50,7 @@ CONNMAN_CONF_OPTS += --enable-client
 CONNMAN_DEPENDENCIES += readline
 
 define CONNMAN_INSTALL_CM
-	$(INSTALL) -m 0755 -D $(@D)/client/connmanctl $(CONNMAN_TARGET_DIR)/usr/bin/connmanctl
+	$(CONNMAN_FAKEROOT) $(INSTALL) -m 0755 -D $(@D)/client/connmanctl $(CONNMAN_TARGET_DIR)/usr/bin/connmanctl
 endef
 
 CONNMAN_POST_INSTALL_TARGET_HOOKS += CONNMAN_INSTALL_CM

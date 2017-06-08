@@ -235,15 +235,34 @@ define WPA_SUPPLICANT_INSTALL_TARGET_CMDS
 	$(WPA_SUPPLICANT_INSTALL_WPA_CLIENT_SO)
 endef
 
+ifeq ($(BR2_PACKAGE_WPA_SUPPLICANT_SERVICE),y)
+
+define WPA_SUPPLICANT_INSTALL_INIT_SYSV		
+	$($(WPA_SUPPLICANT_FAKEROOT) ) $(INSTALL) -D -m 0755 package/wpa_supplicant/wpa_supplicant.init \
+		$(WPA_SUPPLICANT_TARGET_DIR)/etc/init.d/wpa_supplicant
+	$($(WPA_SUPPLICANT_FAKEROOT) ) $(INSTALL) -D -m 0644 package/wpa_supplicant/wpa_supplicant.default \
+		$(WPA_SUPPLICANT_TARGET_DIR)/etc/default/wpa_supplicant
+		
+	$($(WPA_SUPPLICANT_FAKEROOT) ) $(INSTALL) -d -m 0755 $(WPA_SUPPLICANT_TARGET_DIR)/etc/rc.d/rc.startup.d	
+	$($(WPA_SUPPLICANT_FAKEROOT) ) $(INSTALL) -d -m 0755 $(WPA_SUPPLICANT_TARGET_DIR)/etc/rc.d/rc.shutdown.d
+	
+	$($(WPA_SUPPLICANT_FAKEROOT) ) ln -fs ../../init.d/wpa_supplicant \
+		$(WPA_SUPPLICANT_TARGET_DIR)/etc/rc.d/rc.startup.d/S20wpa_supplicant
+	$($(WPA_SUPPLICANT_FAKEROOT) ) ln -fs ../../init.d/wpa_supplicant \
+		$(WPA_SUPPLICANT_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S50wpa_supplicant
+endef
+
 define WPA_SUPPLICANT_INSTALL_INIT_SYSTEMD
-	$(INSTALL) -m 0644 -D $(@D)/$(WPA_SUPPLICANT_SUBDIR)/systemd/wpa_supplicant.service \
+	$(WPA_SUPPLICANT_FAKEROOT) $(INSTALL) -m 0644 -D $(@D)/$(WPA_SUPPLICANT_SUBDIR)/systemd/wpa_supplicant.service \
 		$(WPA_SUPPLICANT_TARGET_DIR)/usr/lib/systemd/system/wpa_supplicant.service
-	$(INSTALL) -m 0644 -D $(@D)/$(WPA_SUPPLICANT_SUBDIR)/systemd/wpa_supplicant@.service \
+	$(WPA_SUPPLICANT_FAKEROOT) $(INSTALL) -m 0644 -D $(@D)/$(WPA_SUPPLICANT_SUBDIR)/systemd/wpa_supplicant@.service \
 		$(WPA_SUPPLICANT_TARGET_DIR)/usr/lib/systemd/system/wpa_supplicant@.service
-	$(INSTALL) -m 0644 -D $(@D)/$(WPA_SUPPLICANT_SUBDIR)/systemd/wpa_supplicant-nl80211@.service \
+	$(WPA_SUPPLICANT_FAKEROOT) $(INSTALL) -m 0644 -D $(@D)/$(WPA_SUPPLICANT_SUBDIR)/systemd/wpa_supplicant-nl80211@.service \
 		$(WPA_SUPPLICANT_TARGET_DIR)/usr/lib/systemd/system/wpa_supplicant-nl80211@.service
-	$(INSTALL) -m 0644 -D $(@D)/$(WPA_SUPPLICANT_SUBDIR)/systemd/wpa_supplicant-wired@.service \
+	$(WPA_SUPPLICANT_FAKEROOT) $(INSTALL) -m 0644 -D $(@D)/$(WPA_SUPPLICANT_SUBDIR)/systemd/wpa_supplicant-wired@.service \
 		$(WPA_SUPPLICANT_TARGET_DIR)/usr/lib/systemd/system/wpa_supplicant-wired@.service
 endef
+
+endif
 
 $(eval $(generic-package))

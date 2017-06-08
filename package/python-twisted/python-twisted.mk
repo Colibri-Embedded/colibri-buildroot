@@ -11,5 +11,6 @@ PYTHON_TWISTED_SITE = https://twistedmatrix.com/Releases/Twisted/$(PYTHON_TWISTE
 PYTHON_TWISTED_SETUP_TYPE = setuptools
 PYTHON_TWISTED_LICENSE = MIT
 PYTHON_TWISTED_LICENSE_FILES = LICENSE
+PYTHON_TWISTED_DEPENDENCIES = python-zope-interface
 
 $(eval $(python-package))

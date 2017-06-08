@@ -1,0 +1,8 @@
+config BR2_PACKAGE_TXDBUS
+	bool "python-txdbus"
+	depends on BR2_PACKAGE_PYTHON || BR2_PACKAGE_PYTHON3
+	select BR2_PACKAGE_TWISTED
+	help
+	  Python bindings for D-Bus
+
+	  https://pypi.python.org/pypi/txdbus

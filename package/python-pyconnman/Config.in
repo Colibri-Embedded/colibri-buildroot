@@ -1,0 +1,8 @@
+config BR2_PACKAGE_PYCONNMAN
+	bool "python-pyconnman"
+	depends on BR2_PACKAGE_PYTHON || BR2_PACKAGE_PYTHON3
+	select BR2_CONNMAN
+	help
+	  Python bindings for connman
+
+	  https://pypi.python.org/pypi/pyconnman/

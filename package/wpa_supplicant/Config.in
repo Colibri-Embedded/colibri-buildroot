@@ -48,6 +48,12 @@ config BR2_PACKAGE_WPA_SUPPLICANT_PASSPHRASE
 	help
 	  Install wpa_passphrase command line utility.
 
+config BR2_PACKAGE_WPA_SUPPLICANT_SERVICE
+	bool "Enable wpa_supplicant on startup"
+	help
+	  Enable support wpa_supplicant service during boot.
+	  (Useful for network managers).
+
 config BR2_PACKAGE_WPA_SUPPLICANT_DBUS_OLD
 	bool "Enable support for old DBus control interface"
 	depends on BR2_PACKAGE_DBUS

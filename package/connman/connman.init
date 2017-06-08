@@ -15,30 +15,30 @@
 . /etc/default/rc
 . ${rc_functions}
 
-test -r /etc/default/network && source /etc/default/network
+test -r /etc/default/connman && source /etc/default/connman
 
-[ -z $NETWORK_MANAGER ] && NETWORK_MANAGER=ifupdown
+[ -z $CONNMAN_PIDFILE ] && CONNMAN_PIDFILE=/run/connmand.pid
 
-[ "$NETWORK_MANAGER" != "ifupdown" ] && exit 0
+CONNMAN_ARGS="-n"
+
+DAEMON=/usr/sbin/connmand
 
 case "$1" in
   start)
- 	boot_msg "Starting network."
- 	mkdir -p /run/network &> /dev/null
-	/sbin/ifup -a > /dev/null 2>&1
+	boot_msg "Starting connection manager."
+	start-stop-daemon -S -b -m -q -p $CONNMAN_PIDFILE --exec $DAEMON -- $CONNMAN_ARGS
 	evaluate_retval
-	
 	;;
   stop)
-	boot_msg "Stopping network."
-	/sbin/ifdown -a > /dev/null 2>&1
+	boot_msg "Stopping connection manager."
+	start-stop-daemon -K -q -p $CONNMAN_PIDFILE
 	evaluate_retval
 	;;
-  restart)
-    $0 stop
-    sleep 1
-    $0 start
-    ;;
+  restart|reload)
+	${0} stop
+	sleep 1
+	${0} start
+	;;
   *)
 	echo "Usage: $0 {start|stop|restart}"
 	exit 1
