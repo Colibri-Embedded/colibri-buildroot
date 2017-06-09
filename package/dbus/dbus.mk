@@ -77,6 +77,7 @@ define DBUS_INSTALL_TARGET_FIXUP
 	$(DBUS_FAKEROOT) mkdir -p $(DBUS_TARGET_DIR)/var/lib
 	$(DBUS_FAKEROOT) rm -rf $(DBUS_TARGET_DIR)/var/lib/dbus
 	$(DBUS_FAKEROOT) ln -sf /tmp/dbus $(DBUS_TARGET_DIR)/var/lib/dbus
+	$(DBUS_FAKEROOT) rm -rf $(DBUS_TARGET_DIR)/etc/rc.d/init.d
 endef
 
 DBUS_POST_INSTALL_TARGET_HOOKS += DBUS_INSTALL_TARGET_FIXUP

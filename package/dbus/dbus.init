@@ -15,6 +15,9 @@
 
 test -r /etc/default/dbus && source /etc/default/dbus
 
+[ -z $DBUS_STARTUP ] && DBUS_STARTUP="yes"
+[ "$DBUS_STARTUP" != "yes" ] && exit 0
+
 DAEMON=/usr/bin/dbus-daemon
 DBUS_ARGS=""
 

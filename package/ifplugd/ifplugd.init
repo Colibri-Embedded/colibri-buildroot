@@ -19,6 +19,9 @@ test -r /etc/default/ifplugd && source /etc/default/ifplugd
 
 [ -z $IFPLUGD_PIDFILE ] && IFPLUGD_PIDFILE=/run/ifplugd.pid
 
+[ -z $IFPLUGD_STARTUP ] && IFPLUGD_STARTUP="yes"
+[ "$IFPLUGD_STARTUP" != "yes" ] && exit 0
+
 DAEMON=/usr/sbin/ifplugd
 
 case "$1" in

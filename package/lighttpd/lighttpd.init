@@ -17,6 +17,9 @@
 
 test -r /etc/default/lighttpd && source /etc/default/lighttpd
 
+[ -z $LIGHTTPD_STARTUP ] && LIGHTTPD_STARTUP="yes"
+[ "$LIGHTTPD_STARTUP" != "yes" ] && exit 0
+
 [ -z $LIGHTTPD_PIDFILE ] && LIGHTTPD_PIDFILE=/run/lighttpd.pid
 [ -z $LIGHTTPD_CONF ] && LIGHTTPD_CONF=/etc/lighttpd/lighttpd.conf
 

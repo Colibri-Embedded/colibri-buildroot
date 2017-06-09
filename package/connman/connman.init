@@ -16,9 +16,12 @@
 . ${rc_functions}
 
 test -r /etc/default/connman && source /etc/default/connman
+test -r /etc/default/network && source /etc/default/network
+
+[ -z $NETWORK_MANAGER ] && NETWORK_MANAGER=ifupdown
+[ "$NETWORK_MANAGER" != "connman" ] && exit 0
 
 [ -z $CONNMAN_PIDFILE ] && CONNMAN_PIDFILE=/run/connmand.pid
-
 CONNMAN_ARGS="-n"
 
 DAEMON=/usr/sbin/connmand

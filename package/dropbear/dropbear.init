@@ -20,6 +20,9 @@ test -r /etc/default/dropbear && source /etc/default/dropbear
 [ -z $DROPBEAR_ARGS ] && DROPBEAR_ARGS=-B
 [ -z $DROPBEAR_PIDFILE ] && DROPBEAR_PIDFILE=/run/dropbear.pid
 
+[ -z $DROPBEAR_STARTUP ] && DROPBEAR_STARTUP="yes"
+[ "$DROPBEAR_STARTUP" != "yes" ] && exit 0
+
 DROPBEAR_ARGS="$DROPBEAR_ARGS -R -P $DROPBEAR_PIDFILE"
 
 DAEMON=/usr/sbin/dropbear
