@@ -22,7 +22,7 @@ test -r /etc/default/network && source /etc/default/network
 [ "$NETWORK_MANAGER" != "connman" ] && exit 0
 
 [ -z $CONNMAN_PIDFILE ] && CONNMAN_PIDFILE=/run/connmand.pid
-CONNMAN_ARGS="-n"
+CONNMAN_ARGS="$CONNMAN_ARGS -n"
 
 DAEMON=/usr/sbin/connmand
 

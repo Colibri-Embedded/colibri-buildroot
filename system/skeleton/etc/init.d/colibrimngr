@@ -64,7 +64,8 @@ case "$1" in
   start)
     boot_msg "Colibri Manager"
     if [ "$FIRSTBOOT" == "yes" ]; then
-        copy_network_config
+		# replaced by network.first as it supports multiple network managers
+        # copy_network_config
         /sbin/depmod
     fi
     

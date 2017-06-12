@@ -9,6 +9,11 @@ config BR2_PACKAGE_WPA_SUPPLICANT
 
 if BR2_PACKAGE_WPA_SUPPLICANT
 
+config BR2_PACKAGE_WPA_SUPPLICANT_NL80211
+	bool "Enable nl80211 support"
+	help
+		Enable modern network link 80211 interface
+
 config BR2_PACKAGE_WPA_SUPPLICANT_AP_SUPPORT
 	bool "Enable AP mode"
 	help

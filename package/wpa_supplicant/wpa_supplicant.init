@@ -16,8 +16,11 @@
 . ${rc_functions}
 
 test -r /etc/default/wpa_supplicant && source /etc/default/wpa_supplicant
+test -r /etc/default/network && source /etc/default/network
 
 [ -z $WPA_SUPPLICANT_PIDFILE ] && WPA_SUPPLICANT_PIDFILE=/run/wpa_supplicant.pid
+[ -z $NETWORK_MANAGER ] && NETWORK_MANAGER=ifupdown
+[ "$NETWORK_MANAGER" == "ifupdown" ] && exit 0
 
 ARGS="$WPA_SUPPLICANT_ARGS -u"
 
