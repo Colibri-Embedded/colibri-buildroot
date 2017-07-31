@@ -24,7 +24,7 @@ test -r /etc/default/network && source /etc/default/network
 
 ARGS="$WPA_SUPPLICANT_ARGS -u"
 
-DAEMON=/usr/sbin/wpa_supplicant
+DAEMON=/usr/sbin/wpa_supplicant_failsafe
 
 case "$1" in
   start)

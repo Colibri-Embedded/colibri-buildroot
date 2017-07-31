@@ -847,7 +847,8 @@ printvars:
 				$(origin $V)), \
 		$(info $V=$($V) ($(value $V)))))
 
-clean:
+
+clean: clean-question
 	rm -rf $(TARGET_DIR) $(BINARIES_DIR) $(HOST_DIR) \
 		$(BUILD_DIR) $(BASE_DIR)/staging \
 		$(LEGAL_INFO_DIR) $(SDCARD_DIR) $(PACKAGES_DIR)
@@ -860,6 +861,11 @@ ifeq ($(O),output)
 	rm -rf $(O)
 endif
 	rm -rf $(BR2_CONFIG) $(CONFIG_DIR)/.config.old $(CONFIG_DIR)/.auto.deps
+
+clean-question:
+	@read -p "You are about to remove ALL build folders, are you sure? (no/yes): " answer; \
+	echo "Answer: $$answer"; \
+	[ "$$answer" == "yes" ] || exit 1
 
 help:
 	@echo 'Cleaning:'

@@ -247,9 +247,13 @@ define WPA_SUPPLICANT_INSTALL_INIT_SYSV
 	$($(WPA_SUPPLICANT_FAKEROOT) ) $(INSTALL) -d -m 0755 $(WPA_SUPPLICANT_TARGET_DIR)/etc/rc.d/rc.shutdown.d
 	
 	$($(WPA_SUPPLICANT_FAKEROOT) ) ln -fs ../../init.d/wpa_supplicant \
-		$(WPA_SUPPLICANT_TARGET_DIR)/etc/rc.d/rc.startup.d/S20wpa_supplicant
+		$(WPA_SUPPLICANT_TARGET_DIR)/etc/rc.d/rc.startup.d/S50wpa_supplicant
 	$($(WPA_SUPPLICANT_FAKEROOT) ) ln -fs ../../init.d/wpa_supplicant \
 		$(WPA_SUPPLICANT_TARGET_DIR)/etc/rc.d/rc.shutdown.d/S50wpa_supplicant
+		
+	$($(WPA_SUPPLICANT_FAKEROOT) ) $(INSTALL) -d -m 0755 $(WPA_SUPPLICANT_TARGET_DIR)/usr/sbin
+	$($(WPA_SUPPLICANT_FAKEROOT) ) $(INSTALL) -D -m 0755 package/wpa_supplicant/wpa_supplicant_failsafe \
+		$(WPA_SUPPLICANT_TARGET_DIR)/usr/sbin/wpa_supplicant_failsafe
 endef
 
 define WPA_SUPPLICANT_INSTALL_INIT_SYSTEMD

@@ -24,6 +24,8 @@
 # Create a list of __cmd__ commands
 COMMANDS=$(cat $0 | grep -o -e "^__.*__")
 
+TMP_MOUNT_PATH="/run/colibrimngr/tmp_mount"
+
 R_SUCCESS=0
 R_REBOOT_REQUIRED=1
 R_ABORTED=2
@@ -70,6 +72,19 @@ remount_boot_ro() {
 	mount -o remount,ro /mnt/live/mnt/boot
 }
 
+##
+#
+# $1 - B_FILENAME
+# $2 - mount path, will be created if does not exists
+#
+mount_bundle_at() {
+	B_FILENAME="$1"
+	MOUNT_PATH="$2"
+	
+	mkdir -p "$MOUNT_PATH"
+	mount -o loop -t squashfs "${B_FILENAME}" "${MOUNT_PATH}"
+}
+
 is_version_format_valid() {
 	echo $1 | grep -Eq "^[0-9]+([.][0-9]+)*$"
 }
@@ -99,6 +114,10 @@ filename_to_bundleinfo() {
 	esac
 }
 
+##
+#
+# $1 - B_FILENAME
+#
 copy_to_bundles() {
 	B_FILE=$(basename $1)
 	if [ -f /mnt/live/${BUNDLES}/${B_FILE}.remove ]; then
@@ -113,7 +132,11 @@ copy_to_bundles() {
 	fi
 }
 
-# B_FILENAME, TRIGGER_NAME
+##
+# 
+# $1 - B_FILENAME
+# $2 - TRIGGER_NAME
+#
 create_trigger()
 {
 	B_FILE=$(basename $1)
@@ -142,8 +165,16 @@ extract_to_boot() {
 	unzip -o $SRC_FILE -d /mnt/live/mnt/boot/
 }
 
+##
+#
+# $1 - B_NAME
+# $2 - Postpone (yes|no)
+# $3 - New bundle filename
+#
 remove_bundle() {
+	B_NAME="$1"
 	POSTPONE="$2"
+	NEW_B_FILENAME="$3"
 	CAN_REMOVE="no"
 	
 	BUNDLE=$(is_bundle_active $1)
@@ -152,12 +183,11 @@ remove_bundle() {
 	fi
 
 	if [ $CAN_REMOVE == "yes" ]; then
+		
+		# pre_remove script execute
+		exec_bundle_script ${B_NAME} pre_remove ${NEW_B_FILENAME}
 	
-										
-		# post_remove script execute
-		exec_bundle_script $1 pre_remove
-	
-		BUNDLE=$(is_bundle_installed $1)
+		BUNDLE=$(is_bundle_installed $B_NAME)
 		if [ "x$BUNDLE" != "x" ]; then
 			echo -n "Removing $BUNDLE..."
 			rm -f /mnt/live/${BUNDLES}/${BUNDLE}
@@ -166,10 +196,12 @@ remove_bundle() {
 		fi
 		
 		# post_remove script execute
-		exec_bundle_script $1 post_remove
+		exec_bundle_script $B_NAME post_remove ${NEW_B_FILENAME}
 	else
 		if [ $POSTPONE == "yes" ]; then
 			echo "Bundle $BUNDLE removal is postponed."
+			exec_bundle_script $B_NAME postpone ${NEW_B_FILENAME}
+			
 			touch /mnt/live/${BUNDLES}/${BUNDLE}.remove
 			return $R_REBOOT_REQUIRED
 		else
@@ -181,22 +213,29 @@ remove_bundle() {
 	return $R_SUCCESS
 }
 
+##
+#
+# $1 - B_NAME
+#
 activate_bundle() {
-	CB=$(is_bundle_active $1)
+	B_NAME="$1"
+	CB=$(is_bundle_active $B_NAME)
 	if [ "x$CB" == "x" ]; then
 		# Bundle is not already active.
-		CB=$(is_bundle_installed $1)
+		CB=$(is_bundle_installed $B_NAME)
 		if [ "x$CB" != "x" ]; then
+			B_FILENAME="/mnt/live/${BUNDLES}/${CB}"
+			
+			exec_bundle_script $B_NAME pre_activate ${B_FILENAME}
+		
 			# Bundle is installed so let's activate it.
 			echo -n "Activating..."
-			mkdir -p /mnt/live/${BDATA}/${CB}
-			mount -o loop -t squashfs "/mnt/live/${BUNDLES}/${CB}" "/mnt/live/${BDATA}/${CB}" 2>/dev/null
+			#~ mkdir -p /mnt/live/${BDATA}/${CB}
+			#~ mount -o loop -t squashfs "/mnt/live/${BUNDLES}/${CB}" "/mnt/live/${BDATA}/${CB}" 2>/dev/null
+			mount_bundle_at "${B_FILENAME}" "/mnt/live/${BDATA}/${CB}"
 			mount -o remount,add:1:"/mnt/live/${BDATA}/${CB}" aufs / 2>/dev/null
 			
-			if [ -f "/mnt/live/${BUNDLES}/${CB}.post_install" ]; then
-				B_NAME=$(filename_to_bundleinfo ${CB} name)
-				exec_bundle_script post_install $B_NAME
-			fi
+			exec_bundle_script $B_NAME post_activate
 			
 			echo "DONE"
 		else
@@ -205,21 +244,31 @@ activate_bundle() {
 	fi
 }
 
+##
+#
+# $1 - B_NAME
+# $2 - Force deactivation (yes|no)
 deactivate_bundle() {
 	### @TODO: implement forcefull deactivation
 	### @TODO: implement 'abort' in case processes are still using the bundle's content
-	CB=$(is_bundle_active $1)
+	B_NAME="$1"
 	FORCE="$2"
+	CB=$(is_bundle_active $1)
 	
 	
 	if [ "x$CB" != "x" ]; then
+		exec_bundle_script $B_NAME pre_deactivate
+		
 		echo -n "Deactivating..."
 		mount -t aufs -o remount,verbose,del:"/mnt/live${BDATA}/${CB}" aufs / 2>/dev/null
 		umount /mnt/live/${BDATA}/${CB} 2>/dev/null 
 		rm -rf /mnt/live/${BDATA}/${CB}
+		
+		exec_bundle_script $B_NAME post_deactivate
+		
 		echo "DONE"
 	else
-		CB=$(is_bundle_installed $1)
+		CB=$(is_bundle_installed $B_NAME)
 		if [ "x$CB" == "x" ]; then
 			echo "Bundle not installed"
 		else
@@ -253,6 +302,9 @@ is_bundle_installed() {
 	return 1
 }
 
+##
+# $1 - B_NAME
+#
 is_bundle_active()
 {
 	NEEDLE=$1
@@ -270,6 +322,37 @@ is_bundle_active()
 		fi
 	done
 	return 1
+}
+
+##
+#
+# $1 - B_NAME
+# $2 - script name (pre_remove|post_remove|pre_install|post_install)
+# $3 - Execute script from bundle file (temp mount)
+#
+exec_bundle_script()
+{
+	echo "exec_bundle_script:" $@
+	B_NAME="$1"
+	SCRIPT_NAME="$2"
+	B_FILENAME="$3"
+	CUSTOM_ROOT=""
+	
+	if [ -n "${B_FILENAME}" ] && [ -e "${B_FILENAME}" ]; then
+		CUSTOM_ROOT=${TMP_MOUNT_PATH}
+		mount_bundle_at "${B_FILENAME}" "${CUSTOM_ROOT}"
+	fi
+	
+	SCRIPT_FILE="${CUSTOM_ROOT}/var/lib/colibri/bundle/$B_NAME/$SCRIPT_NAME.sh"
+	
+	if [ -x ${SCRIPT_FILE} ]; then
+		${SCRIPT_FILE}
+	fi
+	
+	if [ -n "${B_FILENAME}" ] && [ -e "${B_FILENAME}" ]; then
+		umount "${CUSTOM_ROOT}"
+		rm -rf "${CUSTOM_ROOT}"
+	fi	
 }
 
 ######################
@@ -398,52 +481,58 @@ __enable__() #min-args:1
 	sync
 }
 
-# B_NAME, script
-exec_bundle_script()
-{
-	echo "exec_bundle_script:" $@
-	B_NAME=$2
-	case $1 in
-		post_remove)
-			if [ -x "/var/lib/colibri/bundle/$B_NAME/post_remove.sh" ]; then
-				/var/lib/colibri/bundle/$B_NAME/post_remove.sh
-			fi
-			;;
-		pre_remove)
-			if [ -x "/var/lib/colibri/bundle/$B_NAME/pre_remove.sh" ]; then
-				/var/lib/colibri/bundle/$B_NAME/pre_remove.sh
-			fi
-			;;
-		post_install)
-			if [ -x "/var/lib/colibri/bundle/$B_NAME/post_install.sh" ]; then
-				/var/lib/colibri/bundle/$B_NAME/post_install.sh
-			fi
-			;;
-		pre_install)
-			if [ -x "/var/lib/colibri/bundle/$B_NAME/pre_install.sh" ]; then
-				/var/lib/colibri/bundle/$B_NAME/pre_install.sh
-			fi
-			;;
-	esac
-}
-
 #help: trigger on-boot commands
 __onboot__()
 {
 	remount_bundles_rw
 	
-	for bundle in $(cd /mnt/live/${BUNDLES}/; ls *.${BEXT}.*);do
-		case "${bundle##*.}" in
-			post_install)
-				B_FILE=$(echo $bundle | sed s/.post_install//)
-				B_NAME=$(filename_to_bundleinfo $B_FILE name)
-				exec_bundle_script post_install $B_NAME
-				# Remove bundle trigger
-				rm /mnt/live/${BUNDLES}/${bundle}
-				;;
-			post_remove)
-				;;
-		esac
+	for bundle in $(cd /mnt/live/${BUNDLES}/; ls *.${BEXT});do
+		#case "${bundle##*.}" in
+			#~ post_install)
+				#~ B_FILE=$(echo $bundle | sed s/.post_install//)
+				#~ B_NAME=$(filename_to_bundleinfo $B_FILE name)
+				#~ exec_bundle_script post_install $B_NAME
+				#~ # Remove bundle trigger
+				#~ rm /mnt/live/${BUNDLES}/${bundle}
+				#~ ;;
+			#~ post_remove)
+				#~ ;;
+		#esac
+		
+		B_FILE="$bundle"
+		B_NAME=$(filename_to_bundleinfo $B_FILE name)
+		
+		# TRIGGER=/mnt/live/${BUNDLES}/${bundle}.pre_remove
+		# if [ -e $TRIGGER ]; then
+		# 	echo "pre_remove trigger detected"
+		# 	exec_bundle_script $B_NAME pre_remove
+		# 	# Remove bundle trigger
+		# 	rm $TRIGGER
+		# fi
+		
+		TRIGGER=/mnt/live/${BUNDLES}/${bundle}.post_remove
+		if [ -e $TRIGGER ]; then
+			echo "post_remove trigger detected"
+			exec_bundle_script $B_NAME post_remove
+			# Remove bundle trigger
+			rm $TRIGGER
+		fi
+		
+		# TRIGGER=/mnt/live/${BUNDLES}/${bundle}.pre_install
+		# if [ -e $TRIGGER ]; then
+		# 	echo "pre_install trigger detected"
+		# 	exec_bundle_script $B_NAME pre_install
+		# 	# Remove bundle trigger
+		# 	rm $TRIGGER
+		# fi
+		
+		TRIGGER=/mnt/live/${BUNDLES}/${bundle}.post_install
+		if [ -e $TRIGGER ]; then
+			echo "post_install trigger detected"
+			exec_bundle_script $B_NAME post_install
+			# Remove bundle trigger
+			rm $TRIGGER
+		fi
 	done
 	remount_bundles_ro
 }
@@ -510,7 +599,7 @@ __install__() #min-args:1
 								# Bundle is installed but is not active,
 								dbg_msg "Bundle is inactive"
 								# we can remove the bundle safely
-								remove_bundle $B_NAME
+								remove_bundle $B_NAME "no" "${B_FULL_FILENAME}"
 								
 								CAN_INSTALL="yes"
 								IS_INACTIVE="yes"
@@ -523,13 +612,13 @@ __install__() #min-args:1
 									# Forcefully deactive the bundle and remove it
 									deactivate_bundle $B_NAME "yes"
 									# Remove the bundle
-									remove_bundle $B_NAME
+									remove_bundle $B_NAME "no" "${B_FULL_FILENAME}"
 									CAN_INSTALL="yes"
 									IS_INACTIVE="yes"
 								else
 									# Check whether the install should be postponed
 									if [ x"$POSTPONE" == x"yes" ]; then
-										remove_bundle $B_NAME "yes"
+										remove_bundle $B_NAME "yes" "${B_FULL_FILENAME}"
 										CAN_INSTALL="yes"
 										REBOOT_REQUIRED="yes"
 									else
@@ -546,14 +635,20 @@ __install__() #min-args:1
 						
 						# Check whether everything was resolved
 						if [ x"$CAN_INSTALL" == x"yes" ]; then
+							# The bundle is not yet activated so the pre_install script has
+							# to be accessed from the new bundle from a temp mount
+							exec_bundle_script $B_NAME pre_install ${B_FULL_FILENAME}
+							
 							copy_to_bundles $B_FULL_FILENAME
 							copy_to_bundles ${B_FULL_FILENAME}.md5sum
 							
+							
 							if [ x"$IS_INACTIVE" == x"yes" ]; then
 								TO_ACTIVATE="$TO_ACTIVATE $B_NAME"
+							else
+								create_trigger $B_FULL_FILENAME post_install
 							fi
 							
-							create_trigger $B_FULL_FILENAME post_install
 						fi
 						
 					# ... if [ "$?" == "0" ]; then
@@ -751,27 +846,6 @@ __updateboot__() #min-args:1
 	fi
 	
 	return $R_SUCCESS
-}
-
-__test1__() #min-args:1
-{
-	check_root
-	echo "test1"
-	
-	CB=$1
-	#~ MP="/mnt/live/${BDATA}/${CB}"
-	
-	#~ LSOF_OUT=$(lsof $MP | sed -e "s@\t@#@g" )
-	
-	#~ for line in $LSOF_OUT; do
-		#~ echo $line
-	#~ done
-	
-	echo $(filename_to_bundleinfo $CB name)
-	
-	echo "INSTALLED: " $(is_bundle_installed $CB)
-	echo "ACTIVE:" $(is_bundle_active $CB)
-	
 }
 
 # Commands: end
