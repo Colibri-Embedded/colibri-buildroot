@@ -203,6 +203,7 @@ remove_bundle() {
 			exec_bundle_script $B_NAME postpone ${NEW_B_FILENAME}
 			
 			touch /mnt/live/${BUNDLES}/${BUNDLE}.remove
+			create_trigger ${NEW_B_FILENAME} post_remove
 			return $R_REBOOT_REQUIRED
 		else
 			echo "Bundle must be inactive to be removed."
