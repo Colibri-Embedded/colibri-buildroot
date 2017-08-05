@@ -1,0 +1,7 @@
+config BR2_PACKAGE_WAMPCC
+	bool "wampcc"
+	help
+	  WAMP C++ library that provides the WAMP basic profile for client 
+	  roles and also a lightweight implementation of a WAMP router / dealer. 
+
+	  https://github.com/darrenjs/wampcc

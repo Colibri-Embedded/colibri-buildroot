@@ -19,7 +19,11 @@ else
 GCC_SITE = $(BR2_GNU_MIRROR:/=)/gcc/gcc-$(GCC_VERSION)
 endif
 
+ifeq ($(BR2_GCC_VERSION_6_X),y)
+GCC_SOURCE ?= gcc-$(GCC_VERSION).tar.xz
+else
 GCC_SOURCE ?= gcc-$(GCC_VERSION).tar.bz2
+endif
 
 GCC_ARCHIVE_TARGET = NO
 
