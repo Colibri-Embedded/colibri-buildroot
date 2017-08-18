@@ -7,8 +7,15 @@
 # https://github.com/raspberrypi/firmware/archive/1.20160209.tar.gz
 
 #~ RPI_FIRMWARE_VERSION = 565197e2f830388155dfd6ba713ea32a75697a26
+ifeq ($(BR2_PACKAGE_RPI_FIRMWARE_USE_CUSTOM_VERSION),y)
+RPI_FIRMWARE_VERSION = $(BR2_PACKAGE_RPI_FIRMWARE_CUSTOM_VERSION)
+RPI_FIRMWARE_SITE = https://github.com/raspberrypi/firmware/archive
+RPI_FIRMWARE_SOURCE = $(RPI_FIRMWARE_VERSION).tar.gz
+else
 RPI_FIRMWARE_VERSION = 6364331ee24c03108b4a572cb218164480b9275b
 RPI_FIRMWARE_SITE = $(call github,raspberrypi,firmware,$(RPI_FIRMWARE_VERSION))
+endif
+
 RPI_FIRMWARE_LICENSE = BSD-3c
 RPI_FIRMWARE_LICENSE_FILES = boot/LICENCE.broadcom
 RPI_FIRMWARE_INSTALL_TARGET = NO
@@ -18,6 +25,9 @@ RPI_FIRMWARE_INSTALL_BOOTFILES = YES
 ifeq ($(BR2_PACKAGE_RPI_FIRMWARE_INSTALL_DTBS),y)
 #~ RPI_FIRMWARE_DEPENDENCIES += host-rpi-firmware
 define RPI_FIRMWARE_INSTALL_DTB
+	if [ -f $(@D)/boot/bcm2708-rpi-0-w.dtb ]; then \
+		$(INSTALL) -D -m 0644 $(@D)/boot/bcm2708-rpi-0-w.dtb $(BINARIES_DIR)/rpi-firmware/bcm2708-rpi-0-w.dtb; \
+	fi 
 	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2708-rpi-b.dtb $(BINARIES_DIR)/rpi-firmware/bcm2708-rpi-b.dtb
 	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2708-rpi-b-plus.dtb $(BINARIES_DIR)/rpi-firmware/bcm2708-rpi-b-plus.dtb
 	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2709-rpi-2-b.dtb $(BINARIES_DIR)/rpi-firmware/bcm2709-rpi-2-b.dtb
@@ -27,6 +37,9 @@ define RPI_FIRMWARE_INSTALL_DTB
 	done
 endef
 define RPI_FIRMWARE_INSTALL_DTB_SDCARD
+	if [ -f $(@D)/boot/bcm2708-rpi-0-w.dtb ]; then \
+		$(INSTALL) -D -m 0644 $(@D)/boot/bcm2708-rpi-0-w.dtb $(SDCARD_DIR)/bcm2708-rpi-0-w.dtb; \
+	fi
 	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2708-rpi-b.dtb $(SDCARD_DIR)/bcm2708-rpi-b.dtb
 	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2708-rpi-b-plus.dtb $(SDCARD_DIR)/bcm2708-rpi-b-plus.dtb
 	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2709-rpi-2-b.dtb $(SDCARD_DIR)/bcm2709-rpi-2-b.dtb
@@ -36,6 +49,9 @@ define RPI_FIRMWARE_INSTALL_DTB_SDCARD
 	done
 endef
 define RPI_FIRMWARE_INSTALL_DTB_BOOTFILES
+	if [ -f $(@D)/boot/bcm2708-rpi-0-w.dtb ]; then \
+		$(INSTALL) -D -m 0644 $(@D)/boot/bcm2708-rpi-0-w.dtb $(BOOTFILES_DIR)/bcm2708-rpi-0-w.dtb; \
+	fi
 	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2708-rpi-b.dtb $(BOOTFILES_DIR)/bcm2708-rpi-b.dtb
 	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2708-rpi-b-plus.dtb $(BOOTFILES_DIR)/bcm2708-rpi-b-plus.dtb
 	$(INSTALL) -D -m 0644 $(@D)/boot/bcm2709-rpi-2-b.dtb $(BOOTFILES_DIR)/bcm2709-rpi-2-b.dtb
