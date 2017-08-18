@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Stop any previous running instances
+killall -9 wpa_supplicant
+
+# Ensure that wpa_supplicant service gets restarted on failuer
+while true; do
+    wpa_supplicant $@
+    sleep 1
+done
